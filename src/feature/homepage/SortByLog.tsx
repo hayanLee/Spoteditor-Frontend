@@ -1,5 +1,4 @@
 import MainPagination from '@/components/Pagination/MainPagination';
-import React from 'react';
 
 const SortByLog = () => {
   return (

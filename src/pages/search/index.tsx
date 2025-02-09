@@ -2,8 +2,6 @@ import PageContentLayout from '@/components/Layout/PageContentLayout';
 import SectionHeader from '@/components/Header/SectionHeader';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 import CustomPagination from '@/components/CustomPagination';
 
 function Search() {

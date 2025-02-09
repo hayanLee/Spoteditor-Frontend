@@ -15,7 +15,7 @@ interface CustomPaginationProps {
 }
 
 function CustomPagination({ total, current }: CustomPaginationProps) {
-  const [pageNums, setPageNums] = useState([1, 2, 3]);
+  const [pageNums] = useState([1, 2, 3]);
 
   const onPrevClick = () => {};
 
