@@ -1,18 +1,18 @@
+import HeadPhoneIcon from '@/components/Icons/HeadPhoneIcon';
+import SettingIcon from '@/components/Icons/SettingIcon';
 import UserIcon from '@/components/Icons/UserIcon';
+import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
+import LogoutButton from '@/features/profile/LogoutButton';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import SettingIcon from '@/components/Icons/SettingIcon';
-import HeadPhoneIcon from '@/components/Icons/HeadPhoneIcon';
-import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
 import { Link } from 'react-router-dom';
-import LogoutButton from '@/feature/profile/LogoutButton';
 
 function UserProfileButton() {
   const textRef = useRef<HTMLSpanElement>(null);

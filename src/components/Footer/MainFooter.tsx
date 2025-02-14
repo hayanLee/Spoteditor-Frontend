@@ -1,21 +1,19 @@
 const MainFooter = () => {
   return (
-    <footer className="w-full h-[306px] px-50px pb-14 pt-36 bg-black font-untitled">
-      <div
-        className="flex justify-between h-[56px] pb-8 text-[#CDCFD4] text-16 font-normal border-b"
-        style={{ borderBottom: "1px solid var(--Color-Light-950, #242528)" }}
-      >
-        <div className="w-[185px]">
-          <span className="mr-3">About Us</span>
-          Contact Us
+    <footer className="w-full bg-black px-50px">
+      <div className="flex gap-4 text-primary-200 border-b border-primary-950 mt-20 web:mt-[200px] py-4 web:py-8">
+        <div className="flex gap-4 web:gap-8 web:grow">
+          <p>About Us</p>
+          <p>Contact Us</p>
         </div>
-        <span>Instragram</span>
+        <p>Instragram</p>
       </div>
-      <div className="h-6 flex justify-between font-pretendard text-16 font-normal text-[#575A63] mt-6">
-        <span>©2025 Spoteditor. All Rights are reserved️</span>
-        <div className="w-[265px] flex justify-between">
-          <span>Privacy Policy</span>
-          Terms & Conditions
+
+      <div className="flex flex-col web:flex-row gap-3 justify-between text-primary-600 mt-4 mb-10">
+        <p>©2025 Spoteditor. All Rights are reserved️</p>
+        <div className="flex gap-6">
+          <p>Privacy Policy</p>
+          <p>Terms & Conditions</p>
         </div>
       </div>
     </footer>

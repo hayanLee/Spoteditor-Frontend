@@ -2,8 +2,8 @@ import PenIcon from '@/components/Icons/PenIcon';
 import PageContentLayout from '@/components/Layout/PageContentLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import DeleteAccountConfirmButton from '@/feature/profile-setting/DeleteAccountConfirmButton';
-import SaveProfileButton from '@/feature/profile-setting/SaveProfileButton';
+import DeleteAccountConfirmButton from '@/features/profile-setting/DeleteAccountConfirmButton';
+import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
 
 function ProfileSetting() {
   return (
