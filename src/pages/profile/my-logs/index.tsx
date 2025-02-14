@@ -1,11 +1,16 @@
-import PostCardLayout from '@/components/Layout/PostCardLayout';
 import MainPagination from '@/components/Pagination/MainPagination';
-import { PostCard, PostCardImage, PostCardLocation, PostCardTitle } from '@/components/PostCard';
+import {
+  PostCard,
+  PostCardImage,
+  PostCardLocation,
+  PostCardTitle,
+  PostCardWrapper,
+} from '@/features/profile/PostCard';
 
 function MyLogs() {
   return (
     <>
-      <PostCardLayout className="mb-[50px]">
+      <PostCardWrapper className="mb-[50px]">
         {Array.from({ length: 12 }).map((_, idx) => (
           <PostCard key={idx}>
             <PostCardImage lable className="bg-slate-300" />
@@ -13,7 +18,7 @@ function MyLogs() {
             <PostCardLocation location="서울" detail="위치 세부 정보" />
           </PostCard>
         ))}
-      </PostCardLayout>
+      </PostCardWrapper>
       <MainPagination />
     </>
   );

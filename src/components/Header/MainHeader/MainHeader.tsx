@@ -1,10 +1,10 @@
 import global from '@/assets/homepage/global.png';
 import search from '@/assets/homepage/search.png';
 import LogoIcon from '@/components/Icons/LogoIcon';
-import LoginModal from '@/feature/login/LoginModal';
 import { useSearchStore } from '@/store/searchStore';
 import { Link } from 'react-router-dom';
 import LoginStatusButtons from './LoginStatusButtons';
+import LoginModal from '@/features/login/LoginModal';
 const MainHeader = () => {
   const { toggleSearchBar } = useSearchStore();
 

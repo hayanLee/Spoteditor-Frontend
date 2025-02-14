@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
-import SearchIcon from '../Icons/SearchIcon';
+import SearchIcon from '../../components/Icons/SearchIcon';
 import { useSearchStore } from '@/store/searchStore';
 
 function SearchBar() {
@@ -28,7 +28,7 @@ function SearchBar() {
     });
     toggleSearchBar();
   };
-
+  /* fixed top-[60px] */
   const onCloseOverlayClick = () => {
     toggleSearchBar();
   };
@@ -36,7 +36,7 @@ function SearchBar() {
     <>
       {isOpen ? (
         <>
-          <nav className="web:px-[50px] z-30 py-[30px] fixed top-[60px] mobile:px-4 web:w-[1440px] mobile:w-full flex justify-center items-center bg-black">
+          <nav className="web:px-[50px] z-40 py-[30px] sticky mobile:px-4 web:w-[1440px] mobile:w-full flex justify-center items-center bg-black">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSearchSubmit)}
@@ -52,7 +52,7 @@ function SearchBar() {
                           placeholder="제가 찾는 건..."
                           {...field}
                           style={{ color: 'white' }}
-                          className="bg-inherit pl-[25px] caret-white text-white placeholder:text-[#575A63] text-17"
+                          className="bg-inherit pl-[25px] caret-white text-white placeholder:text-[#575A63] text-text-xl"
                         />
                       </FormControl>
                       <FormMessage />
@@ -65,9 +65,9 @@ function SearchBar() {
               </form>
             </Form>
           </nav>
-          <main
+          <div
             onClick={onCloseOverlayClick}
-            className="fixed z-20 w-full h-screen web:w-[1440px] mobile:max-w-[768px] bg-black/80"
+            className="fixed z-30 w-full h-screen web:w-[1440px] mobile:w-full bg-black/80"
           />
         </>
       ) : null}

@@ -5,7 +5,7 @@ interface PageLayoutProps {
   className?: string;
 }
 
-function PageContentLayout({ className, children }: PageLayoutProps) {
+function PageLayout({ className, children }: PageLayoutProps) {
   return (
     <div
       className={cn(
@@ -18,4 +18,4 @@ function PageContentLayout({ className, children }: PageLayoutProps) {
   );
 }
 
-export default PageContentLayout;
+export default PageLayout;

@@ -1,3 +1,5 @@
+import mockImg1 from '@/assets/mock/1.png';
+import mockImg3 from '@/assets/mock/3.png';
 import ArrowIcon from '@/components/Icons/ArrowIcon';
 import MainPagination from '@/components/Pagination/MainPagination';
 import { Button } from '@/components/ui/button';
@@ -5,8 +7,8 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import CitySearchForm from '@/features/homepage/CitySearchForm';
 import CourseButton from '@/features/homepage/CourseButton';
 import LogCard from '@/features/homepage/LogCard';
-import PlaceCard from '@/features/homepage/PlaceCard';
 
+import { cn } from '@/lib/utils';
 const categories: string[] = [
   '로.맨.틱 데이트 코스!',
   '가성비 굿 하루',
@@ -63,10 +65,16 @@ const HomePage = () => {
 
         {/* 컨테이너 */}
         <Carousel>
-          <CarouselContent className="gap-4 flex">
+          <CarouselContent className="flex">
             {[...Array(5)].map((_, idx) => (
-              <CarouselItem className="flex-none web:basis-1/4" key={idx}>
-                <PlaceCard />
+              <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={idx}>
+                <LogCard
+                  title={'혼자 보내는 하루, 골목골목 숨어있는 용산 원효로 카페'}
+                  image={mockImg1}
+                  location1="서울"
+                  location2="위치 세부정보"
+                  vertical
+                />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -104,18 +112,25 @@ const HomePage = () => {
           <h3 className="text-primary-950 text-xl font-semibold">Log</h3>
         </div>
 
-        <div className="flex flex-col gap-8 web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-[55px]">
-          {[...Array(13)].map((_, idx) =>
-            idx === 2 ? (
-              <div key={idx} className="col-span-2 row-span-2 h-full w-full">
-                <LogCard isLarge />
+        <div className="flex flex-col gap-y-8 web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-10">
+          {[...Array(13)].map((_, idx) => {
+            const isLarge = idx === 2;
+
+            const logCardProps = {
+              key: idx,
+              title: '혼자 보내는 하루, 골목골목 숨어있는 용산 원효로 카페',
+              image: isLarge ? mockImg1 : mockImg3,
+              location1: '서울',
+              location2: '위치 세부정보',
+              isLarge,
+            };
+
+            return (
+              <div key={idx} className={cn(isLarge && 'col-span-2 row-span-2')}>
+                <LogCard {...logCardProps} />
               </div>
-            ) : (
-              <div key={idx}>
-                <LogCard />
-              </div>
-            )
-          )}
+            );
+          })}
         </div>
 
         <MainPagination />

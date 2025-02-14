@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
 
-interface PostCardLayoutProps {
+interface PostCardWrapperProps {
   className?: string;
   children: React.ReactNode;
 }
 
-function PostCardLayout({ className, children }: PostCardLayoutProps) {
+function PostCardWrapper({ className, children }: PostCardWrapperProps) {
   return (
     <section
       className={cn(
@@ -18,4 +18,4 @@ function PostCardLayout({ className, children }: PostCardLayoutProps) {
   );
 }
 
-export default PostCardLayout;
+export default PostCardWrapper;

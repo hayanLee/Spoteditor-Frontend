@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import VerifiedLabelIcon from '../Icons/VerifiedLabelIcon';
+import VerifiedLabelIcon from '../../../components/Icons/VerifiedLabelIcon';
 
 interface PostCardImageProps {
   imageUrl?: string;

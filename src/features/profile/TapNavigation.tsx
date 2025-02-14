@@ -11,7 +11,7 @@ function TapNavigation() {
       <div>
         <Separator orientation="vertical" className="web:h-[20px] mobile:h-[18px]" />
       </div>
-      <Button className="rounded-[60px] web:text-14 mobile:text-12">Upload</Button>
+      <Button className="rounded-[60px] web:text-text-sm mobile:text-text-xs">Upload</Button>
     </nav>
   );
 }

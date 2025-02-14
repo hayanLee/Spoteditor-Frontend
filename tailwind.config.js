@@ -1,3 +1,5 @@
+import scrollbarHide from 'tailwind-scrollbar-hide';
+
 module.exports = {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -15,90 +17,18 @@ module.exports = {
         untitled: ['UntitledSansLight', 'sans-serif'],
       },
       fontSize: {
-        '2xl': [
-          '32px',
-          {
-            lineHeight: '130%',
-            fontWeight: '500',
-          },
-        ],
-        xl: [
-          '28px',
-          {
-            lineHeight: '130%',
-            fontWeight: '400',
-          },
-        ],
-        lg: [
-          '24px',
-          {
-            lineHeight: '135%',
-            fontWeight: '400',
-          },
-        ],
-        md: [
-          '22px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        sm: [
-          '20px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-2xl': [
-          '18px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-xl': [
-          '17px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-lg': [
-          '16px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-md': [
-          '16px',
-          {
-            lineHeight: '135%',
-            fontWeight: '400',
-          },
-        ],
-        'text-sm': [
-          '14px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-xs': [
-          '12px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
-        'text-2xs': [
-          '11px',
-          {
-            lineHeight: '150%',
-            fontWeight: '400',
-          },
-        ],
+        '2xl': ['32px', { lineHeight: '130%' }],
+        xl: ['28px', { lineHeight: '130%' }],
+        lg: ['24px', { lineHeight: '135%' }],
+        md: ['22px', { lineHeight: '150%' }],
+        sm: ['20px', { lineHeight: '150%' }],
+        'text-2xl': ['18px', { lineHeight: '150%' }],
+        'text-xl': ['17px', { lineHeight: '150%' }],
+        'text-lg': ['16px', { lineHeight: '150%' }],
+        'text-md': ['16px', { lineHeight: '135%' }],
+        'text-sm': ['14px', { lineHeight: '150%' }],
+        'text-xs': ['12px', { lineHeight: '150%' }],
+        'text-2xs': ['11px', { lineHeight: '150%' }],
       },
       fontWeight: {
         regular: '400',
@@ -182,5 +112,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [scrollbarHide, require('tailwindcss-animate')],
 };

@@ -1,13 +1,13 @@
 import PenIcon from '@/components/Icons/PenIcon';
-import PageContentLayout from '@/components/Layout/PageContentLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import DeleteAccountConfirmButton from '@/features/profile-setting/DeleteAccountConfirmButton';
 import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
+import PageLayout from '@/layouts/PageLayout';
 
 function ProfileSetting() {
   return (
-    <PageContentLayout className="">
+    <PageLayout className="">
       <div className="web:w-[661px] mobile:w-screen flex flex-col mobile:px-[16px]">
         <article className=" flex justify-center mb-[32px]">
           <div className="relative">
@@ -55,7 +55,7 @@ function ProfileSetting() {
           </form>
         </section>
         <section>
-          <p className="mb-4 font-bold text-18">계정 설정</p>
+          <p className="mb-4 font-bold text-text-2xl">계정 설정</p>
           <div className="flex items-center justify-between py-[5px]">
             <p className="form-label">계정 삭제</p>
             <DeleteAccountConfirmButton />
@@ -72,7 +72,7 @@ function ProfileSetting() {
           <SaveProfileButton />
         </section>
       </div>
-    </PageContentLayout>
+    </PageLayout>
   );
 }
 

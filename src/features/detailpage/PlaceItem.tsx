@@ -1,6 +1,14 @@
 import mockImg from '@/assets/mock/3.png';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import { Bookmark, Clock, MapPin, Star } from 'lucide-react';
+import { BookMarkIcon, ClockIcon, SpotIcon, StarIcon } from '@/components/Icons';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+
 const PlaceItem = () => {
   return (
     <div className="border-t py-[15px] web:grid web:grid-cols-[1fr_3fr] web:gap-5 web:py-4">
@@ -11,18 +19,18 @@ const PlaceItem = () => {
             <p>01</p>
             <h4>서촌 베란다</h4>
           </div>
-          <Bookmark fill="black" />
+          <BookMarkIcon className="cursor-pointer" />
         </div>
 
         <div className="flex flex-col text-text-sm text-primary-400 web:text-text-lg">
           <div className="flex gap-2 items-center">
-            <Clock size={15} />
+            <ClockIcon />
             <p className="after:ml-1.5 after:content-['|'] after:text-primary-100">카페</p>
             <p className="text-info-500">영업중</p>
             <p>오후 8시에 영업종료</p>
           </div>
           <div className="flex gap-2 items-center">
-            <MapPin size={15} />
+            <SpotIcon className="stroke-primary-400" />
             <p className="after:ml-1.5 after:content-['|'] after:text-primary-100">서울</p>
             <p>위치 세부정보</p>
           </div>
@@ -35,15 +43,34 @@ const PlaceItem = () => {
           <CarouselContent className="gap-2.5 flex">
             {[...Array(3)].map((_, idx) => (
               <CarouselItem className="flex-none web:basis-1/3" key={idx}>
-                <img src={mockImg} alt="mockImg" className="w-[245px] web:w-full" />
+                <Dialog>
+                  <DialogTrigger>
+                    <img src={mockImg} alt="mockImg" className="w-[245px] web:w-full" />
+                  </DialogTrigger>
+                  <DialogContent className="bg-transparent" hideCloseButton>
+                    <Carousel className="w-full">
+                      <CarouselContent>
+                        {Array.from({ length: 5 }).map((_, index) => (
+                          <CarouselItem key={index}>
+                            <img src={mockImg} alt="mockImg" />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+
+                      {/* 좌우 버튼 */}
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
+                  </DialogContent>
+                </Dialog>
               </CarouselItem>
             ))}
           </CarouselContent>
         </Carousel>
 
         {/* 장소 설명 */}
-        <div className="flex items-center text-text-sm font-bold">
-          <Star fill="black" />
+        <div className="flex items-center text-text-sm font-bold gap-1">
+          <StarIcon fontSize={18} />
           <p>4.0</p>
         </div>
         <p className="text-primary-400 text-text-sm mt-2.5 web:text-text-lg">
