@@ -18,7 +18,10 @@ function LoginModal() {
     /* onClose(): 모달이 닫힐 때 호출되어 open을 false로 변경 */
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeLoginModal()} modal={true}>
       <DialogPrimitive.Overlay className=" mobile:bg-white" />
-      <DialogContent className="mobile:top-0 mobile:left-[50%] mobile:w-[375px] mobile:translate-x-[-50%] mobile:translate-y-0">
+      <DialogContent
+        hideCloseButton
+        className="mobile:top-0 mobile:left-[50%] mobile:w-[375px] mobile:translate-x-[-50%] mobile:translate-y-0 web:pb-[44.82px]"
+      >
         <DialogClose
           asChild
           className="flex items-center justify-end w-full web:py-2 mobile:py-[13px]"
@@ -36,7 +39,7 @@ function LoginModal() {
               <br /> 업데이트 소식을 확인해보세요.
             </DialogDescription>
           </DialogHeader>
-          <Button size="icon" variant="ghost" className="w-auto web:my-5 mobile:my-10">
+          <Button variant={null} className="w-auto web:my-5 mobile:my-10">
             <img className="object-contain" src={kakaoLoginButton} alt="카카오 로그인 버튼" />
           </Button>
           <p className="text-text-xs text-center text-[#6D727D] w-[320px]">

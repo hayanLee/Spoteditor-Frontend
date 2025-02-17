@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
-import SearchIcon from '../../components/Icons/SearchIcon';
+import SearchIcon from '@/components/Icons/SearchIcon';
 import { useSearchStore } from '@/store/searchStore';
 
 function SearchBar() {
@@ -36,7 +36,7 @@ function SearchBar() {
     <>
       {isOpen ? (
         <>
-          <nav className="web:px-[50px] z-40 py-[30px] sticky mobile:px-4 web:w-[1440px] mobile:w-full flex justify-center items-center bg-black">
+          <nav className="web:px-[50px] -z-10 py-[30px] sticky mobile:px-4 w-full flex justify-center items-center bg-black">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSearchSubmit)}
@@ -67,7 +67,7 @@ function SearchBar() {
           </nav>
           <div
             onClick={onCloseOverlayClick}
-            className="fixed z-30 w-full h-screen web:w-[1440px] mobile:w-full bg-black/80"
+            className="fixed top-0 left-0 w-screen h-screen -z-20 bg-black/80"
           />
         </>
       ) : null}

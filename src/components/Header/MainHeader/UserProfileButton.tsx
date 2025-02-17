@@ -33,13 +33,13 @@ function UserProfileButton() {
   }, []);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger className="focus:outline-none" asChild>
         <button>
           <UserIcon />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[230px]">
+      <DropdownMenuContent>
         <DropdownMenuItem className="font-bold text-text-lg flex justify-start gap-[5px] px-4 items-center">
           <span ref={textRef} className="truncate">
             Teamspoteditor
@@ -48,31 +48,39 @@ function UserProfileButton() {
         </DropdownMenuItem>
         <Link to="/profile/12/my-logs">
           <DropdownMenuItem className="px-4 py-5 focus:bg-white">
-            <Button className="w-full h-full rounded-[60px] bg-[#F7F7F7] text-text-sm font-medium hover:bg-[#F7F7F7]">
-              프로필 보기
+            <Button className="w-full h-full rounded-[60px] bg-[#F7F7F7] hover:bg-[#F7F7F7]">
+              <span className="font-medium text-black text-text-sm">프로필 보기</span>
             </Button>
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <Link to="/profile-setting">
-          <DropdownMenuItem className="flex items-center justify-start gap-2 text-text-sm">
-            <SettingIcon />
-            설정
+        <div className="m-1">
+          <Link to="/profile-setting">
+            <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
+              <SettingIcon />
+              설정
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
+            <HeadPhoneIcon />
+            문의하기
           </DropdownMenuItem>
-        </Link>
+        </div>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex items-center justify-start gap-2 text-text-sm">
-          <HeadPhoneIcon />
-          고객센터
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild className="flex items-center justify-start gap-2 text-text-sm">
-          <LogoutButton />
-        </DropdownMenuItem>
+        <div className="m-1">
+          <DropdownMenuItem asChild className="flex items-center justify-start text-text-sm">
+            <LogoutButton />
+          </DropdownMenuItem>
+        </div>
         <DropdownMenuSeparator />
         <div className="flex items-center justify-start px-4 py-[10px] gap-[15px] text-[#81858F]">
+          <Link to="/notice" className="flex">
+            <DropdownMenuItem>
+              <button className="text-text-xs">공지사항</button>
+            </DropdownMenuItem>
+          </Link>
           <button className="text-text-xs">이용약관</button>
-          <button className="text-text-xs">개인 정보 처리방침</button>
+          <button className="text-text-xs">개인정보처리방침</button>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

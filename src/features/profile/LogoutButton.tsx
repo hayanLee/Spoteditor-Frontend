@@ -13,7 +13,7 @@ function LogoutButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="flex items-center cursor-default justify-start gap-2 text-[14px] rounded-sm px-2 py-1.5 w-full hover:bg-neutral-100 focus:bg-neutral-100 focus:text-neutral-900">
+        <button className="flex items-center cursor-default justify-start gap-2 text-[14px] rounded-sm px-4 py-3 w-full hover:bg-neutral-100 focus:bg-neutral-100 focus:text-neutral-900">
           <LogoutIcon />
           <p>로그아웃</p>
         </button>

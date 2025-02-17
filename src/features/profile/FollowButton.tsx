@@ -26,7 +26,10 @@ function FollowButton({ label, count }: FollowButtonProps) {
           <span className="font-bold text-center text-[18px]">{count}</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="web:w-[348px] mobile:w-[340px] h-420 p-0 overflow-hidden">
+      <DialogContent
+        hideCloseButton
+        className="web:w-[348px] mobile:w-[340px] h-420 p-0 overflow-hidden"
+      >
         <DialogTitle className="grid grid-cols-3 w-full mb-2 section-heading h-[50px] px-2.5">
           <div />
           <div className="flex items-center justify-center">
@@ -58,7 +61,10 @@ function FollowButton({ label, count }: FollowButtonProps) {
                 <figcaption className="font-bold text-text-xs">user name</figcaption>
               </figure>
               {label === '팔로잉' && (
-                <Button variant="secondary" className="font-medium h-7 w-[62px] rounded-[60px]">
+                <Button
+                  variant="ghost"
+                  className="font-medium h-7 w-[62px] rounded-[60px] text-text-xs"
+                >
                   팔로잉
                 </Button>
               )}

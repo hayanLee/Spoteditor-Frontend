@@ -1,6 +1,8 @@
 import MainLayout from '@/layouts/MainLayout';
 import DetailPage from '@/pages/detail';
 import HomePage from '@/pages/home';
+import Notice from '@/pages/notice';
+import NoticeDetail from '@/pages/notice/notice-detail';
 import Profile from '@/pages/profile';
 import ProfileSetting from '@/pages/profile-setting';
 import MyLogs from '@/pages/profile/my-logs';
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
       {
         path: 'profile-setting',
         element: <ProfileSetting />,
+      },
+      {
+        path: 'notice',
+        element: <Notice />,
+      },
+      {
+        path: 'notice/:noticeId',
+        element: <NoticeDetail />,
       },
     ],
   },

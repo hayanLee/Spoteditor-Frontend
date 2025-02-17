@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import XIcon from '../Icons/XIcon';
-import { X } from 'lucide-react';
 
 const Dialog = DialogPrimitive.Root;
 

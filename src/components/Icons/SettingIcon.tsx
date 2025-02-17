@@ -11,8 +11,8 @@ function SettingIcon() {
         <path
           d="M7 9.04036C7.9665 9.04036 8.75 8.25686 8.75 7.29036C8.75 6.32387 7.9665 5.54036 7 5.54036C6.0335 5.54036 5.25 6.32387 5.25 7.29036C5.25 8.25686 6.0335 9.04036 7 9.04036Z"
           stroke="#09090B"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
       <defs>
