@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@/components/Icons/SearchIcon';
 import { useSearchStore } from '@/store/searchStore';
+import { AnimatePresence, motion } from 'motion/react';
 
 function SearchBar() {
   const nav = useNavigate();
@@ -33,10 +34,16 @@ function SearchBar() {
     toggleSearchBar();
   };
   return (
-    <>
+    <AnimatePresence>
       {isOpen ? (
         <>
-          <nav className="web:px-[50px] -z-10 py-[30px] sticky mobile:px-4 w-full flex justify-center items-center bg-black">
+          <motion.nav
+            initial={{ translateY: -200, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ translateY: -200, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="web:px-[50px] -z-10 py-[30px] fixed mobile:px-4 w-full flex justify-center items-center bg-black top-11 left-0 web:top-[61px]"
+          >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSearchSubmit)}
@@ -64,14 +71,17 @@ function SearchBar() {
                 </button>
               </form>
             </Form>
-          </nav>
-          <div
+          </motion.nav>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onCloseOverlayClick}
             className="fixed top-0 left-0 w-screen h-screen -z-20 bg-black/80"
           />
         </>
       ) : null}
-    </>
+    </AnimatePresence>
   );
 }
 

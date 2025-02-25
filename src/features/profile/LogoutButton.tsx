@@ -25,10 +25,10 @@ function LogoutButton() {
         </DialogDescription>
         <DialogClose asChild className="flex justify-end w-full">
           <div className="space-x-[15px]">
-            <Button variant="outline" className="w-[53px]">
-              닫기
+            <Button variant="outline" className="w-[80px]">
+              취소
             </Button>
-            <Button className="w-[91px]">확인</Button>
+            <Button className="w-[100px]">확인</Button>
           </div>
         </DialogClose>
       </DialogContent>

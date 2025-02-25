@@ -3,6 +3,7 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import FollowButton from './FollowButton';
+import { Link } from 'react-router-dom';
 
 function ProfileHeader() {
   return (
@@ -30,12 +31,14 @@ function ProfileHeader() {
         </h3>
         <h3>@spoteditorofficial</h3>
       </section>
-      <Button
-        variant="outline"
-        className="web:mt-[15px] p-2 mobile:mt-[10px] web:w-[60px] web:h-[28px] mobile:w-[50px] mobile:h-[24px] rounded-[60px] font-medium text-text-xs"
-      >
-        편집
-      </Button>
+      <Link to="/profile-setting">
+        <Button
+          variant="outline"
+          className="web:mt-[15px] p-2 mobile:mt-[10px] web:w-[60px] web:h-[28px] mobile:w-[50px] mobile:h-[24px] rounded-[60px] font-medium text-text-xs"
+        >
+          편집
+        </Button>
+      </Link>
     </section>
   );
 }

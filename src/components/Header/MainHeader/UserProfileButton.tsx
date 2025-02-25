@@ -55,7 +55,7 @@ function UserProfileButton() {
         </Link>
         <DropdownMenuSeparator />
         <div className="m-1">
-          <Link to="/profile-setting">
+          <Link to="">
             <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
               <SettingIcon />
               설정
