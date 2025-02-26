@@ -5,7 +5,6 @@ import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
 import { useRegisterStore } from '@/store/registerStore';
 import { CircleX } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { KakaoPlace } from './types/place.type';
 
 const SearchPage = () => {
   const navi = useNavigate();
@@ -13,7 +12,8 @@ const SearchPage = () => {
   const recentSearchPlaces = useRegisterStore((state) => state.recentSearchPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
 
-  const handleRemoveClick = (place: KakaoPlace) => removeSelectedPlace(place);
+  const handleRemoveClick = (place: kakao.maps.services.PlacesSearchResultItem) =>
+    removeSelectedPlace(place);
   return (
     <div className="h-full flex flex-col">
       <RegisterSearchBar to={REGISTER_SELECT} />
