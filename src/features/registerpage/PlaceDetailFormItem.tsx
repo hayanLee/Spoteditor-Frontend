@@ -1,10 +1,15 @@
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { KakaoPlace } from '@/pages/register/types/place.type';
 import { Camera, ChevronRight, Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
-const PlaceDetailFormItem = ({ place, idx }: { place: KakaoPlace; idx: number }) => {
+const PlaceDetailFormItem = ({
+  place,
+  idx,
+}: {
+  place: kakao.maps.services.PlacesSearchResultItem;
+  idx: number;
+}) => {
   const [isChecked, setIsChecked] = useState(false);
   const handleChecked = () => setIsChecked((prev) => !prev);
 

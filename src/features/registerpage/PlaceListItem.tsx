@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { KakaoPlace } from '@/pages/register/types/place.type';
 import { useRegisterStore } from '@/store/registerStore';
 
-const PlaceListItem = ({ place }: { place: KakaoPlace }) => {
+const PlaceListItem = ({ place }: { place: kakao.maps.services.PlacesSearchResultItem }) => {
   const addSelectedPlace = useRegisterStore((state) => state.addSelectedPlace);
 
   const { place_name, category_group_name, address_name } = place;

@@ -1,4 +1,3 @@
-import { KakaoPlace } from '@/pages/register/types/place.type';
 import { create } from 'zustand';
 
 type RegisterStoreState = {
@@ -7,15 +6,16 @@ type RegisterStoreState = {
     selectedFeelings: string[];
   };
 
-  selectedPlaces: KakaoPlace[]; // 선택한 장소
-  recentSearchPlaces: KakaoPlace[]; // 최근 검색 장소
+  selectedPlaces: kakao.maps.services.PlacesSearchResult; // 선택한 장소
+  recentSearchPlaces: kakao.maps.services.PlacesSearchResult; // 최근 검색 장소
 };
 
 type RegisterStoreActions = {
-  addSelectedPlace: (place: KakaoPlace) => void;
-  removeSelectedPlace: (place: KakaoPlace) => void;
   setCompanions: (whom: string) => void;
   setFeelings: (feeling: string) => void;
+
+  addSelectedPlace: (place: kakao.maps.services.PlacesSearchResultItem) => void;
+  removeSelectedPlace: (place: kakao.maps.services.PlacesSearchResultItem) => void;
 };
 
 type RegisterStore = RegisterStoreState & RegisterStoreActions;
