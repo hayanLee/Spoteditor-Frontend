@@ -1,20 +1,20 @@
 import { Button } from '@/components/ui/button';
-import { REGISTER_SEARCH } from '@/constants/pathname';
+import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
 import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
+import PlaceListDrawer from '@/features/registerpage/SearchPlacesDrawer';
 import { cn } from '@/lib/utils';
 import { useRegisterStore } from '@/store/registerStore';
+import { CircleX } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MapPage = () => {
   const navi = useNavigate();
-  const addSelectedPlace = useRegisterStore((state) => state.addSelectedPlace);
-  const handleSelectPlace = () => {
-    if (!selectedPlace) return;
-    addSelectedPlace(selectedPlace);
-    navi(REGISTER_SEARCH);
-  };
+  // 전역 상태
+  const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
+  const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
 
+  // 지도 관련 객체들
   const isSDKLoadedRef = useRef(false);
   const isMapLoadedRef = useRef(false);
   const mapContainerRef = useRef(null);
@@ -24,11 +24,11 @@ const MapPage = () => {
   const geoCoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
   const currentLocationRef = useRef<{ lat: number; lon: number } | null>(null);
 
-  const [address, setAddress] = useState('');
-  const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]);
-  const [places, setPlaces] = useState<kakao.maps.services.PlacesSearchResult>([]);
-  const [selectedPlace, setSelectedPlace] =
-    useState<kakao.maps.services.PlacesSearchResultItem | null>(null);
+  // 리렌더링 사용 상태
+  // const [address, setAddress] = useState('');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]); // 검색 결과 마커들
+  const [places, setPlaces] = useState<kakao.maps.services.PlacesSearchResult>([]); // 검색 결과 장소들
 
   // sdk 로드
   useEffect(() => {
@@ -49,6 +49,11 @@ const MapPage = () => {
     if (!isSDKLoadedRef.current || !isMapLoadedRef.current) return;
 
     try {
+      if (currentLocationRef.current) {
+        console.log('기존 위치 재사용');
+        return;
+      }
+
       const { lat, lon } = await getCurrentLocation(); // 현재 위치 가져오기
       currentLocationRef.current = { lat, lon };
 
@@ -61,16 +66,19 @@ const MapPage = () => {
       placeRef.current = new window.kakao.maps.services.Places();
       geoCoderRef.current = new window.kakao.maps.services.Geocoder();
 
-      if (geoCoderRef.current) {
-        geoCoderRef.current.coord2Address(lon, lat, (result, status: string) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            const address = result[0].address.address_name;
-            setAddress(address);
-          } else {
-            console.log('주소 변환 실패');
-          }
-        });
-      }
+      // if (!address) {
+      //   console.log('주소 변환 실행');
+      //   if (geoCoderRef.current) {
+      //     geoCoderRef.current.coord2Address(lon, lat, (result, status: string) => {
+      //       if (status === window.kakao.maps.services.Status.OK) {
+      //         const address = result[0].address.address_name;
+      //         setAddress(address);
+      //       } else {
+      //         console.log('주소 변환 실패');
+      //       }
+      //     });
+      //   }
+      // }
     } catch (error) {
       console.log('위치 정보 가져오기 실패');
     }
@@ -99,6 +107,7 @@ const MapPage = () => {
     if (status === window.kakao.maps.services.Status.OK) {
       setPlaces(result);
       displayPlaces(result);
+      setIsOpen(true);
     } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
       alert('검색 결과가 없습니다.');
       setPlaces([]);
@@ -143,59 +152,53 @@ const MapPage = () => {
     if (!mapRef.current || !placeRef.current) return;
     const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
     mapRef.current.setCenter(placePosition);
-    setSelectedPlace(place);
   };
 
   return (
     <div className="h-full flex flex-col">
       <RegisterSearchBar ref={inputRef} onSubmit={handleSubmit} to={REGISTER_SEARCH} />
+      {selectedPlaces.length > 0 && (
+        <div className="px-4 py-[14px] bg-primary-50 text-text-sm font-medium flex gap-3">
+          {selectedPlaces.map((place, idx) => (
+            <span className="flex items-center gap-[3px] cursor-pointer" key={idx}>
+              {place.place_name}
+              <CircleX className="p-1" onClick={() => removeSelectedPlace(place)} />
+            </span>
+          ))}
+        </div>
+      )}
       {/* 지도 담을 영역 */}
       <div ref={mapContainerRef} className="w-full h-full relative">
-        <span
+        <Button
+          variant={'outline'}
+          fullRounded
           className={cn(
-            'absolute bottom-[15px] left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-full border border-primary-100 z-20 font-medium hidden',
-            address && 'block'
+            'absolute bottom-[15px] left-1/2 transform -translate-x-1/2 z-20 !text-text-sm invisible',
+            places.length && 'visible'
           )}
+          onClick={() => setIsOpen(true)}
         >
-          {address}
-        </span>
+          목록 보기
+        </Button>
       </div>
 
       {/* 장소 리스트 */}
       {!!places.length && (
-        <div className="overflow-y-auto scrollbar-hide h-1/2">
-          <ul className="cursor-pointer">
-            {places.map((place, index) => (
-              <li
-                key={index}
-                className="py-2.5 px-4  flex justify-between items-center hover:bg-primary-50"
-                onClick={() => handlePlaceClick(place)} // 장소 클릭 시 처리
-              >
-                <div>
-                  <div className="flex items-center gap-[3px] font-medium mb-[3px]">
-                    <h4 className="text-text-sm">{place.place_name}</h4>
-                    <span className="text-text-xs text-primary-400">{place.category_name}</span>
-                  </div>
-                  <div className="flex font-medium text-text-xs items-center gap-1.5">
-                    <h5 className=" text-primary-300">도로명</h5>
-                    <p className="text-primary-400">{place.road_address_name}</p>
-                  </div>
-                  <div className="flex font-medium text-text-xs items-center gap-1.5">
-                    <h5 className=" text-primary-300">지번</h5>
-                    <p className="text-primary-400">{place.address_name}</p>
-                  </div>
-                </div>
-                <Button variant={'outline'} size={'s'} fullRounded>
-                  선택
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <PlaceListDrawer
+          places={places}
+          onPlaceClick={handlePlaceClick}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       )}
 
       <div className="pt-2 pb-6 px-4">
-        <Button className="w-full" size={'xl'} onClick={handleSelectPlace}>
+        <Button
+          className="w-full"
+          size={'xl'}
+          onClick={() => navi(REGISTER_DETAILS)}
+          disabled={!selectedPlaces.length}
+        >
           선택
         </Button>
       </div>

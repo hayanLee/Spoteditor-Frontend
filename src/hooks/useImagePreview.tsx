@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function useImagePreview(initialImageUrl: string = '') {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -15,6 +15,11 @@ function useImagePreview(initialImageUrl: string = '') {
     }
   };
 
+  const handleClearImage = () => {
+    setImageFile(null);
+    setImagePreview(initialImageUrl);
+  };
+
   //이미지 미리보기
   useEffect(() => {
     if (imageFile) {
@@ -28,7 +33,7 @@ function useImagePreview(initialImageUrl: string = '') {
     }
   }, [imageFile, initialImageUrl]);
 
-  return { imageFile, imagePreview, handleFileChange };
+  return { imageFile, imagePreview, handleFileChange, handleClearImage };
 }
 
 export default useImagePreview;

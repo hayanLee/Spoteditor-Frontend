@@ -1,6 +1,6 @@
+import PenIcon from '@/components/Icons/PenIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import PenIcon from '@/components/Icons/PenIcon';
 import useImagePreview from '@/hooks/useImagePreview';
 import { useRef } from 'react';
 
@@ -33,7 +33,7 @@ export default function ProfileSettingAvatar({ imageUrl }: ProfileSettingAvatarP
           id="imageUrl"
           ref={hiddenInputRef}
           onChange={handleFileChange}
-          className="hidden"
+          // className="hidden"
         />
       </article>
     </div>

@@ -4,12 +4,16 @@ import ArrowIcon from '@/components/Icons/ArrowIcon';
 import MainPagination from '@/components/Pagination/MainPagination';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import { REGISTER_SELECT } from '@/constants/pathname';
 import LogCard from '@/features/homepage/LogCard';
 import MainHero from '@/features/homepage/MainHero';
 
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const navi = useNavigate();
+  const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
   return (
     <>
       {/* 메인 히어로 */}
@@ -51,7 +55,10 @@ const HomePage = () => {
             </h3>
 
             <div className="flex my-[15px]">
-              <Button className="rounded-full text-text-sm text-white py-2.5 px-6 web:text-text-md web:py-3">
+              <Button
+                className="rounded-full text-text-sm text-white py-2.5 px-6 web:text-text-md web:py-3"
+                onClick={handleGotoRegisterPage}
+              >
                 나의 추천 코스 등록하기
               </Button>
               <div className="rounded-full w-10 h-10 bg-black flex justify-center items-center">
