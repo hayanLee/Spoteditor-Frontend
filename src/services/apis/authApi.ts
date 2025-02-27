@@ -38,6 +38,7 @@ class AuthClient {
             await this.instance.post('/auth/refresh');
             console.log('새로운 AccessToken 발급 완료, 요청 재시도');
 
+            originalRequest.withCredentials = true;
             return this.instance(originalRequest); // 기존 요청 재시도
           } catch (err) {
             console.error('RefreshToken도 만료 → 로그아웃 필요');
@@ -56,4 +57,4 @@ class AuthClient {
   }
 }
 
-export const currentAuth = new AuthClient(API_BASE_URL).getInstance();
+export const currentAuth = new AuthClient(`${API_BASE_URL}/api`).getInstance();

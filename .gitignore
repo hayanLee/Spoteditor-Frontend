@@ -25,3 +25,7 @@ dist-ssr
 
 # env
 .env
+
+#https file
+localhost.pem
+localhost-key.pem
