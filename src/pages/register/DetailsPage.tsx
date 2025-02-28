@@ -39,7 +39,7 @@ const DetailsPage = () => {
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('제출');
   };
