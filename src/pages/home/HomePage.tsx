@@ -17,7 +17,8 @@ const HomePage = () => {
   const { data, isLoading } = useLogList();
 
   if (isLoading) return;
-  const { content, totalPages } = data;
+  const { totalPages } = data;
+  const content = data.content ?? [];
   return (
     <>
       {/* 메인 히어로 */}
@@ -25,8 +26,8 @@ const HomePage = () => {
 
       <div className="flex flex-col px-4 web:px-[50px]">
         {/* 제목 */}
-        <div className="flex justify-between items-end mt-10 mb-6 font-untitled">
-          <div className="text-xl web:text-2xl font-semibold">
+        <div className="flex items-end justify-between mt-10 mb-6 font-untitled">
+          <div className="text-xl font-semibold web:text-2xl">
             <h3 className="text-primary-300">Sort by</h3>
             <h3 className="text-primary-950">Popularity</h3>
           </div>
@@ -36,7 +37,7 @@ const HomePage = () => {
         {/* 컨테이너 */}
         <Carousel>
           <CarouselContent className="flex">
-            {content.map((log: LogContent) => (
+            {content?.map((log: LogContent) => (
               <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={log.placeLogId}>
                 <LogCard vertical log={log} />
               </CarouselItem>
@@ -45,9 +46,9 @@ const HomePage = () => {
         </Carousel>
 
         {/* 에디터 설명 */}
-        <div className="flex flex-col web:grid web:grid-cols-2 border-primary-100 my-20 web:gap-7 justify-center">
+        <div className="flex flex-col justify-center my-20 web:grid web:grid-cols-2 border-primary-100 web:gap-7">
           <div className="py-[18px] border-t border-b flex flex-col justify-center web:py-10">
-            <h3 className="text-md font-bold web:text-xl">
+            <h3 className="font-bold text-md web:text-xl">
               모든 유저가 <br className="web:hidden" />
               특별한 "에디터"가 될 수 있어요!
             </h3>
@@ -59,7 +60,7 @@ const HomePage = () => {
               >
                 나의 추천 코스 등록하기
               </Button>
-              <div className="rounded-full w-10 h-10 bg-black flex justify-center items-center">
+              <div className="flex items-center justify-center w-10 h-10 bg-black rounded-full">
                 <ArrowIcon />
               </div>
             </div>
@@ -75,7 +76,7 @@ const HomePage = () => {
 
         {/* 로그 */}
         <div className="mb-6 font-untitled">
-          <div className="text-xl web:text-2xl font-semibold">
+          <div className="text-xl font-semibold web:text-2xl">
             <h3 className="text-primary-300">Latest</h3>
             <h3 className="text-primary-950">Log</h3>
           </div>
