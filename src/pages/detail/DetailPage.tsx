@@ -2,9 +2,18 @@ import coverImg from '@/assets/detailPage/coverImg.png';
 import { SpotIcon, SubtractIcon } from '@/components/Icons';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import PlaceItem from '@/features/detailpage/PlaceItem';
+import LogCard from '@/features/homepage/LogCard';
 import useLog from '@/hooks/queries/log/useLog';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { Bookmark, TableIcon } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 
 const DetailPage = () => {
@@ -53,19 +62,19 @@ const DetailPage = () => {
         </div>
 
         {/* 컨텐츠 */}
-        {places.map((place: PlaceInLog) => (
-          <PlaceItem place={place} key={place.placeId} />
+        {places.map((place: PlaceInLog, idx: number) => (
+          <PlaceItem place={place} key={place.placeId} idx={idx + 1} />
         ))}
       </div>
 
-      {/* <div className="fixed bottom-12 right-5 flex flex-col gap-[15px]">
+      <div className="fixed bottom-12 right-5 flex flex-col gap-[15px]">
         <button className="w-[60px] h-[60px] border border-gray-200 flex items-center justify-center rounded-full bg-white">
-          <BookMarkIcon className="w-5 h-7" strokeWidth={2.5} />
+          <Bookmark className="w-[2em] h-[2em]" />
         </button>
         <Dialog>
           <DialogTrigger>
             <button className="w-[60px] h-[60px] border border-gray-200 flex items-center justify-center rounded-full bg-white">
-              <TableIcon className="w-7 h-7" strokeWidth={2.5} />
+              <TableIcon className="w-[2em] h-[2em]" />
             </button>
           </DialogTrigger>
           <DialogContent>
@@ -74,21 +83,13 @@ const DetailPage = () => {
             </DialogHeader>
 
             <div className="grid grid-cols-3 gap-x-[5px] gap-y-5 w-full max-h-[680px] overflow-y-auto scrollbar-hide py-[18px]">
-              {[...Array(10)].map((_, idx) => (
-                <LogCard
-                  key={idx}
-                  image={mockImg}
-                  location1="서울"
-                  location2="종로구"
-                  title="친구랑 서촌 하루"
-                  vertical
-                  isModal
-                />
+              {places.map((place: PlaceInLog) => (
+                <LogCard key={place.placeId} place={place} vertical isModal />
               ))}
             </div>
           </DialogContent>
         </Dialog>
-      </div> */}
+      </div>
     </div>
   );
 };

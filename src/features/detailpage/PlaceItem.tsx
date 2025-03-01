@@ -12,7 +12,12 @@ import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { Bookmark, Clock, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
-const PlaceItem = ({ place }: { place: PlaceInLog }) => {
+interface PlaceItemProps {
+  place: PlaceInLog;
+  idx: number;
+}
+
+const PlaceItem = ({ place, idx }: PlaceItemProps) => {
   const { name, description, address } = place;
   const [isChecked, setIsChecked] = useState(false);
   const handleClick = () => setIsChecked((prev) => !prev);
@@ -22,7 +27,7 @@ const PlaceItem = ({ place }: { place: PlaceInLog }) => {
       <div className="space-y-2">
         <div className="flex justify-between text-text-lg font-bold web:text-text-2xl">
           <div>
-            <p>01</p>
+            <p>{String(idx).padStart(2, '0')}</p>
             <h4>{name}</h4>
           </div>
           <Bookmark

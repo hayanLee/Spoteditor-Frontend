@@ -1,16 +1,18 @@
-import { BookMarkIcon, SubtractIcon } from '@/components/Icons';
+import mockImg from '@/assets/mock/1.png';
+import { SubtractIcon } from '@/components/Icons';
 import { cn } from '@/lib/utils';
-import { LogContent } from '@/services/apis/types/logAPI.type';
+import { LogContent, PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { Bookmark } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-
 type LogCardProps = {
   isLarge?: boolean;
   vertical?: boolean;
   isModal?: boolean;
   log?: LogContent;
+  place?: PlaceInLog;
 };
 
-const LogCard = ({ isLarge, vertical, isModal, log }: LogCardProps) => {
+const LogCard = ({ isLarge, vertical, isModal, log, place }: LogCardProps) => {
   const navi = useNavigate();
   const handleCardClick = () => navi(`/log/${log?.placeLogId}`);
   return (
@@ -24,7 +26,7 @@ const LogCard = ({ isLarge, vertical, isModal, log }: LogCardProps) => {
       {/* 이미지 */}
       <div className={cn('relative grow')}>
         <img
-          src={log?.image.storedFile}
+          src={mockImg}
           alt="장소 이미지"
           className={cn(
             'object-cover w-full h-full aspect-[3/2] bg-blue-100',
@@ -38,17 +40,18 @@ const LogCard = ({ isLarge, vertical, isModal, log }: LogCardProps) => {
         )}
 
         {isModal && (
-          <div className="w-8 h-8 bg-white absolute top-1 right-1 p-1.5 flex items-center justify-center">
-            <BookMarkIcon />
+          <div className="w-10 h-10 bg-white absolute top-1 right-1 p-1.5 flex items-center justify-center">
+            <Bookmark className="w-[1.5em] h-[1.5em]" />
           </div>
         )}
       </div>
 
       {/* 설명 */}
       <div className="text-text-sm web:text-text-md">
-        <h5 className="font-bold">{log?.name}</h5>
+        <h5 className="font-bold">{log?.name || place?.name} </h5>
         <h6 className="text-primary-300 font-normal">
-          {log?.address.sido} | {log?.address.sigungu}
+          {log && `${log.address.sido} | ${log.address.sigungu}`}
+          {place && `${place.address.sido} | ${place.address.sigungu}`}
         </h6>
       </div>
     </div>
