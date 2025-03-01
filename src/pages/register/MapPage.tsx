@@ -2,9 +2,9 @@ import { Button } from '@/components/ui/button';
 import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
 import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
 import SearchResultDrawer from '@/features/registerpage/SearchResultDrawer';
+import SelectedPlacePreview from '@/features/registerpage/SelectedPlacePreview';
 import { cn } from '@/lib/utils';
 import { useRegisterStore } from '@/store/registerStore';
-import { CircleX } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -143,16 +143,8 @@ const MapPage = () => {
   return (
     <div className="h-full flex flex-col">
       <RegisterSearchBar ref={inputRef} onSubmit={handleSubmit} to={REGISTER_SEARCH} />
-      {selectedPlaces.length > 0 && (
-        <div className="px-4 py-[14px] bg-primary-50 text-text-sm font-medium flex gap-3">
-          {selectedPlaces.map((place, idx) => (
-            <span className="flex items-center gap-[3px] cursor-pointer" key={idx}>
-              {place.place_name}
-              <CircleX className="p-1" onClick={() => removeSelectedPlace(place)} />
-            </span>
-          ))}
-        </div>
-      )}
+      {selectedPlaces.length > 0 && <SelectedPlacePreview onRemove={removeSelectedPlace} />}
+
       {/* 지도 담을 영역 */}
       <div ref={mapContainerRef} className="w-full h-full relative">
         <Button
