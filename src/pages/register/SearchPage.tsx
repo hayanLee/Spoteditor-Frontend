@@ -19,11 +19,14 @@ const SearchPage = () => {
       <RegisterSearchBar to={REGISTER_SELECT} />
 
       {selectedPlaces.length > 0 && (
-        <div className="px-4 py-[14px] bg-primary-50 text-text-sm font-medium flex gap-3">
+        <div className="px-4 py-[14px] bg-primary-50 text-text-sm font-medium flex gap-3 overflow-x-auto min-w-0 scrollbar-hide">
           {selectedPlaces.map((place, idx) => (
-            <span className="flex items-center gap-[3px] cursor-pointer" key={idx}>
+            <span className="flex items-center gap-[3px] cursor-pointer flex-shrink-0" key={idx}>
               {place.place_name}
-              <CircleX className="p-1" onClick={() => handleRemoveClick(place)} />
+              <CircleX
+                className="p-1 fill-white stroke-primary-300"
+                onClick={() => handleRemoveClick(place)}
+              />
             </span>
           ))}
         </div>

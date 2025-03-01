@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
 import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
-import PlaceListDrawer from '@/features/registerpage/SearchPlacesDrawer';
+import SearchResultDrawer from '@/features/registerpage/SearchResultDrawer';
 import { cn } from '@/lib/utils';
 import { useRegisterStore } from '@/store/registerStore';
 import { CircleX } from 'lucide-react';
@@ -65,20 +65,6 @@ const MapPage = () => {
       mapRef.current = new window.kakao.maps.Map(mapContainerRef.current, options);
       placeRef.current = new window.kakao.maps.services.Places();
       geoCoderRef.current = new window.kakao.maps.services.Geocoder();
-
-      // if (!address) {
-      //   console.log('주소 변환 실행');
-      //   if (geoCoderRef.current) {
-      //     geoCoderRef.current.coord2Address(lon, lat, (result, status: string) => {
-      //       if (status === window.kakao.maps.services.Status.OK) {
-      //         const address = result[0].address.address_name;
-      //         setAddress(address);
-      //       } else {
-      //         console.log('주소 변환 실패');
-      //       }
-      //     });
-      //   }
-      // }
     } catch (error) {
       console.log('위치 정보 가져오기 실패');
     }
@@ -184,7 +170,7 @@ const MapPage = () => {
 
       {/* 장소 리스트 */}
       {!!places.length && (
-        <PlaceListDrawer
+        <SearchResultDrawer
           places={places}
           onPlaceClick={handlePlaceClick}
           isOpen={isOpen}
@@ -199,7 +185,7 @@ const MapPage = () => {
           onClick={() => navi(REGISTER_DETAILS)}
           disabled={!selectedPlaces.length}
         >
-          선택
+          다음
         </Button>
       </div>
     </div>
