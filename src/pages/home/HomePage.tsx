@@ -82,7 +82,7 @@ const HomePage = () => {
         </div>
 
         <div className="flex flex-col gap-y-8 web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-10">
-          {content.map((log: LogContent, idx: number) => {
+          {content?.map((log: LogContent, idx: number) => {
             const isLarge = idx === 2;
 
             return (
