@@ -4,9 +4,10 @@ import fs from 'fs';
 import { defineConfig, loadEnv, ConfigEnv } from 'vite';
 
 export default ({ mode }: ConfigEnv) => {
-  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+  const env = loadEnv(mode, process.cwd());
 
-  const isDevelop: boolean = process.env.VITE_DEVELOP === 'true';
+  const isDevelop: boolean = env.VITE_DEVELOP === 'true';
+  const isVercel: boolean = !!process.env.VERCEL; // Vercel 환경인지 확인
 
   return defineConfig({
     plugins: [react()],
@@ -16,13 +17,14 @@ export default ({ mode }: ConfigEnv) => {
         '@': path.resolve(__dirname, './src'),
       },
     },
-    server: {
-      https: isDevelop
+    server:
+      !isVercel && isDevelop
         ? {
-            key: fs.readFileSync('localhost-key.pem'),
-            cert: fs.readFileSync('localhost.pem'),
+            https: {
+              key: fs.readFileSync('localhost-key.pem'),
+              cert: fs.readFileSync('localhost.pem'),
+            },
           }
-        : undefined, // false 대신 undefined 사용하여 타입 에러 방지
-    },
+        : undefined, // Vercel에서는 HTTPS 설정 제거
   });
 };
