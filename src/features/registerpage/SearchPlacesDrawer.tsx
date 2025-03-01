@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Drawer, DrawerContent } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useRegisterStore } from '@/store/registerStore';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -15,6 +15,7 @@ const PlaceListDrawer = ({ places, onPlaceClick, isOpen, setIsOpen }: PlaceListD
   return (
     <Drawer modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <DrawerContent className="max-h-[40vh]">
+        <DrawerTitle className="hidden">검색 장소 리스트</DrawerTitle>
         <div className="overflow-y-auto scrollbar-hide">
           <ul className="cursor-pointer">
             {places.map((place, index) => (

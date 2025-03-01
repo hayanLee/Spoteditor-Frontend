@@ -2,20 +2,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import useImages from '@/hooks/useImages';
+import { PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
 import { Camera, ChevronRight, Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import ImagePreviewItem from './ImagePreviewItem';
 
 interface PlaceDetailFormItemProps {
   place: kakao.maps.services.PlacesSearchResultItem;
   idx: number;
+  setRef: (id: string, elem: HTMLTextAreaElement) => void;
+  onChangePresignUrlList: Dispatch<SetStateAction<{ [key: number]: PresignedUrlWithName[] }>>;
 }
 
-const PlaceDetailFormItem = ({ place, idx }: PlaceDetailFormItemProps) => {
+const PlaceDetailFormItem = ({
+  place,
+  idx,
+  setRef,
+  onChangePresignUrlList,
+}: PlaceDetailFormItemProps) => {
+  const { handleFileChange, handleRemoveImage, imagePreviews, presignedUrls } = useImages();
   const [isChecked, setIsChecked] = useState(false);
-  const handleChecked = () => setIsChecked((prev) => !prev);
-  const { handleFileChange, handleRemoveImage, imagePreviews } = useImages();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleChecked = () => setIsChecked((prev) => !prev);
+
+  useEffect(() => {
+    onChangePresignUrlList((prev) => ({
+      ...prev,
+      [place.place_name]: presignedUrls,
+    }));
+  }, [onChangePresignUrlList, presignedUrls, place.place_name]);
 
   return (
     <div className="py-[5px]">
@@ -51,7 +67,6 @@ const PlaceDetailFormItem = ({ place, idx }: PlaceDetailFormItemProps) => {
       </div>
 
       {/* 사진 첨부 */}
-
       <Button
         variant={'outline'}
         className="border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 mt-[15px] mb-2.5"
@@ -75,23 +90,26 @@ const PlaceDetailFormItem = ({ place, idx }: PlaceDetailFormItemProps) => {
           ))}
         </div>
       )}
-
-      {/* 파일 입력 */}
       <Input
         type="file"
         accept="image/*"
         onChange={handleFileChange}
         ref={fileInputRef}
         className="hidden"
+        multiple
       />
 
       {/* 내용 */}
       <Textarea
-        className="bg-primary-50 text-primary-300 text-text-sm placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
         placeholder="내용을 입력해주세요. (최대 500자)"
         maxLength={500}
+        ref={(el) => setRef(place.id, el!)}
+        // onClick={handleNavigateToWritePage}
+        // readOnly
       />
     </div>
   );
 };
+
 export default PlaceDetailFormItem;

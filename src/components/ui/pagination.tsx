@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import * as React from 'react';
 
-import { cn } from '@/lib/utils';
 import { ButtonProps, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -16,7 +16,7 @@ Pagination.displayName = 'Pagination';
 
 const PaginationContent = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(
   ({ className, ...props }, ref) => (
-    <ul ref={ref} className={cn('flex flex-row items-center gap-1', className)} {...props} />
+    <ul ref={ref} className={cn('flex flex-row items-center gap-3', className)} {...props} />
   )
 );
 PaginationContent.displayName = 'PaginationContent';
@@ -36,9 +36,11 @@ const PaginationLink = ({ className, isActive, size = 'm', ...props }: Paginatio
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       buttonVariants({
-        variant: isActive ? 'outline' : 'ghost',
+        variant: isActive ? 'ghost' : 'outline',
         size,
       }),
+      isActive && 'border border-primary-100',
+      '!text-text-sm px-3 py-2 border-0',
       className
     )}
     {...props}
@@ -66,10 +68,9 @@ const PaginationNext = ({ className, ...props }: React.ComponentProps<typeof Pag
   <PaginationLink
     aria-label="Go to next page"
     size="m"
-    className={cn('gap-1 pr-2.5', className)}
+    className={cn('gap-1 pr-2.5 border-primary-100 !border', className)}
     {...props}
   >
-    <span>다음</span>
     <ChevronRight className="w-4 h-4" />
   </PaginationLink>
 );
