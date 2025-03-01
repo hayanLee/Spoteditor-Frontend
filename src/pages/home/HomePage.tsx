@@ -17,8 +17,7 @@ const HomePage = () => {
   const { data, isLoading } = useLogList();
 
   if (isLoading) return;
-  const { totalPages } = data;
-  const content = data.content ?? [];
+  const { totalPages, content } = data ?? {};
   return (
     <>
       {/* 메인 히어로 */}
