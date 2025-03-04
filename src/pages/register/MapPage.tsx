@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
 import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
-import PlaceListDrawer from '@/features/registerpage/SearchPlacesDrawer';
+import SearchResultDrawer from '@/features/registerpage/SearchResultDrawer';
+import SelectedPlacePreview from '@/features/registerpage/SelectedPlacePreview';
 import { cn } from '@/lib/utils';
 import { useRegisterStore } from '@/store/registerStore';
-import { CircleX } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,11 +21,10 @@ const MapPage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const placeRef = useRef<kakao.maps.services.Places | null>(null);
-  const geoCoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
   const currentLocationRef = useRef<{ lat: number; lon: number } | null>(null);
 
   // 리렌더링 사용 상태
-  // const [address, setAddress] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]); // 검색 결과 마커들
   const [places, setPlaces] = useState<kakao.maps.services.PlacesSearchResult>([]); // 검색 결과 장소들
@@ -34,6 +33,8 @@ const MapPage = () => {
   useEffect(() => {
     if (isSDKLoadedRef.current) return;
 
+    const start = performance.now();
+
     loadKakaoMapSDK(() => {
       isSDKLoadedRef.current = true;
 
@@ -41,6 +42,10 @@ const MapPage = () => {
       window.kakao.maps.load(() => {
         isMapLoadedRef.current = true;
         initMap();
+
+        const end = performance.now();
+        const loadTime = end - start;
+        console.log(`${loadTime}ms`);
       });
     });
   }, []);
@@ -57,6 +62,7 @@ const MapPage = () => {
       const { lat, lon } = await getCurrentLocation(); // 현재 위치 가져오기
       currentLocationRef.current = { lat, lon };
 
+      console.log(currentLocationRef.current);
       const options = {
         center: new window.kakao.maps.LatLng(lat, lon), // 직접 lat, lon 사용
         level: 3,
@@ -64,21 +70,8 @@ const MapPage = () => {
 
       mapRef.current = new window.kakao.maps.Map(mapContainerRef.current, options);
       placeRef.current = new window.kakao.maps.services.Places();
-      geoCoderRef.current = new window.kakao.maps.services.Geocoder();
 
-      // if (!address) {
-      //   console.log('주소 변환 실행');
-      //   if (geoCoderRef.current) {
-      //     geoCoderRef.current.coord2Address(lon, lat, (result, status: string) => {
-      //       if (status === window.kakao.maps.services.Status.OK) {
-      //         const address = result[0].address.address_name;
-      //         setAddress(address);
-      //       } else {
-      //         console.log('주소 변환 실패');
-      //       }
-      //     });
-      //   }
-      // }
+      setIsLoading(false);
     } catch (error) {
       console.log('위치 정보 가져오기 실패');
     }
@@ -155,43 +148,43 @@ const MapPage = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <RegisterSearchBar ref={inputRef} onSubmit={handleSubmit} to={REGISTER_SEARCH} />
-      {selectedPlaces.length > 0 && (
-        <div className="px-4 py-[14px] bg-primary-50 text-text-sm font-medium flex gap-3">
-          {selectedPlaces.map((place, idx) => (
-            <span className="flex items-center gap-[3px] cursor-pointer" key={idx}>
-              {place.place_name}
-              <CircleX className="p-1" onClick={() => removeSelectedPlace(place)} />
-            </span>
-          ))}
-        </div>
+    <div
+      className={cn(
+        'h-full grid',
+        selectedPlaces.length > 0 ? 'grid-rows-[auto_auto_1fr_auto]' : 'grid-rows-[auto_1fr_auto]'
       )}
+    >
+      <RegisterSearchBar ref={inputRef} onSubmit={handleSubmit} to={REGISTER_SEARCH} />
+      {selectedPlaces.length > 0 && <SelectedPlacePreview onRemove={removeSelectedPlace} />}
       {/* 지도 담을 영역 */}
       <div ref={mapContainerRef} className="w-full h-full relative">
-        <Button
-          variant={'outline'}
-          fullRounded
-          className={cn(
-            'absolute bottom-[15px] left-1/2 transform -translate-x-1/2 z-20 !text-text-sm invisible',
-            places.length && 'visible'
-          )}
-          onClick={() => setIsOpen(true)}
-        >
-          목록 보기
-        </Button>
+        {isLoading ? (
+          <div>로딩중..</div>
+        ) : (
+          <>
+            <Button
+              variant={'outline'}
+              fullRounded
+              className={cn(
+                'absolute bottom-[15px] left-1/2 transform -translate-x-1/2 z-20 !text-text-sm invisible',
+                places.length && 'visible'
+              )}
+              onClick={() => setIsOpen(true)}
+            >
+              목록 보기
+            </Button>
+          </>
+        )}
       </div>
-
       {/* 장소 리스트 */}
       {!!places.length && (
-        <PlaceListDrawer
+        <SearchResultDrawer
           places={places}
           onPlaceClick={handlePlaceClick}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
       )}
-
       <div className="pt-2 pb-6 px-4">
         <Button
           className="w-full"
@@ -199,7 +192,7 @@ const MapPage = () => {
           onClick={() => navi(REGISTER_DETAILS)}
           disabled={!selectedPlaces.length}
         >
-          선택
+          다음
         </Button>
       </div>
     </div>
@@ -211,7 +204,7 @@ function loadKakaoMapSDK(loadedCallback: () => void) {
   const script = document.createElement('script');
   script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${
     import.meta.env.VITE_KAKAO_MAP_KEY
-  }&autoload=false&libraries=services,clusterer`;
+  }&autoload=false&libraries=services`;
   script.async = true;
   script.onload = loadedCallback;
   document.head.appendChild(script);

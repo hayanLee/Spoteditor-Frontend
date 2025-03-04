@@ -1,3 +1,5 @@
+export const HOME = '/';
+
 // register
 export const REGISTER_SELECT = '/register/select';
 export const REGISTER_SEARCH = '/register/search';

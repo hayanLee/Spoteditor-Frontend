@@ -7,14 +7,14 @@ interface PageLayoutProps {
 
 function PageLayout({ className, children }: PageLayoutProps) {
   return (
-    <div
+    <main
       className={cn(
-        'flex flex-col items-center self-stretch web:p-[60px_50px_140px_50px] mobile:p-[40px_16px_50px_16px]',
+        'flex flex-col items-center self-stretch p-[40px_16px_50px_16px] web:p-[60px_50px_140px_50px]',
         className
       )}
     >
       {children}
-    </div>
+    </main>
   );
 }
 

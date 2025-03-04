@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import LogoutConfirmButton from './LogoutConfirmButton';
 
 function LogoutButton() {
   return (
@@ -28,7 +29,7 @@ function LogoutButton() {
             <Button variant="outline" className="w-[80px]">
               취소
             </Button>
-            <Button className="w-[100px]">확인</Button>
+            <LogoutConfirmButton />
           </div>
         </DialogClose>
       </DialogContent>

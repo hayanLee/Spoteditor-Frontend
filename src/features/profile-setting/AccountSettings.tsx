@@ -9,8 +9,7 @@ export default function AccountSettings() {
         <DeleteAccountConfirmButton />
       </div>
       <p className="font-medium text-primarySlate text-text-xs">
-        계정 삭제시 등록된 로그는 삭제되지 않습니다. <br /> 로그를 삭제하시려면 개별 삭제를
-        해주세요.
+        계정 삭제시, 등록된 로그는 모두 영구삭제됩니다.
       </p>
     </section>
   );

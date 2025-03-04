@@ -18,7 +18,7 @@ function ProfileHeader() {
         <VerifiedLabelIcon className="w-[22px] h-[21px] mobile:w-[16.075px] mobile:h-[15.921px]" />
       </section>
       <section className="flex gap-[15px] py-1 text-text-2xl mobile:text-text-lg">
-        <FollowButton label="팔로워" count={321} />
+        <FollowButton label="팔로워" count={20} />
         <div className="flex items-center">
           <Separator orientation="vertical" className="h-3 bg-primarySlate" />
         </div>

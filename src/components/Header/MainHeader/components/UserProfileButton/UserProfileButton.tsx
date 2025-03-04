@@ -13,6 +13,7 @@ import LogoutButton from '@/features/profile/LogoutButton';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import MyProfileButton from './MyProfileButton';
 
 function UserProfileButton() {
   const textRef = useRef<HTMLSpanElement>(null);
@@ -46,13 +47,9 @@ function UserProfileButton() {
           </span>
           {!isTruncated && <VerifiedLabelIcon />}
         </DropdownMenuItem>
-        <Link to="/profile/12/my-logs">
-          <DropdownMenuItem className="px-4 py-5 focus:bg-white">
-            <Button className="w-full h-full rounded-[60px] bg-[#F7F7F7] hover:bg-[#F7F7F7]">
-              <span className="font-medium text-black text-text-sm">프로필 보기</span>
-            </Button>
-          </DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem className="px-4 py-5 focus:bg-white">
+          <MyProfileButton />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="m-1">
           <Link to="">

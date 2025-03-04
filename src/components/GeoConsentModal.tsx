@@ -10,33 +10,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import useGeolocationPermission from '@/hooks/useGeolocationPermission';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function GeoConsentModal() {
-  const [open, setOpen] = useState(false);
-
-  /* 추후 유저 데이터에 위치 정보를 저장할 경우 활용 */
-  //const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
-
-  /* 위치 권한 상태 확인 함수 */
-  const checkPermission = async () => {
-    if (!('permissions' in navigator)) return;
-
-    const result = await navigator.permissions.query({ name: 'geolocation' });
-
-    // "prompt(사용자가 아직 위치 권한을 허용/거부하지 않음)" 상태이면 자동으로 모달 오픈
-    if (result.state === 'prompt') {
-      setOpen(true);
-    }
-
-    // 브라우저 설정에서 권한이 변경될 때 감지(granted: 사용자가 이미 위치 권한을 허용함)
-    result.onchange = () => {
-      if (result.state === 'granted') {
-        setOpen(false); // 권한 허용 시 모달 닫기
-      }
-    };
-  };
+  const { open, setOpen } = useGeolocationPermission();
 
   /* 위치 요청 함수 (모달에서 동의 시 실행) */
   const requestLocation = () => {
@@ -52,11 +31,15 @@ export default function GeoConsentModal() {
     }
   };
 
-  // 컴포넌트 마운트 시 권한 상태 확인
-  useEffect(() => {
-    checkPermission();
-  }, []);
-
+  /* 모달 닫을 때, 현재 경로가 /register로 시작하면 홈으로 이동 */
+  const nav = useNavigate();
+  const { pathname } = useLocation();
+  const handleClose = () => {
+    setOpen(false);
+    if (pathname.startsWith('/register')) {
+      nav(-1);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogPrimitive.Overlay className="mobile:bg-white" />
@@ -65,8 +48,8 @@ export default function GeoConsentModal() {
         className="mobile:top-0 mobile:left-[50%] w-[375px] web:w-[424px] mobile:translate-x-[-50%] mobile:translate-y-0 web:p-[15px]"
       >
         <section className="flex items-center justify-end w-full p-4 web:p-0">
-          <DialogClose asChild>
-            <button>
+          <DialogClose asChild className="bg-transparent focus:outline-none focus:ring-0">
+            <button onClick={handleClose}>
               <XIcon className="w-[34px] h-[34px]" />
             </button>
           </DialogClose>
@@ -85,15 +68,11 @@ export default function GeoConsentModal() {
               동의하지 않는 경우 위치기반 서비스 이용에 제약을 받을 수 있습니다.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex flex-row items-center gap-2 py-5 web:grid web:grid-cols-2">
-            <Button
-              variant="outline"
-              className="flex-1 font-semibold"
-              onClick={() => setOpen(false)}
-            >
+          <DialogFooter className="flex flex-row items-center gap-2 py-5">
+            <Button variant="outline" className="flex-1 font-semibold" onClick={handleClose}>
               거절
             </Button>
-            <Button className="font-semibold" onClick={requestLocation}>
+            <Button className="font-semibold web:flex-1" onClick={requestLocation}>
               동의
             </Button>
           </DialogFooter>

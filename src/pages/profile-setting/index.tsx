@@ -2,8 +2,9 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import AccountSettings from '@/features/profile-setting/AccountSettings';
 import ProfileSettingAvatar from '@/features/profile-setting/ProfileSettingAvatar';
-import ProfileSettingForm from '@/features/profile-setting/ProfileSettingForm';
+import ProfileSettingForm from '@/features/profile-setting/ProfileSettingForm/ProfileSettingForm';
 import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
+import useUser from '@/hooks/useUser';
 import PageLayout from '@/layouts/PageLayout';
 import { profileSettingSchema } from '@/services/schemas/profileSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,18 +13,22 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 function ProfileSetting() {
+  const { user } = useUser('userOnly');
+  console.log('user', user);
+
   const form = useForm({
     resolver: zodResolver(profileSettingSchema),
     defaultValues: {
-      name: '',
-      imageUrl: 'https://github.com/shadcn.png' /* 추후에 유저의 데이터로 변경 */,
-      description: '',
-      instagramId: '',
+      name: user?.name ?? '',
+      imageUrl: user?.imageUrl ?? 'https://github.com/shadcn.png',
+      description: user?.description ?? '',
+      instagramId: user?.instagramId ?? '',
     },
   });
 
   const onSubmit = (data: z.infer<typeof profileSettingSchema>) => {
-    console.log(data);
+    console.log('data', data); // 데이터 조회 안 됨
+    console.log('폼 제출 완료');
   };
 
   const handleSaveClick = useCallback(() => {
@@ -36,7 +41,7 @@ function ProfileSetting() {
       <div className="w-screen web:w-[661px] flex flex-col px-4 web:px-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full">
-            <ProfileSettingAvatar imageUrl="https://github.com/shadcn.png" />
+            <ProfileSettingAvatar imageUrl={String(user?.imageUrl)} />
             <p className="mt-8 mb-4 font-bold text-text-lg web:text-text-2xl">프로필 편집</p>
             <ProfileSettingForm />
             <AccountSettings />

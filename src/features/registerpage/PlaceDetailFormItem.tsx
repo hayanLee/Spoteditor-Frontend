@@ -1,9 +1,10 @@
+import { CameraIcon } from '@/components/Icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import useImages from '@/hooks/useImages';
 import { PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
-import { Camera, ChevronRight, Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
+import { ChevronRight, Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import ImagePreviewItem from './ImagePreviewItem';
 
@@ -47,7 +48,7 @@ const PlaceDetailFormItem = ({
             )}
           </div>
           <p className="flex items-center">
-            {place.place_name} <ChevronRight />
+            {place.place_name} <ChevronRight className="w-[1.2em] h-[1.2em]" />
           </p>
         </div>
 
@@ -72,14 +73,14 @@ const PlaceDetailFormItem = ({
         className="border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 mt-[15px] mb-2.5"
         onClick={() => fileInputRef.current?.click()}
       >
-        <Camera />
+        <CameraIcon className="stroke-primary-600" />
         <span className="text-text-sm font-bold">
           사진첨부<span className="text-error-600"> * </span>(최대 3장)
         </span>
       </Button>
 
       {imagePreviews && (
-        <div className="flex overflow-x-auto">
+        <div className="flex overflow-x-auto mb-2.5">
           {imagePreviews.map((previewURL, idx) => (
             <ImagePreviewItem
               key={previewURL}
@@ -105,8 +106,6 @@ const PlaceDetailFormItem = ({
         placeholder="내용을 입력해주세요. (최대 500자)"
         maxLength={500}
         ref={(el) => setRef(place.id, el!)}
-        // onClick={handleNavigateToWritePage}
-        // readOnly
       />
     </div>
   );
