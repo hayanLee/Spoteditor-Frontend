@@ -2,7 +2,6 @@ import HeadPhoneIcon from '@/components/Icons/HeadPhoneIcon';
 import SettingIcon from '@/components/Icons/SettingIcon';
 import UserIcon from '@/components/Icons/UserIcon';
 import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
