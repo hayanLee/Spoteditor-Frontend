@@ -7,7 +7,7 @@ function Notice() {
     <div className="flex justify-center w-full">
       <div className="max-w-[724px] w-full">
         <NoticeHeader title="공지사항" />
-        <section className="flex flex-col w-full">
+        <main className="flex flex-col w-full">
           {Array.from({ length: 7 }).map((_, idx) => (
             <article
               key={idx}
@@ -20,7 +20,7 @@ function Notice() {
               <time className="text-text-xs text-primary-400">2025.03.15</time>
             </article>
           ))}
-        </section>
+        </main>
       </div>
     </div>
   );

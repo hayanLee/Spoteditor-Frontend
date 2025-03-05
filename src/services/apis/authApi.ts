@@ -30,7 +30,7 @@ class AuthClient {
       async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 403 && !originalRequest._retry) {
           originalRequest._retry = true; // 무한 루프 방지
 
           try {
@@ -52,9 +52,23 @@ class AuthClient {
     );
   }
 
-  public getInstance(): AxiosInstance {
+  getInstance(): AxiosInstance {
     return this.instance;
+  }
+
+  async logoutUser() {
+    try {
+      console.log('로그아웃 요청 시작...');
+      const res = await this.instance.post('/auth/logout');
+      console.log('로그아웃 성공');
+      return res.data;
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      return Promise.reject(error);
+    }
   }
 }
 
-export const currentAuth = new AuthClient(`${API_BASE_URL}/api`).getInstance();
+export const authClient = new AuthClient(`${API_BASE_URL}/api`);
+export const currentAuth = authClient.getInstance();
+export const logoutAuth = () => authClient.logoutUser();

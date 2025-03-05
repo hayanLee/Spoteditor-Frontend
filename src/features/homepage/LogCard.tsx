@@ -1,5 +1,4 @@
 import mockImg from '@/assets/mock/1.png';
-import { SubtractIcon } from '@/components/Icons';
 import { cn } from '@/lib/utils';
 import { LogContent, PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { Bookmark } from 'lucide-react';
@@ -7,20 +6,17 @@ import { useNavigate } from 'react-router-dom';
 type LogCardProps = {
   isLarge?: boolean;
   vertical?: boolean;
-  isModal?: boolean;
   log?: LogContent;
   place?: PlaceInLog;
+  isModal?: boolean;
 };
 
-const LogCard = ({ isLarge, vertical, isModal, log, place }: LogCardProps) => {
+const LogCard = ({ isLarge, vertical, log, place, isModal }: LogCardProps) => {
   const navi = useNavigate();
   const handleCardClick = () => navi(`/log/${log?.placeLogId}`);
   return (
     <div
-      className={cn(
-        'grid gap-1.5 h-full grid-rows-[auto_1fr]',
-        isLarge && 'web:grid-rows-[8.5fr_1fr]'
-      )}
+      className={cn('h-full gap-1.5', isLarge ? 'flex flex-col' : 'grid grid-rows-[auto_1fr]')}
       onClick={handleCardClick}
     >
       {/* 이미지 */}
@@ -28,22 +24,19 @@ const LogCard = ({ isLarge, vertical, isModal, log, place }: LogCardProps) => {
         <img
           src={mockImg}
           alt="장소 이미지"
-          className={cn(
-            'object-cover w-full h-full aspect-[3/2] bg-blue-100',
-            vertical && 'aspect-[3/4]'
-          )}
+          className={cn('object-cover w-full h-full aspect-[3/2]', vertical && 'aspect-[3/4]')}
         />
+        <div className="absolute inset-0 card-id-gradient"></div>
+        <div className="absolute inset-0 hover:bg-black/25 transition-colors"></div>
         {!isModal && (
           <span className="flex items-center gap-1 p-2.5 text-white text-text-2xs font-semibold absolute bottom-0">
-            teamluddy <SubtractIcon />
+            teamluddy
           </span>
         )}
 
-        {isModal && (
-          <div className="w-10 h-10 bg-white absolute top-1 right-1 p-1.5 flex items-center justify-center">
-            <Bookmark className="w-[1.5em] h-[1.5em]" />
-          </div>
-        )}
+        <div className={cn('bg-white absolute top-4 right-4 p-[11px]', isModal && 'top-1 right-1')}>
+          <Bookmark />
+        </div>
       </div>
 
       {/* 설명 */}

@@ -4,7 +4,7 @@ const ArrowIcon = () => {
       <path
         d="M3.58564 1.75811L9.24249 1.75811M9.24249 1.75811L9.24249 7.41497M9.24249 1.75811L0.757209 10.2434"
         stroke="white"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );

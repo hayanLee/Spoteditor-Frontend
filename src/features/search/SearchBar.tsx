@@ -42,7 +42,7 @@ function SearchBar() {
             animate={{ translateY: 0, opacity: 1 }}
             exit={{ translateY: -200, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="web:px-[50px] -z-10 py-[30px] fixed mobile:px-4 w-full flex justify-center items-center bg-black top-11 left-0 web:top-[61px]"
+            className="web:px-[50px] -z-10 py-[30px] fixed mobile:px-4 w-full flex justify-center items-center border-t-primary-900 border-t-[1px] bg-black top-11 left-0 web:top-[61px]"
           >
             <Form {...form}>
               <form

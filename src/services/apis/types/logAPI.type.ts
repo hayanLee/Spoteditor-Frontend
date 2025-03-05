@@ -20,5 +20,5 @@ export interface PlaceInLog {
   description: string;
   address: Address;
   category: string;
-  images: Image;
+  images: Image[];
 }

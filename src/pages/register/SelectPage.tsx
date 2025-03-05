@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
-import { REGISTER_SEARCH } from '@/constants/pathname';
+import { HOME, REGISTER_SEARCH } from '@/constants/pathname';
+import RegisterBar from '@/features/registerpage/RegisterBar';
 import { useRegisterStore } from '@/store/registerStore';
-import { ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const WHO = ['혼자', '친구랑', '연인과', '가족과', '동료와', '반려동물과'];
@@ -32,13 +32,11 @@ const SelectPage = () => {
   const setCompanions = useRegisterStore((state) => state.setCompanions);
   const setFeelings = useRegisterStore((state) => state.setFeelings);
 
-  const handleGoBack = () => navi(-1);
+  const handleGoBack = () => navi(HOME);
 
   return (
     <div className="h-full flex flex-col px-4">
-      <header className="pt-5">
-        <ArrowLeft size={24} className="cursor-pointer" onClick={handleGoBack} />
-      </header>
+      <RegisterBar onClick={handleGoBack} />
 
       <main className="flex flex-col items-center justify-center grow ">
         {/* 제목 */}

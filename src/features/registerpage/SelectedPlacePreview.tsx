@@ -1,5 +1,5 @@
 import { useRegisterStore } from '@/store/registerStore';
-import { CircleX } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface SelectedPlacePreviewProps {
   onRemove: (place: kakao.maps.services.PlacesSearchResultItem) => void;
@@ -13,10 +13,12 @@ const SelectedPlacePreview = ({ onRemove }: SelectedPlacePreviewProps) => {
         {selectedPlaces.map((place, idx) => (
           <span className="flex items-center gap-[3px] cursor-pointer flex-shrink-0" key={idx}>
             {place.place_name}
-            <CircleX
-              className="p-1 fill-white stroke-primary-300"
+            <div
+              className="bg-white rounded-full border border-primary-100 p-0.5"
               onClick={() => onRemove(place)}
-            />
+            >
+              <X size={12} className="stroke-2" />
+            </div>
           </span>
         ))}
       </div>

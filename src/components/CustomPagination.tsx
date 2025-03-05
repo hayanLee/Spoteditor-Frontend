@@ -12,16 +12,17 @@ import { useState } from 'react';
 interface CustomPaginationProps {
   total: number;
   current: number;
+  className?: string;
 }
 
-function CustomPagination({ total, current }: CustomPaginationProps) {
+function CustomPagination({ total, current, className = '' }: CustomPaginationProps) {
   const [pageNums] = useState([1, 2, 3]);
 
   const onPrevClick = () => {};
 
   const onNextClick = () => {};
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         {current >= 1 || current <= 3 ? (
           <PaginationItem>

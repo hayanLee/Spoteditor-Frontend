@@ -26,6 +26,24 @@ class LogAPI {
     const res = await this.#axios.get(url, { responseType: 'blob' });
     console.log(res);
   }
+
+  async deleteLog(placeLogId: number) {
+    const path = `/api/placelogs/${placeLogId}`;
+    const res = await this.#axios.delete(path);
+    console.log('로그 삭제', res);
+  }
+
+  async addBookMark(placeLogId: number) {
+    const path = `/api/placelogs/${placeLogId}/bookmark`;
+    const res = await this.#axios.post(path);
+    console.log('북마크 추가', res);
+  }
+
+  async deleteBookMark(placeLogId: number) {
+    const path = `/api/placelogs/${placeLogId}/bookmark`;
+    const res = await this.#axios.delete(path);
+    console.log('북마크 삭제', res);
+  }
 }
 
 export default LogAPI;

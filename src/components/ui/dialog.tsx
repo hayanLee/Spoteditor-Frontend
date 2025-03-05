@@ -2,7 +2,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import XIcon from '../Icons/XIcon';
+import { X } from 'lucide-react';
 
 const Dialog = DialogPrimitive.Root;
 
@@ -54,11 +54,11 @@ const DialogContent = React.forwardRef<
         {!hideCloseButton && (
           <DialogPrimitive.Close
             className={cn(
-              'absolute rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500',
-              followCloseBtnPosition ? 'top-[9px] right-[22px]' : 'top-4 right-4'
+              'absolute rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 disabled:pointer-events-none data-[state=open]:bg-neutral-100 data-[state=open]:text-neutral-500',
+              followCloseBtnPosition ? 'top-4 right-1.5' : 'top-4 right-4'
             )}
           >
-            <XIcon className="w-[34px] h-[34px]" />
+            <X className="stroke-black" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
@@ -77,10 +77,7 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 DialogHeader.displayName = 'DialogHeader';
 
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
-    {...props}
-  />
+  <div className={cn('flex flex-col-reverse', className)} {...props} />
 );
 DialogFooter.displayName = 'DialogFooter';
 

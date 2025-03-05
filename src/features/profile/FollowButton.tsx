@@ -26,10 +26,7 @@ function FollowButton({ label, count }: FollowButtonProps) {
           <span className="font-bold text-center text-[18px]">{count}</span>
         </button>
       </DialogTrigger>
-      <DialogContent
-        hideCloseButton
-        className="web:w-[348px] mobile:w-[340px] h-420 p-0 overflow-hidden"
-      >
+      <DialogContent hideCloseButton className="w-[340px] web:w-[348px] h-420 p-0 overflow-hidden">
         <DialogTitle className="grid grid-cols-3 w-full mb-2 section-heading h-[50px] px-2.5">
           <div />
           <div className="flex items-center justify-center">
@@ -44,33 +41,35 @@ function FollowButton({ label, count }: FollowButtonProps) {
             </button>
           </DialogClose>
         </DialogTitle>
-        <article className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll">
-          {Array.from({ length: count }).map((_, idx) => (
-            <article
-              key={idx}
-              className={cn(
-                'flex items-center w-full py-[6px]',
-                label === '팔로잉' ? 'justify-between' : 'justify-start'
-              )}
-            >
-              <figure className="flex items-center gap-[6px]">
-                <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <figcaption className="font-bold text-text-xs">user name</figcaption>
-              </figure>
-              {label === '팔로잉' && (
-                <Button
-                  variant="ghost"
-                  className="font-medium h-7 w-[62px] rounded-[60px] text-text-xs"
-                >
-                  팔로잉
-                </Button>
-              )}
-            </article>
-          ))}
-        </article>
+        <div className="pr-[5px] w-full">
+          <article className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll">
+            {Array.from({ length: count }).map((_, idx) => (
+              <article
+                key={idx}
+                className={cn(
+                  'flex items-center w-full py-[6px]',
+                  label === '팔로잉' ? 'justify-between' : 'justify-start'
+                )}
+              >
+                <figure className="flex items-center gap-[6px]">
+                  <Avatar>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <figcaption className="font-bold text-text-xs">user name</figcaption>
+                </figure>
+                {label === '팔로잉' && (
+                  <Button
+                    variant="ghost"
+                    className="font-medium h-7 w-[62px] rounded-[60px] text-text-xs"
+                  >
+                    팔로잉
+                  </Button>
+                )}
+              </article>
+            ))}
+          </article>
+        </div>
       </DialogContent>
     </Dialog>
   );
