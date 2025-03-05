@@ -1,4 +1,5 @@
 import GeoConsentModal from '@/components/GeoConsentModal';
+import { KakaoMapProvider } from '@/contexts/KakaoMap.context';
 import useGeolocationPermission from '@/hooks/useGeolocationPermission';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -10,7 +11,9 @@ const RegisterLayout = () => {
   return (
     <div className="flex flex-col items-center h-screen mx-auto web:w-[724px]">
       <div className="w-full h-full grow">
-        <Outlet />
+        <KakaoMapProvider>
+          <Outlet />
+        </KakaoMapProvider>
       </div>
       {isRegister && open && <GeoConsentModal />}
     </div>

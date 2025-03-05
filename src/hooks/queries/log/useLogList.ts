@@ -15,7 +15,7 @@ const useLogList = (params?: LogsQueryParams) => {
     ...params,
   };
   return useQuery({
-    queryKey: [logKeys.list(finalParams)],
+    queryKey: logKeys.list(finalParams),
     queryFn: () => api.log.getLogs(finalParams),
     placeholderData: keepPreviousData,
   });

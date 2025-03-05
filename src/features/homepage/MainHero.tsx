@@ -13,7 +13,7 @@ const categories: string[] = [
   '친구랑 다양하고 알차게 보낸 하루',
 ];
 const MainHero = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className="bg-black px-4 py-[30px] gap-9 flex flex-col web:grid web:grid-cols-2 web:gap-[30px] web:px-[50px] web:py-10 relative">

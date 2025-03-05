@@ -15,6 +15,8 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function GeoConsentModal() {
+  const nav = useNavigate();
+  const { pathname } = useLocation();
   const { open, setOpen } = useGeolocationPermission();
 
   /* 위치 요청 함수 (모달에서 동의 시 실행) */
@@ -32,16 +34,15 @@ export default function GeoConsentModal() {
   };
 
   /* 모달 닫을 때, 현재 경로가 /register로 시작하면 홈으로 이동 */
-  const nav = useNavigate();
-  const { pathname } = useLocation();
-  const handleClose = () => {
-    setOpen(false);
-    if (pathname.startsWith('/register')) {
+  const handleClose = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen && pathname.startsWith('/register')) {
       nav(-1);
     }
   };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleClose}>
+      {/* onOpenChange는 모달이 열리거나 닫힐 때 boolean 값을 자동으로 전달 */}
       <DialogPrimitive.Overlay className="mobile:bg-white" />
       <DialogContent
         hideCloseButton
@@ -49,7 +50,7 @@ export default function GeoConsentModal() {
       >
         <section className="flex items-center justify-end w-full p-4 web:p-0">
           <DialogClose asChild className="bg-transparent focus:outline-none focus:ring-0">
-            <button onClick={handleClose}>
+            <button onClick={() => handleClose(false)}>
               <XIcon className="w-[34px] h-[34px]" />
             </button>
           </DialogClose>
@@ -69,7 +70,11 @@ export default function GeoConsentModal() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row items-center gap-2 py-5">
-            <Button variant="outline" className="flex-1 font-semibold" onClick={handleClose}>
+            <Button
+              variant="outline"
+              className="flex-1 font-semibold"
+              onClick={() => handleClose(false)}
+            >
               거절
             </Button>
             <Button className="font-semibold web:flex-1" onClick={requestLocation}>

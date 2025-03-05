@@ -1,5 +1,5 @@
 import NotificationButton from '@/features/notification/NotificationButton';
-import useUser from '@/hooks/useUser';
+import useUser from '@/hooks/queries/user/useUser';
 import LoginButton from '@/components/Header/MainHeader/components/LoginButton';
 import UserProfileButton from '@/components/Header/MainHeader/components/UserProfileButton/UserProfileButton';
 

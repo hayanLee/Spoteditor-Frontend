@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
+import { useKakaoMap } from '@/contexts/KakaoMap.context';
 import RegisterSearchBar from '@/features/registerpage/RegisterSearchBar';
 import SearchResultDrawer from '@/features/registerpage/SearchResultDrawer';
 import SelectedPlacePreview from '@/features/registerpage/SelectedPlacePreview';
@@ -10,78 +11,25 @@ import { useNavigate } from 'react-router-dom';
 
 const MapPage = () => {
   const navi = useNavigate();
-  // 전역 상태
+  const { mapContainerRef, placeRef, currentLocationRef, isLoading, initMap, map } = useKakaoMap();
+
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
 
-  // 지도 관련 객체들
-  const isSDKLoadedRef = useRef(false);
-  const isMapLoadedRef = useRef(false);
-  const mapContainerRef = useRef(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const mapRef = useRef<kakao.maps.Map | null>(null);
-  const placeRef = useRef<kakao.maps.services.Places | null>(null);
-  const currentLocationRef = useRef<{ lat: number; lon: number } | null>(null);
-
-  // 리렌더링 사용 상태
-  const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]); // 검색 결과 마커들
   const [places, setPlaces] = useState<kakao.maps.services.PlacesSearchResult>([]); // 검색 결과 장소들
 
-  // sdk 로드
   useEffect(() => {
-    if (isSDKLoadedRef.current) return;
-
-    const start = performance.now();
-
-    loadKakaoMapSDK(() => {
-      isSDKLoadedRef.current = true;
-
-      // 지도 로드 되면 초기화
-      window.kakao.maps.load(() => {
-        isMapLoadedRef.current = true;
-        initMap();
-
-        const end = performance.now();
-        const loadTime = end - start;
-        console.log(`${loadTime}ms`);
-      });
-    });
+    initMap();
   }, []);
-
-  const initMap = async () => {
-    if (!isSDKLoadedRef.current || !isMapLoadedRef.current) return;
-
-    try {
-      if (currentLocationRef.current) {
-        console.log('기존 위치 재사용');
-        return;
-      }
-
-      const { lat, lon } = await getCurrentLocation(); // 현재 위치 가져오기
-      currentLocationRef.current = { lat, lon };
-
-      console.log(currentLocationRef.current);
-      const options = {
-        center: new window.kakao.maps.LatLng(lat, lon), // 직접 lat, lon 사용
-        level: 3,
-      };
-
-      mapRef.current = new window.kakao.maps.Map(mapContainerRef.current, options);
-      placeRef.current = new window.kakao.maps.services.Places();
-
-      setIsLoading(false);
-    } catch (error) {
-      console.log('위치 정보 가져오기 실패');
-    }
-  };
 
   // 검색어 입력
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!inputRef.current || !placeRef.current || !mapRef.current) return;
+    if (!inputRef.current || !placeRef.current || !map) return;
 
     removeMarker(); // 기존 검색어 마크 지우기
 
@@ -119,17 +67,17 @@ const MapPage = () => {
       return addMarker(placePosition);
     });
 
-    mapRef.current?.setBounds(bounds);
+    map?.setBounds(bounds);
     setMarkers(newMarkers);
   };
 
   const addMarker = (position: kakao.maps.LatLng) => {
     const marker = new window.kakao.maps.Marker({ position });
-    marker.setMap(mapRef.current);
+    marker.setMap(map);
 
     // 클릭 시 중앙 정렬
     window.kakao.maps.event.addListener(marker, 'click', () => {
-      mapRef.current?.setCenter(position);
+      map?.setCenter(position);
     });
 
     return marker;
@@ -142,9 +90,9 @@ const MapPage = () => {
 
   // 장소 클릭 시, 지도 중심을 클릭한 장소로 이동
   const handlePlaceClick = (place: kakao.maps.services.PlacesSearchResultItem) => {
-    if (!mapRef.current || !placeRef.current) return;
+    if (!map || !placeRef.current) return;
     const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
-    mapRef.current.setCenter(placePosition);
+    map.setCenter(placePosition);
   };
 
   return (
@@ -198,33 +146,5 @@ const MapPage = () => {
     </div>
   );
 };
-
-// sdk
-function loadKakaoMapSDK(loadedCallback: () => void) {
-  const script = document.createElement('script');
-  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${
-    import.meta.env.VITE_KAKAO_MAP_KEY
-  }&autoload=false&libraries=services`;
-  script.async = true;
-  script.onload = loadedCallback;
-  document.head.appendChild(script);
-}
-
-// geolocation
-async function getCurrentLocation(): Promise<{ lat: number; lon: number }> {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        resolve({
-          lat: pos.coords.latitude,
-          lon: pos.coords.longitude,
-        });
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-}
 
 export default MapPage;

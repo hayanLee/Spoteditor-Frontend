@@ -1,10 +1,12 @@
 import ArrowIcon from '@/components/Icons/ArrowIcon';
 import MainPagination from '@/components/Pagination/MainPagination';
+import LogCardSkeleton from '@/components/Skeleton/LogCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { REGISTER_SELECT } from '@/constants/pathname';
 import LogCard from '@/features/homepage/LogCard';
 import MainHero from '@/features/homepage/MainHero';
+import TypingText from '@/features/homepage/TypingText';
 import useLogList from '@/hooks/queries/log/useLogList';
 import { cn } from '@/lib/utils';
 import { LogContent } from '@/services/apis/types/logAPI.type';
@@ -14,10 +16,9 @@ const HomePage = () => {
   const navi = useNavigate();
   const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
 
-  const { data, isLoading } = useLogList();
-
-  if (isLoading) return;
+  const { data, isLoading, isError } = useLogList();
   const { totalPages, content } = data ?? {};
+
   return (
     <>
       {/* 메인 히어로 */}
@@ -36,21 +37,29 @@ const HomePage = () => {
         {/* 컨테이너 */}
         <Carousel>
           <CarouselContent className="flex">
-            {content?.map((log: LogContent) => (
-              <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={log.placeLogId}>
-                <LogCard vertical log={log} />
-              </CarouselItem>
-            ))}
+            {isLoading || isError
+              ? // 로딩 중
+                [...Array(4)].map((_, idx) => (
+                  <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={idx}>
+                    <LogCardSkeleton />
+                  </CarouselItem>
+                ))
+              : // 데이터 로딩 완료
+                content?.map((log: LogContent) => (
+                  <CarouselItem
+                    className="flex-none basis-1/1.5 web:basis-1/4"
+                    key={log.placeLogId}
+                  >
+                    <LogCard vertical log={log} />
+                  </CarouselItem>
+                ))}
           </CarouselContent>
         </Carousel>
 
         {/* 에디터 설명 */}
         <div className="flex flex-col justify-center my-20 web:grid web:grid-cols-2 border-primary-100 web:gap-7">
           <div className="py-[18px] border-t border-b flex flex-col justify-center web:py-10">
-            <h3 className="font-bold text-md web:text-xl">
-              모든 유저가 <br className="web:hidden" />
-              특별한 "에디터"가 될 수 있어요!
-            </h3>
+            <TypingText text='모든 유저가 특별한 "에디터"가 될 수 있어요!' />
 
             <div className="flex my-[15px]">
               <Button
@@ -81,13 +90,13 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-y-8 web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-10">
+        <div className="flex flex-col web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-10">
           {content?.map((log: LogContent, idx: number) => {
             const isLarge = idx === 2;
 
             return (
               <div key={idx} className={cn(isLarge && 'col-span-2 row-span-2')}>
-                <LogCard log={log} />
+                <LogCard log={log} isLarge={isLarge} />
               </div>
             );
           })}

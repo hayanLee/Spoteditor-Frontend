@@ -21,6 +21,7 @@ interface IUserBookmarkPlace extends IUserPlaceLog {
 }
 
 export interface IUser {
+  userId: number;
   name: string;
   instagramId: string;
   imageUrl: string;
@@ -33,7 +34,6 @@ export interface IUser {
 }
 
 export interface IUpdateUser {
-  email: string;
   name: string;
   imageUrl: string;
   description: string;
