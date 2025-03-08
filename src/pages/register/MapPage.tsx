@@ -1,3 +1,4 @@
+import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { REGISTER_DETAILS, REGISTER_SEARCH } from '@/constants/pathname';
 import { useKakaoMap } from '@/contexts/KakaoMap.context';
@@ -107,7 +108,7 @@ const MapPage = () => {
       {/* 지도 담을 영역 */}
       <div ref={mapContainerRef} className="w-full h-full relative">
         {isLoading ? (
-          <div>로딩중..</div>
+          <Loading />
         ) : (
           <>
             <Button

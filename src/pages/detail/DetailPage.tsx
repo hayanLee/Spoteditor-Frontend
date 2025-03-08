@@ -1,5 +1,3 @@
-import coverImg from '@/assets/detailPage/coverImg.png';
-// import coverImg from '@/assets/mock/1.png';
 import { SpotIcon, SubtractIcon, TableIcon } from '@/components/Icons';
 import LogCoverSkeleton from '@/components/Skeleton/LogCoverSkeleton';
 import PlaceItemSkeleton from '@/components/Skeleton/PlaceItemSkeleton';
@@ -17,29 +15,48 @@ import PlaceItem from '@/features/detailpage/PlaceItem';
 import LogCard from '@/features/homepage/LogCard';
 import useLog from '@/hooks/queries/log/useLog';
 import useResponsive from '@/hooks/useResponsive';
+import { cn } from '@/lib/utils';
+import api from '@/services/apis/api';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
-import { Bookmark } from 'lucide-react';
+import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
+import { Bookmark, Share2 } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 const DetailPage = () => {
-  const { placeLogId } = useParams();
   const navi = useNavigate();
-  const { data, isLoading } = useLog(Number(placeLogId));
+  const { placeLogId } = useParams();
+  const { data, isPending } = useLog(Number(placeLogId));
   const { isMobile } = useResponsive();
+  const [isChecked, setIsChecked] = useState(false);
+
   const name = data?.name ?? '';
   const description = data?.description ?? '';
   const places = data?.places ?? [];
+  const isDataReady = isPending || !data;
 
-  const isDataReady = isLoading || !data;
-  // const isDataReady = true;
+  const onClickLogBookMark = async () => {
+    setIsChecked((prev) => !prev);
+    await api.log.addLogBookMark(Number(placeLogId));
+    // await api.log.deleteLogBookMark(Number(placeLogId));
+    console.log('북마크 추가');
+  };
+
   return (
-    <div>
+    <>
       {/* 커버 이미지 */}
       <div className="relative w-full aspect-[3/4] web:aspect-[4/1]">
         {isDataReady ? (
           <LogCoverSkeleton />
         ) : (
           <>
-            <img src={coverImg} alt="coverImage" className="w-full h-full object-cover" />
+            <img
+              src={getImgFromCloudFront(data.image.storedFile)}
+              alt="coverImage"
+              className="w-full h-full object-cover"
+            />
+            <div className="bg-white/70 border border-primary-100 rounded-full absolute p-2.5 top-[14px] right-2.5 cursor-pointer web:top-4 web:right-4">
+              <Share2 />
+            </div>
             <div className="absolute top-0 left-0 w-full h-full bg-cover-gradient"></div>
             <div className="flex flex-col absolute bottom-0 px-4 py-6 gap-2 web:px-[50px] web:py-8">
               <h3 className="text-lg web:text-2xl font-bold text-white">{name}</h3>
@@ -92,8 +109,9 @@ const DetailPage = () => {
         <Button
           variant={'outline'}
           className="w-[45px] h-[45px] web:w-[60px] web:h-[60px] border-gray-200 rounded-full"
+          onClick={onClickLogBookMark}
         >
-          <Bookmark className="!size-6 web:!size-8" />
+          <Bookmark className={cn('!size-6 web:!size-8', isChecked && 'fill-black')} />
         </Button>
         {/* 장소 모아 보기 버튼 */}
 
@@ -129,7 +147,7 @@ const DetailPage = () => {
           </Dialog>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

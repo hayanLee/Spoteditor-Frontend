@@ -32,13 +32,11 @@ function useImagePreview(initialImageUrl: string = '') {
 
   const uploadImage = useCallback(async () => {
     if (!imageFile || !presignedUrlObj) return;
-    const formData = new FormData();
-    formData.append(imageFile?.name, imageFile);
 
     try {
-      await api.register.uploadImageWithPresignUrl(presignedUrlObj?.preSignedUrl, formData);
+      await api.register.uploadImageWithPresignUrl(presignedUrlObj?.preSignedUrl, imageFile);
     } catch (error) {
-      console.log('s3 이미지 업로드 실패');
+      console.log(error, 's3 이미지 업로드 실패');
     }
   }, [imageFile, presignedUrlObj]);
 

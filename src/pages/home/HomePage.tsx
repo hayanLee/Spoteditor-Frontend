@@ -16,9 +16,10 @@ const HomePage = () => {
   const navi = useNavigate();
   const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
 
-  const { data, isLoading, isError } = useLogList();
+  const { data, isPending, isError } = useLogList();
   const { totalPages, content } = data ?? {};
 
+  const isDataReady = isPending || !data || isError;
   return (
     <>
       {/* 메인 히어로 */}
@@ -37,7 +38,7 @@ const HomePage = () => {
         {/* 컨테이너 */}
         <Carousel>
           <CarouselContent className="flex">
-            {isLoading || isError
+            {isDataReady
               ? // 로딩 중
                 [...Array(4)].map((_, idx) => (
                   <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={idx}>

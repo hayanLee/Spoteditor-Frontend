@@ -21,28 +21,33 @@ class LogAPI {
     return res.data;
   }
 
-  async getImage(filePath: string) {
-    const url = `https://spoteditor-bucket.s3.ap-northeast-2.amazonaws.com/${filePath}`;
-    const res = await this.#axios.get(url, { responseType: 'blob' });
-    console.log(res);
-  }
-
   async deleteLog(placeLogId: number) {
     const path = `/api/placelogs/${placeLogId}`;
     const res = await this.#axios.delete(path);
     console.log('로그 삭제', res);
   }
 
-  async addBookMark(placeLogId: number) {
-    const path = `/api/placelogs/${placeLogId}/bookmark`;
-    const res = await this.#axios.post(path);
-    console.log('북마크 추가', res);
+  // 로그 북마크
+  async addLogBookMark(placeLogId: number) {
+    try {
+      const path = `/api/placelogs/${placeLogId}/bookmark`;
+      const res = await this.#axios.post(path);
+      console.log('로그 북마크 추가', res);
+      if (res.status !== 200) throw new Error('로그 북마크 실패');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  async deleteBookMark(placeLogId: number) {
-    const path = `/api/placelogs/${placeLogId}/bookmark`;
-    const res = await this.#axios.delete(path);
-    console.log('북마크 삭제', res);
+  async deleteLogBookMark(placeLogId: number) {
+    try {
+      const path = `/api/placelogs/${placeLogId}/bookmark`;
+      const res = await this.#axios.delete(path);
+      console.log('로그 북마크 삭제', res);
+      if (res.status !== 204) throw new Error('로그 북마크 삭제 실패');
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

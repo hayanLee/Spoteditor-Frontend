@@ -32,6 +32,7 @@ const LogWritePage = () => {
   const [logTitle, setLogTitle] = useState('');
   const { imagePreview, handleFileChange, handleClearImage, presignedUrlObj } = useImagePreview();
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
+  const resetSelectedPlaces = useRegisterStore((state) => state.resetSelectedPlaces);
 
   const coverUploadInputRef = useRef<HTMLInputElement>(null);
   const logDescripTextAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -49,7 +50,7 @@ const LogWritePage = () => {
     else delete textRefs.current[id];
   };
 
-  // const [sido, , bname] = selectedPlaces[0].address_name.split(' '); // 뒤로가기 옆 로그 대표 지역 이름
+  const [sido, , bname] = selectedPlaces[0].address_name.split(' '); // 뒤로가기 옆 로그 대표 지역 이름
 
   // 제출 형식에 맞춰 포맷
   const formatAddress = (place: kakao.maps.services.PlacesSearchResultItem): Address => ({
@@ -93,22 +94,22 @@ const LogWritePage = () => {
   const handlePostLog = async () => {
     const formatedLog = formatLog(selectedPlaces);
     if (!formatedLog) return;
-    console.log(formatedLog);
-    const result = await api.register.createLog(formatedLog);
-    console.log(result);
 
-    if (result) navi(`/log/${result.placeLogId}`, { replace: true });
+    const result = await api.register.createLog(formatedLog);
+    if (result) {
+      resetSelectedPlaces();
+      navi(`/log/${result.placeLogId}`, { replace: true });
+    }
   };
 
   return (
     <div className="h-full flex flex-col">
       {/* 헤더 */}
-      {/* <LogWriteBar sido={sido} bname={bname} /> */}
-      <LogWriteBar />
+      <LogWriteBar sido={sido} bname={bname} />
 
       <main className="flex flex-col items-center grow gap-3 min-h-0 overflow-y-auto scrollbar-hide">
         {/* 로그 */}
-        <div className="flex items-center w-full border-b px-4">
+        <div className="flex items-center w-full border-b px-4 relative">
           <Input
             name="logTitle"
             placeholder="제목을 입력해주세요. (최대 30자) *"

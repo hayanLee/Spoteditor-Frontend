@@ -1,6 +1,6 @@
-import mockImg from '@/assets/mock/1.png';
 import { cn } from '@/lib/utils';
 import { LogContent, PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Bookmark } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 type LogCardProps = {
@@ -22,7 +22,7 @@ const LogCard = ({ isLarge, vertical, log, place, isModal }: LogCardProps) => {
       {/* 이미지 */}
       <div className={cn('relative grow')}>
         <img
-          src={mockImg}
+          src={getImgFromCloudFront(log?.image.storedFile ?? place?.images[0].storedFile ?? '')}
           alt="장소 이미지"
           className={cn('object-cover w-full h-full aspect-[3/2]', vertical && 'aspect-[3/4]')}
         />

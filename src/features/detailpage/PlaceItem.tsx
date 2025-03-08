@@ -9,8 +9,10 @@ import {
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
+import api from '@/services/apis/api';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { Image } from '@/services/apis/types/registerAPI.type';
+import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Bookmark, Clock, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,10 +22,16 @@ interface PlaceItemProps {
 }
 
 const PlaceItem = ({ place, idx }: PlaceItemProps) => {
-  const { name, description, address, images } = place;
+  const { name, description, address, images, placeId } = place;
   const [isChecked, setIsChecked] = useState(false);
-  const handleClick = () => setIsChecked((prev) => !prev);
   const { isMobile } = useResponsive();
+
+  const onClickPlaceBookMark = async () => {
+    setIsChecked((prev) => !prev);
+
+    await api.place.addPlaceBookMark(Number(placeId));
+    // await api.place.deletePlaceBookMark(Number(placeId));
+  };
   return (
     <div className="border-t border-primary-100 pt-[15px] pb-10 web:grid web:grid-cols-[1fr_3fr] web:gap-[15px] web:py-5">
       {/* 장소 제목 */}
@@ -35,7 +43,7 @@ const PlaceItem = ({ place, idx }: PlaceItemProps) => {
           </div>
           <Bookmark
             className={cn('cursor-pointer web:!size-9', isChecked && 'fill-black')}
-            onClick={handleClick}
+            onClick={onClickPlaceBookMark}
           />
         </div>
 
@@ -64,7 +72,11 @@ const PlaceItem = ({ place, idx }: PlaceItemProps) => {
               <CarouselItem className="flex-none web:basis-1/3" key={img.imageId}>
                 <Dialog>
                   <DialogTrigger>
-                    <img src={mockImg} alt="mockImg" className="w-[245px] web:w-full" />
+                    <img
+                      src={getImgFromCloudFront(img.storedFile)}
+                      alt={img.originalFile}
+                      className="w-[245px] web:w-full aspect-[1/1.3] object-cover"
+                    />
                   </DialogTrigger>
                   <DialogContent className="bg-transparent" hideCloseButton>
                     <Carousel className="w-full">

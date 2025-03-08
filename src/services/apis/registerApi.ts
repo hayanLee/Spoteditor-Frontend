@@ -13,8 +13,13 @@ class RegisterAPI {
     return { ...res.data, originalFile: file.originalFile };
   }
 
-  async uploadImageWithPresignUrl(presignUrl: string, file: FormData) {
-    const res = await this.#axios.put(presignUrl, file);
+  async uploadImageWithPresignUrl(presignUrl: string, file: Blob) {
+    const res = await this.#axios.put(presignUrl, file, {
+      headers: {
+        'Content-Type': 'application/octet-stream',
+      },
+    });
+    console.log(res);
     return res.status;
   }
 

@@ -49,22 +49,14 @@ function useImages(initialImageUrls: string[] = []) {
 
   const uploadImages = useCallback(async () => {
     if (!imageFiles.length || !presignedUrls.length) return;
-
-    const formDataArr = imageFiles.map((imageFile, idx) => {
-      const formData = new FormData();
-      formData.append(imageFile?.name, imageFile);
-
-      return { ...formData, presignedUrl: presignedUrls[idx].preSignedUrl };
-    });
-
+    console.log(imageFiles, presignedUrls);
+    const results = imageFiles.map((img, idx) => ({ img, url: presignedUrls[idx] }));
     try {
-      await Promise.all(
-        formDataArr.map((formData) =>
-          api.register.uploadImageWithPresignUrl(formData.presignedUrl, formData)
-        )
+      await results.forEach((result) =>
+        api.register.uploadImageWithPresignUrl(result.url.preSignedUrl, result.img)
       );
-    } catch (err) {
-      console.log('s3 이미지 업로드 실패');
+    } catch (error) {
+      console.log(error, 's3 이미지 업로드 실패');
     }
   }, [imageFiles, presignedUrls]);
 

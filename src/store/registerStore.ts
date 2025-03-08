@@ -16,6 +16,7 @@ type RegisterStoreActions = {
 
   addSelectedPlace: (place: kakao.maps.services.PlacesSearchResultItem) => void;
   removeSelectedPlace: (place: kakao.maps.services.PlacesSearchResultItem) => void;
+  resetSelectedPlaces: () => void;
 };
 
 type RegisterStore = RegisterStoreState & RegisterStoreActions;
@@ -63,4 +64,5 @@ export const useRegisterStore = create<RegisterStore>()((set) => ({
     set((state) => ({
       selectedPlaces: state.selectedPlaces.filter((item) => item.id !== place.id),
     })),
+  resetSelectedPlaces: () => set(() => ({ selectedPlaces: [] })),
 }));

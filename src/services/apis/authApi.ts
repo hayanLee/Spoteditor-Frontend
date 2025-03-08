@@ -4,6 +4,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 class AuthClient {
   private instance: AxiosInstance;
+  private lastRefreshAttempt: number = 0; // 마지막 Refresh 요청 시각 저장
+  private refreshFailed: boolean = false; // RefreshToken 만료 후 재요청 방지
 
   constructor(baseURL: string) {
     this.instance = axios.create({
@@ -29,9 +31,23 @@ class AuthClient {
       (response: AxiosResponse) => response,
       async (error) => {
         const originalRequest = error.config;
+        const now = Date.now();
 
+        // 1분 내에 RefreshToken 재요청 금지
+        if (this.refreshFailed) {
+          console.warn('🚨 RefreshToken이 만료됨 → 추가 요청 차단');
+          return Promise.reject(error);
+        }
+
+        // 403 응답 시 1분 내 재요청 방지
         if (error.response?.status === 403 && !originalRequest._retry) {
-          originalRequest._retry = true; // 무한 루프 방지
+          if (now - this.lastRefreshAttempt < 60000) {
+            console.warn('⏳ 1분 이내에 RefreshToken 요청이 실행됨. 중복 요청 방지.');
+            return Promise.reject(error);
+          }
+
+          originalRequest._retry = true;
+          this.lastRefreshAttempt = now; // 마지막 시도 시간 기록
 
           try {
             console.log('AccessToken 만료 → RefreshToken으로 재발급 요청');
@@ -42,7 +58,7 @@ class AuthClient {
             return this.instance(originalRequest); // 기존 요청 재시도
           } catch (err) {
             console.error('RefreshToken도 만료 → 로그아웃 필요');
-            window.location.href = '/';
+            this.refreshFailed = true; // RefreshToken 만료 상태 설정 (1분 동안 재시도 안 함)
             return Promise.reject(err);
           }
         }
