@@ -1,12 +1,12 @@
 import mockImg3 from '@/assets/mock/3.png';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import CustomPagination from '@/components/CustomPagination';
 import PageLayout from '@/layouts/PageLayout';
 import LogCard from '@/features/homepage/LogCard';
 import { cn } from '@/lib/utils';
 import SectionHeader from '@/components/Header/SectionHeader';
 import SearchTitleHeader from '@/features/search/SearchTitleHeader';
+import CustomPagination from '@/components/CustomPagination';
 
 function Search() {
   const location = useLocation();
@@ -47,7 +47,7 @@ function Search() {
             );
           })}
         </div>
-        <CustomPagination className="mt-[50px]" current={2} total={12} />
+        <CustomPagination currentPage={1} totalPages={2} />
       </section>
     </PageLayout>
   );

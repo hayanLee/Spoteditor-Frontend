@@ -13,7 +13,7 @@ const ImagePreviewItem = ({ idx, imagePreview, onRemoveImage }: ImagePreviewItem
       <Input
         type="image"
         src={imagePreview}
-        alt="커버 이미지"
+        alt="장소 이미지"
         className="h-[300px] object-cover p-0 "
       />
       <CircleX

@@ -1,5 +1,6 @@
 import { currentAuth } from '@/services/apis/authApi';
-import { IUpdateUser, IUser } from '@/services/apis/types/userAPI.type';
+import { IOhterUser, IUpdateUser, IUser } from '@/services/apis/types/userAPI';
+import { AxiosInstance } from 'axios';
 
 class User {
   private authApi = currentAuth;
@@ -22,3 +23,15 @@ class User {
 }
 
 export const authUserApi = new User();
+
+export class OtherUser {
+  private axios;
+  constructor(axios: AxiosInstance) {
+    this.axios = axios;
+  }
+
+  async getOtherUser(userId: number): Promise<IOhterUser> {
+    const response = await this.axios.get(`/api/users/${userId}`);
+    return response.data;
+  }
+}

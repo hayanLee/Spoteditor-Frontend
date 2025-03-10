@@ -5,7 +5,7 @@ import ProfileSettingAvatar from '@/features/profile-setting/ProfileSettingAvata
 import ProfileSettingForm from '@/features/profile-setting/ProfileSettingForm/ProfileSettingForm';
 import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
 import useUnsavedChangesWarning from '@/hooks/form/useUnsavedChangesWarning';
-import { useUpdateUser } from '@/hooks/mutations/user/useUpdateUser';
+import useUpdateUser from '@/hooks/mutations/user/useUpdateUser';
 import useUser from '@/hooks/queries/user/useUser';
 import PageLayout from '@/layouts/PageLayout';
 import { profileSettingSchema } from '@/services/schemas/profileSchema';

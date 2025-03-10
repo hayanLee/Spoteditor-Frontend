@@ -1,9 +1,9 @@
-import { IUpdateUser } from '@/services/apis/types/userAPI.type';
+import { IUpdateUser } from '@/services/apis/types/userAPI';
 import { authUserApi } from '@/services/apis/userApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userKeys } from '@/hooks/queries/user/userQueryKeys';
 
-export function useUpdateUser() {
+export default function useUpdateUser() {
   const queryClient = useQueryClient();
 
   return useMutation({

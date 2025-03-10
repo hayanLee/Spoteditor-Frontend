@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_KAKAO_LOGIN_URL: string;
   readonly VITE_KAKAO_MAP_KEY: string;
   readonly VITE_DEVELOP?: string;
+  readonly VITE_CLOUDE_FRONT: string;
 }
 
 interface ImportMeta {

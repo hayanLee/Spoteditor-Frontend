@@ -1,32 +1,12 @@
 import api from '@/services/apis/api';
 import { PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
+import { filterNewFiles, getPresignedUrls } from '@/utils/imageUtils';
 import { useCallback, useEffect, useState } from 'react';
 
 function useImages(initialImageUrls: string[] = []) {
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>(initialImageUrls);
   const [presignedUrls, setPresignedUrls] = useState<PresignedUrlWithName[]>([]);
-
-  const filterNewFiles = (files: File[], imageFiles: File[]) => {
-    return files.filter(
-      (file) =>
-        !imageFiles.some(
-          (item) => item.name === file.name && item.lastModified === file.lastModified
-        )
-    );
-  };
-
-  const getPresignedUrls = async (files: File[]) => {
-    try {
-      const presignedUrls = await Promise.all(
-        files.map((file) => api.register.getPresignUrl({ originalFile: file.name }))
-      );
-      return presignedUrls;
-    } catch (error) {
-      console.log('Presigned URL 가져오기 실패:', error);
-      return [];
-    }
-  };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -71,7 +51,7 @@ function useImages(initialImageUrls: string[] = []) {
     }
   }, [imageFiles, uploadImages]);
 
-  return { imageFiles, imagePreviews, handleFileChange, handleRemoveImage, presignedUrls };
+  return { imagePreviews, handleFileChange, handleRemoveImage, presignedUrls };
 }
 
 export default useImages;

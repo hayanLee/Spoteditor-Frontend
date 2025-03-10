@@ -1,37 +1,32 @@
-import mockImg from '@/assets/mock/3.png';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/components/ui/carousel';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import ImageDialog from '@/components/Dialog/ImageDialog';
+import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
+import usePlaceBookMarkMutation from '@/hooks/mutations/log/usePlaceBookMarkMutation';
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
-import api from '@/services/apis/api';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { Image } from '@/services/apis/types/registerAPI.type';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Bookmark, Clock, MapPin } from 'lucide-react';
-import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 interface PlaceItemProps {
   place: PlaceInLog;
   idx: number;
+  isBookMark: boolean;
 }
 
-const PlaceItem = ({ place, idx }: PlaceItemProps) => {
+const PlaceItem = ({ place, idx, isBookMark }: PlaceItemProps) => {
+  const { placeLogId } = useParams();
   const { name, description, address, images, placeId } = place;
-  const [isChecked, setIsChecked] = useState(false);
   const { isMobile } = useResponsive();
+  const { mutate } = usePlaceBookMarkMutation({
+    isBookMark,
+    placeId,
+    placeLogId: Number(placeLogId),
+  });
 
-  const onClickPlaceBookMark = async () => {
-    setIsChecked((prev) => !prev);
+  const onClickPlaceBookMark = () => mutate();
 
-    await api.place.addPlaceBookMark(Number(placeId));
-    // await api.place.deletePlaceBookMark(Number(placeId));
-  };
   return (
     <div className="border-t border-primary-100 pt-[15px] pb-10 web:grid web:grid-cols-[1fr_3fr] web:gap-[15px] web:py-5">
       {/* 장소 제목 */}
@@ -42,7 +37,7 @@ const PlaceItem = ({ place, idx }: PlaceItemProps) => {
             <h4>{name}</h4>
           </div>
           <Bookmark
-            className={cn('cursor-pointer web:!size-9', isChecked && 'fill-black')}
+            className={cn('cursor-pointer web:!size-9', isBookMark && 'fill-black')}
             onClick={onClickPlaceBookMark}
           />
         </div>
@@ -70,30 +65,11 @@ const PlaceItem = ({ place, idx }: PlaceItemProps) => {
           <CarouselContent>
             {images.map((img: Image) => (
               <CarouselItem className="flex-none web:basis-1/3" key={img.imageId}>
-                <Dialog>
-                  <DialogTrigger>
-                    <img
-                      src={getImgFromCloudFront(img.storedFile)}
-                      alt={img.originalFile}
-                      className="w-[245px] web:w-full aspect-[1/1.3] object-cover"
-                    />
-                  </DialogTrigger>
-                  <DialogContent className="bg-transparent" hideCloseButton>
-                    <Carousel className="w-full">
-                      <CarouselContent>
-                        {Array.from({ length: 5 }).map((_, index) => (
-                          <CarouselItem key={index}>
-                            <img src={mockImg} alt="mockImg" />
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-
-                      {/* 좌우 버튼 */}
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-                  </DialogContent>
-                </Dialog>
+                <ImageDialog
+                  images={images}
+                  triggerImg={getImgFromCloudFront(img.storedFile)}
+                  triggerAlt={img.originalFile}
+                />
               </CarouselItem>
             ))}
           </CarouselContent>

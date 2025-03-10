@@ -1,31 +1,37 @@
-import { CameraIcon } from '@/components/Icons';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import useImages from '@/hooks/useImages';
 import { PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
 import { ChevronRight, Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import ImagePreviewItem from './ImagePreviewItem';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import PlaceImagesInput from './PlaceImagesInput';
 
 interface PlaceDetailFormItemProps {
   place: kakao.maps.services.PlacesSearchResultItem;
   idx: number;
-  setRef: (id: string, elem: HTMLTextAreaElement) => void;
+  registerTextRef: (id: string, elem: HTMLTextAreaElement) => void;
   onChangePresignUrlList: Dispatch<SetStateAction<{ [key: number]: PresignedUrlWithName[] }>>;
+  setModifyTarget?: Dispatch<SetStateAction<kakao.maps.services.PlacesSearchResultItem | null>>;
 }
 
 const PlaceDetailFormItem = ({
   place,
   idx,
-  setRef,
+  registerTextRef,
   onChangePresignUrlList,
+  setModifyTarget,
 }: PlaceDetailFormItemProps) => {
-  const { handleFileChange, handleRemoveImage, imagePreviews, presignedUrls } = useImages();
   const [isChecked, setIsChecked] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleChecked = () => {
+    if (!setModifyTarget) return;
+    setIsChecked((prev) => {
+      const newChcked = !prev;
+      if (newChcked) setModifyTarget(place);
+      else setModifyTarget(null);
+      return newChcked;
+    });
+  };
 
-  const handleChecked = () => setIsChecked((prev) => !prev);
+  const { handleFileChange, handleRemoveImage, imagePreviews, presignedUrls } = useImages();
 
   useEffect(() => {
     onChangePresignUrlList((prev) => ({
@@ -37,7 +43,7 @@ const PlaceDetailFormItem = ({
   return (
     <div className="py-[5px]">
       {/* 장소 설명 */}
-      <div className="flex flex-col gap-2">
+      <section className="flex flex-col gap-2">
         <div className="text-text-lg font-bold">
           <div className="flex justify-between">
             <p>{String(idx).padStart(2, '0')}</p>
@@ -65,39 +71,13 @@ const PlaceDetailFormItem = ({
             <p>{place.road_address_name}</p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* 사진 첨부 */}
-      <Button
-        variant={'outline'}
-        className="border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 mt-[15px] mb-2.5"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <CameraIcon className="stroke-primary-600" />
-        <span className="text-text-sm font-bold">
-          사진첨부<span className="text-error-600"> * </span>(최대 3장)
-        </span>
-      </Button>
-
-      {imagePreviews && (
-        <div className="flex overflow-x-auto mb-2.5">
-          {imagePreviews.map((previewURL, idx) => (
-            <ImagePreviewItem
-              key={previewURL}
-              idx={idx}
-              imagePreview={previewURL}
-              onRemoveImage={handleRemoveImage}
-            />
-          ))}
-        </div>
-      )}
-      <Input
-        type="file"
-        accept="image/*"
-        onChange={handleFileChange}
-        ref={fileInputRef}
-        className="hidden"
-        multiple
+      <PlaceImagesInput
+        handleFileChange={handleFileChange}
+        handleRemoveImage={handleRemoveImage}
+        imagePreviews={imagePreviews}
       />
 
       {/* 내용 */}
@@ -105,7 +85,7 @@ const PlaceDetailFormItem = ({
         className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
         placeholder="내용을 입력해주세요. (최대 500자)"
         maxLength={500}
-        ref={(el) => setRef(place.id, el!)}
+        ref={(el) => registerTextRef(place.id, el!)}
       />
     </div>
   );

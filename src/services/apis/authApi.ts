@@ -77,6 +77,11 @@ class AuthClient {
       console.log('로그아웃 요청 시작...');
       const res = await this.instance.post('/auth/logout');
       console.log('로그아웃 성공');
+
+      //로그아웃 시 RefreshToken 관련 상태 초기화
+      this.refreshFailed = false;
+      this.lastRefreshAttempt = 0;
+
       return res.data;
     } catch (error) {
       console.error('로그아웃 실패:', error);

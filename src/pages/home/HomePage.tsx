@@ -10,6 +10,7 @@ import TypingText from '@/features/homepage/TypingText';
 import useLogList from '@/hooks/queries/log/useLogList';
 import { cn } from '@/lib/utils';
 import { LogContent } from '@/services/apis/types/logAPI.type';
+import Autoplay from 'embla-carousel-autoplay';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
@@ -20,6 +21,7 @@ const HomePage = () => {
   const { totalPages, content } = data ?? {};
 
   const isDataReady = isPending || !data || isError;
+
   return (
     <>
       {/* 메인 히어로 */}
@@ -32,11 +34,16 @@ const HomePage = () => {
             <h3 className="text-primary-300">Sort by</h3>
             <h3 className="text-primary-950">Popularity</h3>
           </div>
-          <div className="hidden web:block">--------</div>
         </div>
 
         {/* 컨테이너 */}
-        <Carousel>
+        <Carousel
+          plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}
+          opts={{
+            align: 'start',
+            slidesToScroll: 4,
+          }}
+        >
           <CarouselContent className="flex">
             {isDataReady
               ? // 로딩 중

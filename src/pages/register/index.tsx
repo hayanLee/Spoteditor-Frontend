@@ -1,3 +1,4 @@
+export { default as EditPage } from './EditPage';
 export { default as LogWritePage } from './LogWritePage';
 export { default as MapPage } from './MapPage';
 export { default as NewPlacePage } from './NewPlacePage';

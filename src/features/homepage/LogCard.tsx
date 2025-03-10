@@ -1,3 +1,4 @@
+import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { LogContent, PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
@@ -13,18 +14,25 @@ type LogCardProps = {
 
 const LogCard = ({ isLarge, vertical, log, place, isModal }: LogCardProps) => {
   const navi = useNavigate();
-  const handleCardClick = () => navi(`/log/${log?.placeLogId}`);
+  const handleCardClick = () => {
+    if (!isModal) navi(`/log/${log?.placeLogId}`);
+  };
+  const { isMobile } = useResponsive();
   return (
     <div
       className={cn('h-full gap-1.5', isLarge ? 'flex flex-col' : 'grid grid-rows-[auto_1fr]')}
       onClick={handleCardClick}
     >
       {/* 이미지 */}
-      <div className={cn('relative grow')}>
+      <div className={cn('relative grow group cursor-pointer')}>
         <img
           src={getImgFromCloudFront(log?.image.storedFile ?? place?.images[0].storedFile ?? '')}
           alt="장소 이미지"
-          className={cn('object-cover w-full h-full aspect-[3/2]', vertical && 'aspect-[3/4]')}
+          className={cn(
+            'object-cover w-full aspect-[3/2]',
+            vertical && 'aspect-[3/4]',
+            vertical && isMobile && 'max-w-xs mx-auto'
+          )}
         />
         <div className="absolute inset-0 card-id-gradient"></div>
         <div className="absolute inset-0 hover:bg-black/25 transition-colors"></div>
@@ -34,8 +42,13 @@ const LogCard = ({ isLarge, vertical, log, place, isModal }: LogCardProps) => {
           </span>
         )}
 
-        <div className={cn('bg-white absolute top-4 right-4 p-[11px]', isModal && 'top-1 right-1')}>
-          <Bookmark />
+        <div
+          className={cn(
+            'bg-white absolute top-4 right-4 p-[11px] opacity-0 group-hover:opacity-100 group/bookmark',
+            isModal && 'top-1 right-1'
+          )}
+        >
+          <Bookmark className="group-hover/bookmark:stroke-primary-400" />
         </div>
       </div>
 

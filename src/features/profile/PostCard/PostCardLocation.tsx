@@ -1,19 +1,19 @@
 import { Separator } from '@/components/ui/separator';
 
 interface PostCardLocationProps {
-  location: string;
-  detail: string;
-  className?: string;
+  sido: string;
+  bname: string;
+  sigungu: string;
 }
 
-function PostCardLocation({ location, detail }: PostCardLocationProps) {
+function PostCardLocation({ sido, bname, sigungu }: PostCardLocationProps) {
   return (
-    <h4 className="flex items-center text-primarySlate">
-      <span>{location}</span>
+    <h4 className="flex items-center text-text-sm text-primarySlate web:text-text-md">
+      <span>{sido}</span>
       <div className="mx-2">
         <Separator orientation="vertical" className="h-3 bg-primarySlate" />
       </div>
-      <span>{detail}</span>
+      <span>{`${bname} ${sigungu}`}</span>
     </h4>
   );
 }

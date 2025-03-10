@@ -1,8 +1,14 @@
 import loadingAnimation from '@/assets/loadingAnimation.json';
+import { cn } from '@/lib/utils';
 import Lottie from 'lottie-react';
-const Loading = () => {
+
+interface LoadingProps {
+  className?: string;
+}
+
+const Loading = ({ className }: LoadingProps) => {
   return (
-    <div className="flex items-center justify-center h-full">
+    <div className={cn('flex items-center justify-center h-full', className)}>
       <Lottie animationData={loadingAnimation} loop={true} />
     </div>
   );

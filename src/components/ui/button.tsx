@@ -24,7 +24,7 @@ const buttonVariants = cva(
         l: 'h-[42px] px-4 py-[11px] text-text-sm',
         m: 'h-9 px-4 py-2 text-text-sm',
         sm: 'h-[42px] px-5 py-[14px]  text-[13px] font-semibold leading-[13.65px] tracking-[-0.097px]',
-        s: 'h-7 px-[15px] py-1 text-text-xs',
+        s: 'h-7 px-[15px] py-2 text-text-xs',
         xs: 'h-6 px-2 py-[2px] text-text-xs',
       },
     },

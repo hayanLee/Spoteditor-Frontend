@@ -8,7 +8,7 @@ type UserState = 'userOnly' | 'nonUserOnly';
 
 export default function useUser(userState?: UserState) {
   const { data, error } = useQuery({
-    queryKey: userKeys.all,
+    queryKey: userKeys.me(),
     queryFn: () => authUserApi.getUser(),
     staleTime: Infinity,
   });

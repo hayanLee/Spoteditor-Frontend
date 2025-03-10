@@ -2,6 +2,7 @@ import MainLayout from '@/layouts/MainLayout';
 import RegisterLayout from '@/layouts/RegisterLayout';
 import DetailPage from '@/pages/detail/DetailPage';
 import PlacesCollectionPage from '@/pages/detail/PlacesCollectionPage';
+import NotFoundPage from '@/pages/Error/NotFoundPage';
 import HomePage from '@/pages/home/HomePage';
 import Notice from '@/pages/notice';
 import NoticeDetail from '@/pages/notice/notice-detail';
@@ -10,7 +11,14 @@ import ProfileSetting from '@/pages/profile-setting';
 import MyLogs from '@/pages/profile/my-logs';
 import SavedLogs from '@/pages/profile/saved-logs';
 import SavedSpaces from '@/pages/profile/saved-spaces';
-import { MapPage, NewPlacePage, SearchPage, SelectPage, WritePage } from '@/pages/register';
+import {
+  EditPage,
+  MapPage,
+  NewPlacePage,
+  SearchPage,
+  SelectPage,
+  WritePage,
+} from '@/pages/register';
 import LogWritePage from '@/pages/register/LogWritePage';
 import Search from '@/pages/search';
 import { createBrowserRouter } from 'react-router-dom';
@@ -52,6 +60,7 @@ const router = createBrowserRouter([
         path: 'notice/:noticeId',
         element: <NoticeDetail />,
       },
+      { path: '/*', element: <NotFoundPage /> },
     ],
   },
   {
@@ -63,6 +72,7 @@ const router = createBrowserRouter([
       { path: '/register/maps', element: <MapPage /> },
       { path: '/register/newPlace', element: <NewPlacePage /> },
       { path: '/write', element: <WritePage /> },
+      { path: '/register/edit/:placeLogId', element: <EditPage /> },
     ],
   },
   { path: '/log/:placeLogId/placesCollection', element: <PlacesCollectionPage /> },

@@ -39,7 +39,7 @@ const PaginationLink = ({ className, isActive, size = 'm', ...props }: Paginatio
         variant: isActive ? 'ghost' : 'outline',
         size,
       }),
-      isActive && 'border border-primary-100',
+      isActive && '!border border-primary-100',
       '!text-text-sm px-3 py-2 border-0',
       className
     )}
@@ -55,11 +55,10 @@ const PaginationPrevious = ({
   <PaginationLink
     aria-label="Go to previous page"
     size="m"
-    className={cn('gap-1 pl-2.5', className)}
+    className={cn('gap-1 pl-2.5 border-primary-100 !border', className)}
     {...props}
   >
     <ChevronLeft className="w-4 h-4" />
-    <span>Previous</span>
   </PaginationLink>
 );
 PaginationPrevious.displayName = 'PaginationPrevious';
@@ -79,7 +78,7 @@ PaginationNext.displayName = 'PaginationNext';
 const PaginationEllipsis = ({ className, ...props }: React.ComponentProps<'span'>) => (
   <span
     aria-hidden
-    className={cn('flex h-9 w-9 items-center justify-center', className)}
+    className={cn('flex h-9 w-9 items-end justify-center pb-1', className)}
     {...props}
   >
     <MoreHorizontal className="w-4 h-4" />

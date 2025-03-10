@@ -1,4 +1,5 @@
 import { AxiosInstance } from 'axios';
+import { PlaceBookMark } from './types/placeAPI.type';
 
 class PlaceAPI {
   #axios;
@@ -11,7 +12,7 @@ class PlaceAPI {
       const path = `/api/bookmark`;
       const res = await this.#axios.post(path, { placeId });
       console.log('장소 북마크 추가', res);
-      // if (res.status !== 201) throw new Error('장소 북마크 실패');
+      if (res.status !== 201) throw new Error('장소 북마크 실패');
     } catch (error) {
       console.log(error);
     }
@@ -22,9 +23,20 @@ class PlaceAPI {
       const path = `/api/bookmark`;
       const res = await this.#axios.delete(path, { data: { placeId } });
       console.log('장소 북마크 삭제', res);
-      // if (res.status !== 204) throw new Error('장소 북마크 삭제 실패');
+      if (res.status !== 204) throw new Error('장소 북마크 삭제 실패');
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async getPlaceBookMark(placeLogId: number): Promise<PlaceBookMark[]> {
+    try {
+      const path = `/api/placelogs/${placeLogId}/bookmark`;
+      const res = await this.#axios.get(path);
+      return res.data as PlaceBookMark[];
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
 }

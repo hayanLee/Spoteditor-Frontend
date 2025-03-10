@@ -28,9 +28,10 @@ export interface IUser {
   description: string;
   follower: number;
   following: number;
-  userPlaceLogDtoList: IUserPlaceLog[];
-  userBookmarkPlaceLogDtoList: IUserPlaceLog[];
-  userBookmarkPlaceDtoList: IUserBookmarkPlace[];
+}
+
+export interface IOhterUser extends IUser {
+  isFollowing: boolean;
 }
 
 export interface IUpdateUser {

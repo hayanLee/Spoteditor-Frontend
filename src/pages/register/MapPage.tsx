@@ -12,7 +12,8 @@ import { useNavigate } from 'react-router-dom';
 
 const MapPage = () => {
   const navi = useNavigate();
-  const { mapContainerRef, placeRef, currentLocationRef, isLoading, initMap, map } = useKakaoMap();
+  const { mapContainerRef, place, currentLocation, geocoder, isLoading, initMap, map } =
+    useKakaoMap();
 
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
@@ -26,22 +27,75 @@ const MapPage = () => {
     initMap();
   }, []);
 
-  // 검색어 입력
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  /* '지역 + 키워드'로 파싱 */
+  const parseQuery = (query: string) => {
+    const queryParts = query.split(' ');
+    console.log(queryParts);
+    if (queryParts.length === 2) {
+      const region = queryParts[0];
+      const keyword = queryParts.slice(1).join('');
+      return { region, keyword };
+    } else {
+      const keyword = queryParts[0];
+      return { keyword };
+    }
+  };
+
+  const getRegionLocation = (region: string): Promise<{ lat: number; lon: number }> => {
+    return new Promise((resolve, reject) => {
+      geocoder?.addressSearch(region, (result, status) => {
+        if (status === 'OK') {
+          const { x, y } = result[0];
+          resolve({ lat: Number(y), lon: Number(x) });
+        } else {
+          reject('주소 변환 실패');
+        }
+      });
+    });
+  };
+
+  /* 검색어 입력 */
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!inputRef.current || !placeRef.current || !map) return;
+    if (!inputRef.current || !place || !map) return;
 
     removeMarker(); // 기존 검색어 마크 지우기
 
-    const query = inputRef.current.value;
-    placeRef.current.keywordSearch(query, searchByKeyword, {
-      location: new window.kakao.maps.LatLng(
-        currentLocationRef.current?.lat,
-        currentLocationRef.current?.lon
-      ),
-      radius: 2000,
-    });
+    const query = inputRef.current.value.trim();
+    if (!query) return;
+
+    const { region, keyword } = parseQuery(query);
+    if (!keyword) {
+      alert('검색어를 입력해주세요');
+      return;
+    }
+
+    let location: {
+      lat: number;
+      lon: number;
+    };
+
+    try {
+      if (region) {
+        location = await getRegionLocation(region);
+      } else {
+        // console.log(currentLocation);
+        location = {
+          lat: currentLocation?.lat || 37.5665,
+          lon: currentLocation?.lon || 126.978,
+        };
+      }
+
+      // console.log(location);
+
+      place.keywordSearch(keyword, searchByKeyword, {
+        location: new window.kakao.maps.LatLng(location.lat, location.lon),
+        radius: 2000,
+      });
+    } catch (error) {
+      console.error('위치 검색 오류:', error);
+    }
   };
 
   // pagination 가능
@@ -91,7 +145,7 @@ const MapPage = () => {
 
   // 장소 클릭 시, 지도 중심을 클릭한 장소로 이동
   const handlePlaceClick = (place: kakao.maps.services.PlacesSearchResultItem) => {
-    if (!map || !placeRef.current) return;
+    if (!map || !place) return;
     const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
     map.setCenter(placePosition);
   };
