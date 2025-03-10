@@ -3,8 +3,8 @@ import LogAPI from './logApi';
 import PlaceAPI from './placeApi';
 import RegisterAPI from './registerApi';
 import FollowAPI from './followApi';
-import UserLog from './userLogApi';
 import { OtherUser } from './userApi';
+import UserLog from './userLogApi';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 

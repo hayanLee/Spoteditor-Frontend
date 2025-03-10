@@ -42,7 +42,7 @@ const DetailPage = () => {
   const isDataReady =
     isLogPending || isPlaceBookmarkPending || isLoading || isLogBookmarkPending || !user;
 
-  const userId = user?.userId;
+  const userId = logData?.userId;
   const name = logData?.name ?? '';
   const description = logData?.description ?? '';
   const places = logData?.places ?? [];
@@ -122,7 +122,7 @@ const DetailPage = () => {
       <div className="flex flex-col px-4 py-2.5 gap-[15px] web:px-[50px] web:py-5">
         <div className="web:grid web:grid-cols-[1fr_3fr] gap-5">
           {/* 프로필  */}
-          <OtherUserProfileSection userId={userId} />
+          <OtherUserProfileSection userId={Number(userId)} />
 
           {/* 설명 */}
           {isDataReady ? (
