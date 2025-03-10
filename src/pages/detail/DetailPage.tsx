@@ -39,9 +39,10 @@ const DetailPage = () => {
   const { user, isLoading } = useUser();
 
   /* state */
-  const isDataReady = isLogPending || isPlaceBookmarkPending || isLoading || isLogBookmarkPending;
+  const isDataReady =
+    isLogPending || isPlaceBookmarkPending || isLoading || isLogBookmarkPending || !user;
 
-  const userId = data?.userId;
+  const userId = user?.userId;
   const name = logData?.name ?? '';
   const description = logData?.description ?? '';
   const places = logData?.places ?? [];

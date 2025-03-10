@@ -31,7 +31,7 @@ export class OtherUser {
   }
 
   async getOtherUser(userId: number): Promise<IOhterUser> {
-    const response = await this.axios.get(`/api/users/${userId}`);
+    const response = await this.axios.get(`/api/user/${userId}`);
     return response.data;
   }
 }
