@@ -12,6 +12,7 @@ import {
 import useFollower from '@/hooks/queries/follow/useFollower';
 import useOtherFollower from '@/hooks/queries/follow/useOtherFollower';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
+import { Link } from 'react-router-dom';
 
 interface FollowerListButtonProps {
   isMe: boolean;
@@ -70,21 +71,26 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
               <>
                 {data?.pages.map((followerList) =>
                   followerList.content.map((follower) => (
-                    <article
-                      key={follower.userId}
-                      className="flex items-center w-full py-[6px] between justify-start"
-                    >
-                      <figure className="flex items-center gap-[6px]">
-                        <Avatar className="w-11 h-11">
-                          <AvatarImage
-                            src={follower.imageUrl}
-                            alt={`${follower.name}님의 프로필`}
-                          />
-                          <AvatarFallback>{follower.name}</AvatarFallback>
-                        </Avatar>
-                        <figcaption className="font-bold text-text-xs">{follower.name}</figcaption>
-                      </figure>
-                    </article>
+                    <DialogClose asChild>
+                      <Link
+                        to={`/profile/${follower?.userId}`}
+                        key={follower.userId}
+                        className="flex items-center w-full py-[6px] between justify-start"
+                      >
+                        <figure className="flex items-center gap-[6px]">
+                          <Avatar className="w-11 h-11">
+                            <AvatarImage
+                              src={follower.imageUrl}
+                              alt={`${follower.name}님의 프로필`}
+                            />
+                            <AvatarFallback>{follower.name}</AvatarFallback>
+                          </Avatar>
+                          <figcaption className="font-bold text-text-xs">
+                            {follower.name}
+                          </figcaption>
+                        </figure>
+                      </Link>
+                    </DialogClose>
                   ))
                 )}
                 {isFetchingNextPage && <Loading className="w-full" />}

@@ -13,6 +13,7 @@ import useFollowing from '@/hooks/queries/follow/useFollowing';
 import useOtherFollowing from '@/hooks/queries/follow/useOtherFollowing';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
 import FollowingButton from './FollowingButton';
+import { Link } from 'react-router-dom';
 
 interface FollowingListButtonProps {
   isMe: boolean;
@@ -77,22 +78,27 @@ export default function FollowingListButton({
               <>
                 {data?.pages.map((folloingList) =>
                   folloingList.content.map((folloing) => (
-                    <article
-                      key={folloing.userId}
-                      className="flex items-center w-full py-[6px] between justify-between"
-                    >
-                      <figure className="flex items-center gap-[6px]">
-                        <Avatar className="w-11 h-11">
-                          <AvatarImage
-                            src={folloing.imageUrl}
-                            alt={`${folloing.name}님의 프로필`}
-                          />
-                          <AvatarFallback>{folloing.name}</AvatarFallback>
-                        </Avatar>
-                        <figcaption className="font-bold text-text-xs">{folloing.name}</figcaption>
-                      </figure>
-                      {isMe && <FollowingButton otherUserId={folloing.userId} />}
-                    </article>
+                    <DialogClose asChild>
+                      <Link
+                        to={`/profile/${folloing?.userId}`}
+                        key={folloing.userId}
+                        className="flex items-center w-full py-[6px] between justify-between"
+                      >
+                        <figure className="flex items-center gap-[6px]">
+                          <Avatar className="w-11 h-11">
+                            <AvatarImage
+                              src={folloing.imageUrl}
+                              alt={`${folloing.name}님의 프로필`}
+                            />
+                            <AvatarFallback>{folloing.name}</AvatarFallback>
+                          </Avatar>
+                          <figcaption className="font-bold text-text-xs">
+                            {folloing.name}
+                          </figcaption>
+                        </figure>
+                        {isMe && <FollowingButton otherUserId={folloing.userId} />}
+                      </Link>
+                    </DialogClose>
                   ))
                 )}
                 {isFetchingNextPage && <Loading className="w-full" />}
