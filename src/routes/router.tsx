@@ -2,7 +2,7 @@ import MainLayout from '@/layouts/MainLayout';
 import RegisterLayout from '@/layouts/RegisterLayout';
 import DetailPage from '@/pages/detail/DetailPage';
 import PlacesCollectionPage from '@/pages/detail/PlacesCollectionPage';
-import NotFoundPage from '@/pages/error/NotFoundPage';
+import NotFoundPage from '@/pages/Error/NotFoundPage';
 import HomePage from '@/pages/home/HomePage';
 import Notice from '@/pages/notice';
 import NoticeDetail from '@/pages/notice/notice-detail';
