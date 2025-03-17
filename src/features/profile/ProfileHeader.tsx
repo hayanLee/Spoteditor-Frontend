@@ -14,7 +14,9 @@ function ProfileHeader() {
   const { user, isLoading: userLoading } = useUser();
 
   const isMe = user?.userId === Number(userId);
-  const { data: otherUserData, isLoading: otherUserLoading } = useOtherUser(Number(userId));
+  const { data: otherUserData, isLoading: otherUserLoading } = useOtherUser(Number(userId), {
+    enabled: !isMe,
+  });
 
   const data = isMe ? user : otherUserData;
   const isLoading = isMe ? userLoading : otherUserLoading;

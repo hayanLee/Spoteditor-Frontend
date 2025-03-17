@@ -2,17 +2,15 @@ import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import { Button } from '@/components/ui/button';
 import useDeleteLog from '@/hooks/mutations/log/useDeleteLogMutation';
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface LogEditBarProps {
-  sido?: string;
-  bname?: string;
   logTitle: string;
-  placeLogId: string;
 }
 
-const LogEditBar = ({ sido = '', bname = '', logTitle = '', placeLogId }: LogEditBarProps) => {
+const LogEditBar = ({ logTitle }: LogEditBarProps) => {
   const navi = useNavigate();
+  const { placeLogId } = useParams();
   const { mutate: deleteLog } = useDeleteLog(Number(placeLogId));
   const handleBack = () => navi(-1);
 
@@ -28,9 +26,7 @@ const LogEditBar = ({ sido = '', bname = '', logTitle = '', placeLogId }: LogEdi
         >
           <ArrowLeft size={24} />
         </Button>
-        <p className="text-text-2xl font-bold">
-          {sido} · {bname}
-        </p>
+        <p className="text-text-2xl font-bold">로그 수정</p>
       </div>
 
       <ConfirmDialog

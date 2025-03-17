@@ -7,7 +7,7 @@ import {
   UserLogs,
 } from './types/userLogAPI';
 
-class UserLog {
+export default class UserLogAPI {
   private axios;
   constructor(axios: AxiosInstance) {
     this.axios = axios;
@@ -46,5 +46,3 @@ class UserLog {
     return response.data;
   }
 }
-
-export default UserLog;

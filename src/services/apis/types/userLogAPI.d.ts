@@ -1,3 +1,4 @@
+import { PageNation } from './commonApi';
 import { LogContent, LogsQueryParams } from './logAPI.type';
 import { Address, Image } from './registerAPI.type';
 /* 타유저 api 파라미터 */
@@ -24,6 +25,7 @@ interface Place {
 
 interface PlaceLog {
   placeLogId: number;
+  author: string;
   name: string;
   image: Image;
   address: Address;
@@ -31,31 +33,10 @@ interface PlaceLog {
 }
 
 /* 유저 로그리스트 응답*/
-export interface UserLogs {
-  content: LogContent[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  sort: SortInfo;
-}
+type UserLogs = PageNation<LogContent[]>
 
 /* 유저 북마크 장소 응답*/
-export interface UserBookmarkPlaces {
-  content: Place[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  sort: SortInfo;
-}
+type UserBookmarkPlaces = PageNation<Place[]>
 
 /* 유저 북마크 로그리스트 응답 */
-export interface UserBookmarkLogs {
-  content: PlaceLog[];
-  totalCount: number;
-  pageNumber: number;
-  pageSize: number;
-  totalPages: number;
-  sort: SortInfo;
-}
+type UserBookmarkLogs = PageNation<PlaceLog[]>

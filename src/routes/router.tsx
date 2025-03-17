@@ -2,7 +2,7 @@ import MainLayout from '@/layouts/MainLayout';
 import RegisterLayout from '@/layouts/RegisterLayout';
 import DetailPage from '@/pages/detail/DetailPage';
 import PlacesCollectionPage from '@/pages/detail/PlacesCollectionPage';
-import NotFoundPage from '@/pages/Error/NotFoundPage';
+import NotFoundPage from '@/pages/error/NotFoundPage';
 import HomePage from '@/pages/home/HomePage';
 import Notice from '@/pages/notice';
 import NoticeDetail from '@/pages/notice/notice-detail';
@@ -26,6 +26,7 @@ import { createBrowserRouter } from 'react-router-dom';
 const router = createBrowserRouter([
   {
     element: <MainLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/search', element: <Search /> },
@@ -60,11 +61,11 @@ const router = createBrowserRouter([
         path: 'notice/:noticeId',
         element: <NoticeDetail />,
       },
-      { path: '/*', element: <NotFoundPage /> },
     ],
   },
   {
     element: <RegisterLayout />,
+    errorElement: <NotFoundPage />,
     children: [
       { path: '/register/select', element: <SelectPage /> },
       { path: '/register/search', element: <SearchPage /> },
@@ -75,7 +76,11 @@ const router = createBrowserRouter([
       { path: '/register/edit/:placeLogId', element: <EditPage /> },
     ],
   },
-  { path: '/log/:placeLogId/placesCollection', element: <PlacesCollectionPage /> },
+  {
+    path: '/log/:placeLogId/placesCollection',
+    element: <PlacesCollectionPage />,
+    errorElement: <NotFoundPage />,
+  },
 ]);
 
 export default router;

@@ -21,19 +21,23 @@ export default function CustomPagination({ currentPage, totalPages }: CustomPagi
     setSearchParams({ pageNumber: page.toString(), totalPages: totalPages.toString() });
   };
 
-  const shouldShowLeftArrow = currentPage > 3;
+  const shouldShowLeftArrow = currentPage >= 3;
   const shouldShowRightArrow = currentPage < totalPages - 2;
 
   const getPageNumbers = () => {
     if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
+    if (currentPage === 3) {
+      return [2, 3, 4, '...', totalPages];
+    }
+    if (currentPage > totalPages - 2) {
+      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
+    }
     if (currentPage >= totalPages - 3) {
       return [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
     }
-    if (currentPage >= totalPages - 2) {
-      return [1, '...', totalPages - 2, totalPages - 1, totalPages];
-    }
+
     if (currentPage > 3 && totalPages - 3) {
       return [currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
     }

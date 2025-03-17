@@ -1,45 +1,71 @@
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import ModifyDrawer from '@/components/Drawer/ModifyDrawer';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import CoverImageInput from '@/features/registerpage/CoverImageInput';
+import LogCoverImgInput from '@/features/registerpage/LogCoverImgInput';
 import LogWriteBar from '@/features/registerpage/LogWriteBar';
-import PlaceDetailFormItem from '@/features/registerpage/PlaceDetailFormItem';
-import useImagePreview from '@/hooks/useImagePreview';
+import PlaceFormItem from '@/features/registerpage/PlaceFormItem';
+import { cn } from '@/lib/utils';
 import api from '@/services/apis/api';
-import { Log, Place, PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
+import { Log, PresignUrlResponse } from '@/services/apis/types/registerAPI.type';
+import { LogWriteFormSchema } from '@/services/schemas/logSchema';
 import { useRegisterStore } from '@/store/registerStore';
 import { formatAddress } from '@/utils/formatLogForm';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+
+export interface LogWriteFormData {
+  title: string;
+  description: string;
+  coverImgSrc: PresignUrlResponse | null;
+  places: { photos: PresignUrlResponse[]; placeDescription?: string }[];
+}
 
 const LogWritePage = () => {
   const navi = useNavigate();
+  const form = useForm<LogWriteFormData>({
+    resolver: zodResolver(LogWriteFormSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      title: '',
+      description: '',
+      coverImgSrc: null,
+      places: [],
+    },
+  });
+
   /* states */
-  const [logTitle, setLogTitle] = useState('');
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const resetSelectedPlaces = useRegisterStore((state) => state.resetSelectedPlaces);
-  const { imagePreview, handleFileChange, handleClearImage, presignedUrlObj } = useImagePreview();
-  const logDescripTextAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [sido, , bname] = selectedPlaces[0].address_name.split(' '); // 뒤로가기 옆 로그 대표 지역 이름
-  // 로그 등록 시 필요한 {presignedUrl, uuid}
-  const [presignedUrlList, setPresignUrlList] = useState<{ [key: string]: PresignedUrlWithName[] }>(
-    {}
-  );
-  const [modifyTarget, setModifyTarget] =
-    useState<kakao.maps.services.PlacesSearchResultItem | null>(null); // 선택한 타켓 장소
-
-  const textRefs = useRef<{ [placeId: string]: string }>({});
-  const registerTextRef = (id: string, elem: HTMLTextAreaElement) => {
-    if (elem) textRefs.current[id] = elem.value;
-    else delete textRefs.current[id];
-  };
+  const [sido = '', , bname = ''] = selectedPlaces[0]?.address_name?.split(' ') || [];
 
   /* handlers */
-  const handleClearTitle = () => setLogTitle('');
-  const handlePostLog = async () => {
-    const formatedLog = formatLog(selectedPlaces);
+  const formatLog = ({ title, description, coverImgSrc, places }: LogWriteFormData): Log => {
+    return {
+      name: title,
+      description: description,
+      originalFile: coverImgSrc?.originalFile || '',
+      uuid: coverImgSrc?.uuid || '',
+      status: 'public',
+      tags: [],
+      places: places.map((place, idx) => {
+        return {
+          name: selectedPlaces[idx].place_name,
+          description: place.placeDescription || '',
+          address: formatAddress(selectedPlaces[idx]),
+          category: 'TOUR',
+          originalFiles: place?.photos.map((item) => item.originalFile),
+          uuids: place?.photos.map((item) => item.uuid),
+        };
+      }),
+    };
+  };
+
+  const onSubmit = async (values: LogWriteFormData) => {
+    const formatedLog = formatLog(values);
     if (!formatedLog) return;
     const result = await api.register.createLog(formatedLog);
     if (result) {
@@ -48,114 +74,89 @@ const LogWritePage = () => {
     }
   };
 
-  // 제출 형식에 맞춰 포맷
-  const formatPlace = (place: kakao.maps.services.PlacesSearchResultItem): Place | null => {
-    const placeImages = presignedUrlList[place.place_name];
-    if (!placeImages || placeImages.length === 0) {
-      alert(`${place.place_name} 이미지가 비어있습니다.`);
-      return null;
-    }
-
-    return {
-      name: place.place_name,
-      description: textRefs.current[place.id],
-      address: formatAddress(place),
-      category: 'TOUR',
-      originalFiles: presignedUrlList[place.place_name].map((item) => item.originalFile),
-      uuids: presignedUrlList[place.place_name].map((item) => item.uuid),
-    };
-  };
-  const formatLog = (places: kakao.maps.services.PlacesSearchResult): Log | null => {
-    if (!logTitle || !logDescripTextAreaRef.current?.value || !presignedUrlObj?.originalFile) {
-      alert('로그 제목 / 설명 / 커버 이미지를 작성해주세요');
-      return null;
-    }
-
-    const formattedPlaces = places.map((place) => formatPlace(place));
-
-    if (formattedPlaces.some((place) => place === null)) return null;
-
-    // 로그 정보
-    return {
-      name: logTitle,
-      description: logDescripTextAreaRef.current.value,
-      originalFile: presignedUrlObj?.originalFile,
-      uuid: presignedUrlObj?.uuid,
-      status: 'public',
-      tags: [],
-      places: formattedPlaces as Place[],
-    };
-  };
-
   return (
     <div className="h-full flex flex-col">
       {/* 헤더 */}
       <LogWriteBar sido={sido} bname={bname} />
 
-      <main className="flex flex-col items-center grow min-h-0 overflow-y-auto scrollbar-hide">
-        {/* 로그 제목 */}
-        <section className="flex items-center w-full border-b px-4 relative">
-          <Input
-            name="logTitle"
-            placeholder="제목을 입력해주세요. (최대 30자) *"
-            className=" placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0"
-            maxLength={30}
-            value={logTitle}
-            onChange={(e) => setLogTitle(e.target.value)}
+      <Form {...form}>
+        <form
+          className="flex flex-col items-center grow min-h-0 overflow-y-auto scrollbar-hide "
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <FormField
+            name="title"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col items-center w-full border-b px-4 relative">
+                <Input
+                  {...field}
+                  placeholder="제목을 입력해주세요. (최대 30자) *"
+                  className={cn(
+                    "placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0",
+                    form.formState.errors.title && 'placeholder:text-error-500'
+                  )}
+                />
+                {field.value && (
+                  <CircleX
+                    className="stroke-white fill-primary-100 absolute stroke-1 top-2 right-4  cursor-pointer hover:fill-slate-50/50"
+                    size={24}
+                    onClick={() => form.setValue(field.name, '')}
+                  />
+                )}
+              </FormItem>
+            )}
           />
-          {logTitle && (
-            <CircleX
-              className="stroke-white fill-primary-100 absolute stroke-1 top-2 right-4  cursor-pointer hover:fill-slate-50/50"
-              size={24}
-              onClick={handleClearTitle}
-            />
-          )}
-        </section>
 
-        {/* 커버 이미지 */}
-        <CoverImageInput
-          imagePreview={imagePreview}
-          handleFileChange={handleFileChange}
-          handleClearImage={handleClearImage}
-        />
-
-        <div className="px-4 w-full">
-          {/* 로그 설명 */}
-          <Textarea
-            className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm  placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder="내용을 입력해주세요. (최대 500자)"
-            maxLength={500}
-            ref={logDescripTextAreaRef}
+          {/* 커버 이미지 */}
+          <LogCoverImgInput
+            name="coverImgSrc"
+            control={form.control}
+            setValue={form.setValue}
+            trigger={form.trigger}
+          />
+          <FormField
+            name="description"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="px-4 w-full">
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm  placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    placeholder="내용을 입력해주세요. (최대 500자)"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
 
           {/* 장소 */}
-          <div className="flex flex-col w-full mt-3">
+          <div className="flex flex-col w-full mt-3 px-4">
             {selectedPlaces.map((place, idx) => (
-              <PlaceDetailFormItem
+              <PlaceFormItem
+                control={form.control}
                 place={place}
                 key={place.id}
-                idx={idx + 1}
-                registerTextRef={registerTextRef}
-                onChangePresignUrlList={setPresignUrlList}
-                setModifyTarget={setModifyTarget}
+                idx={idx}
+                setValue={form.setValue}
+                trigger={form.trigger}
               />
             ))}
           </div>
-        </div>
-      </main>
+        </form>
+      </Form>
 
       {/* 버튼 */}
       <div className="pt-2 pb-3 px-4 ">
-        <ModifyDrawer
-          isOpen={!!modifyTarget}
-          setIsOpen={() => setModifyTarget(null)}
-          modifyTarget={modifyTarget}
-        />
+        <ModifyDrawer />
         <ConfirmDialog
           title="로그를 등록하시겠어요?"
           showCheckbox={true}
           checkboxLabel="비공개"
-          onConfirm={handlePostLog}
+          onConfirm={form.handleSubmit(onSubmit)}
+          disabled={!!Object.keys(form.formState.errors).length}
         />
       </div>
     </div>

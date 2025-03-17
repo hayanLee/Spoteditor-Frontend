@@ -12,8 +12,10 @@ import {
 import useFollowing from '@/hooks/queries/follow/useFollowing';
 import useOtherFollowing from '@/hooks/queries/follow/useOtherFollowing';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
-import FollowingButton from './FollowingButton';
+import FollowingButton from './LogFollowingButton';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import ProfileFollowingButton from './ProfileFollowingButton';
 
 interface FollowingListButtonProps {
   isMe: boolean;
@@ -50,8 +52,15 @@ export default function FollowingListButton({
   return (
     <Dialog>
       <DialogTrigger asChild className="outline-none">
-        <button className="flex items-center space-x-1">
-          <DialogDescription className="text-black text-[18px]">팔로잉</DialogDescription>
+        <button
+          disabled={count <= 0}
+          className={cn('flex items-center space-x-1', count <= 0 && 'text-primarySlate')}
+        >
+          <DialogDescription
+            className={cn('text-black text-[18px]', count <= 0 && 'text-primarySlate')}
+          >
+            팔로잉
+          </DialogDescription>
           <span className="font-bold text-center text-[18px]">{count}</span>
         </button>
       </DialogTrigger>
@@ -70,8 +79,11 @@ export default function FollowingListButton({
             </button>
           </DialogClose>
         </DialogTitle>
-        <div ref={scrollRef} className="pr-[5px] w-full">
-          <article className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll">
+        <div className="pr-[5px] w-full">
+          <article
+            ref={scrollRef}
+            className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll"
+          >
             {isLoading ? (
               <Loading className="w-full pl-[5px]" />
             ) : (
@@ -96,12 +108,18 @@ export default function FollowingListButton({
                             {folloing.name}
                           </figcaption>
                         </figure>
-                        {isMe && <FollowingButton otherUserId={folloing.userId} />}
+                        {isMe && (
+                          <ProfileFollowingButton
+                            otherUserId={folloing.userId}
+                            otherUserName={folloing.name}
+                            otherUserImage={folloing.imageUrl}
+                          />
+                        )}
                       </Link>
                     </DialogClose>
                   ))
                 )}
-                {isFetchingNextPage && <Loading className="w-full" />}
+                {isFetchingNextPage && <Loading className="w-full h-5" />}
               </>
             )}
           </article>

@@ -31,7 +31,8 @@ class LogAPI {
   async updateLog(placeLogId: number, requestData: UpdateRequest) {
     console.log(placeLogId, '보내는 데이터', requestData);
     const path = `/api/placelogs/${placeLogId}`;
-    const res = await this.#axios.patch(path, { requestData });
+    const res = await this.#axios.patch(path, requestData);
+    if (res.status === 200) return { success: true };
     console.log('로그 업데이트', res);
   }
 

@@ -10,12 +10,3 @@ export const formatAddress = (place: kakao.maps.services.PlacesSearchResultItem)
   bname: place.address_name.split(' ')[1],
   sigungu: place.address_name.split(' ')[2],
 });
-
-// const formatPlace = (place: kakao.maps.services.PlacesSearchResultItem): Place => ({
-//   name: place.place_name,
-//   description: textRefs.current[place.id],
-//   address: formatAddress(place),
-//   category: 'TOUR',
-//   originalFiles: presignedUrlList[place.place_name].map((item) => item.originalFile),
-//   uuids: presignedUrlList[place.place_name].map((item) => item.uuid),
-// });

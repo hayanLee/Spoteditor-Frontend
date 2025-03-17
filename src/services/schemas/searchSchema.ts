@@ -8,3 +8,8 @@ export const searchSchema = z.object({
 });
 
 export type SearchForm = z.infer<typeof searchSchema>;
+
+export const citySearchSchema = z.object({
+  sido: z.string(),
+  bname: z.string(),
+});

@@ -8,7 +8,7 @@ interface PostCardTitleProps {
 function PostCardTitle({ className, title }: PostCardTitleProps) {
   return (
     <h3
-      className={cn('font-bold text-black text-text-sm web:text-text-lg web:mb-[6px]', className)}
+      className={cn('font-bold text-black text-text-sm web:text-text-lg web:mb-[3px]', className)}
     >
       {title}
     </h3>

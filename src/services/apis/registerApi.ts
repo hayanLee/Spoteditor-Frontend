@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { Log, PresignedUrlWithName, PresignUrlRequest } from './types/registerAPI.type';
+import { Log, PresignUrlRequest, PresignUrlResponse } from './types/registerAPI.type';
 
 class RegisterAPI {
   #axios;
@@ -7,7 +7,7 @@ class RegisterAPI {
     this.#axios = axios;
   }
 
-  async getPresignUrl(file: PresignUrlRequest): Promise<PresignedUrlWithName> {
+  async getPresignUrl(file: PresignUrlRequest): Promise<PresignUrlResponse> {
     const path = '/api/purl';
     const res = await this.#axios.post(path, file);
     return { ...res.data, originalFile: file.originalFile };

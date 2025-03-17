@@ -12,8 +12,7 @@ import { useNavigate } from 'react-router-dom';
 
 const MapPage = () => {
   const navi = useNavigate();
-  const { mapContainerRef, place, currentLocation, geocoder, isLoading, initMap, map } =
-    useKakaoMap();
+  const { mapContainerRef, place, geocoder, isLoading, initMap, map } = useKakaoMap();
 
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
@@ -22,6 +21,7 @@ const MapPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]); // 검색 결과 마커들
   const [places, setPlaces] = useState<kakao.maps.services.PlacesSearchResult>([]); // 검색 결과 장소들
+  const [pagination, setPagination] = useState<kakao.maps.Pagination | null>(null); // 페이지네이션
 
   useEffect(() => {
     initMap();
@@ -30,7 +30,6 @@ const MapPage = () => {
   /* '지역 + 키워드'로 파싱 */
   const parseQuery = (query: string) => {
     const queryParts = query.split(' ');
-    console.log(queryParts);
     if (queryParts.length === 2) {
       const region = queryParts[0];
       const keyword = queryParts.slice(1).join('');
@@ -71,45 +70,36 @@ const MapPage = () => {
       return;
     }
 
-    let location: {
-      lat: number;
-      lon: number;
-    };
-
     try {
       if (region) {
-        location = await getRegionLocation(region);
+        const location = await getRegionLocation(region);
+        place.keywordSearch(keyword, searchByKeyword, {
+          location: new window.kakao.maps.LatLng(location.lat, location.lon),
+          radius: 5000,
+        });
       } else {
-        // console.log(currentLocation);
-        location = {
-          lat: currentLocation?.lat || 37.5665,
-          lon: currentLocation?.lon || 126.978,
-        };
+        place.keywordSearch(keyword, searchByKeyword);
       }
-
-      // console.log(location);
-
-      place.keywordSearch(keyword, searchByKeyword, {
-        location: new window.kakao.maps.LatLng(location.lat, location.lon),
-        radius: 2000,
-      });
     } catch (error) {
       console.error('위치 검색 오류:', error);
     }
   };
 
-  // pagination 가능
-  const searchByKeyword = (result: kakao.maps.services.PlacesSearchResult, status: string) => {
+  const searchByKeyword = (
+    result: kakao.maps.services.PlacesSearchResult,
+    status: string,
+    pagination: kakao.maps.Pagination
+  ) => {
     if (status === window.kakao.maps.services.Status.OK) {
       setPlaces(result);
+      setPagination(pagination);
       displayPlaces(result);
       setIsOpen(true);
-    } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-      alert('검색 결과가 없습니다.');
+    } else {
+      if (status === window.kakao.maps.services.Status.ZERO_RESULT) alert('검색 결과가 없습니다.');
+      if (status === window.kakao.maps.services.Status.ERROR) alert('검색 중 오류가 발생했습니다.');
       setPlaces([]);
-    } else if (status === window.kakao.maps.services.Status.ERROR) {
-      alert('검색 중 오류가 발생했습니다.');
-      setPlaces([]);
+      setPagination(null);
     }
   };
 
@@ -148,6 +138,7 @@ const MapPage = () => {
     if (!map || !place) return;
     const placePosition = new window.kakao.maps.LatLng(place.y, place.x);
     map.setCenter(placePosition);
+    map.setLevel(3);
   };
 
   return (
@@ -186,6 +177,7 @@ const MapPage = () => {
           onPlaceClick={handlePlaceClick}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          pagination={pagination}
         />
       )}
       <div className="pt-2 pb-6 px-4">

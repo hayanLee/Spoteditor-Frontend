@@ -1,59 +1,63 @@
 import api from '@/services/apis/api';
-import { PresignedUrlWithName } from '@/services/apis/types/registerAPI.type';
+import { PresignUrlResponse } from '@/services/apis/types/registerAPI.type';
+import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { useCallback, useEffect, useState } from 'react';
 
-function useImagePreview(initialImageUrl: string = '') {
+function useImagePreview(initialImageUrl = '') {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialImageUrl);
-  const [presignedUrlObj, setPresignedUrlObj] = useState<PresignedUrlWithName | null>(null);
+  const [presignedUrlObj, setPresignedUrlObj] = useState<PresignUrlResponse | null>(null);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      try {
-        setImageFile(file);
-        const result = await api.register.getPresignUrl({ originalFile: file.name });
-        setPresignedUrlObj(result);
-      } catch (error) {
-        console.log('presigned URL 가져오기 실패', error);
-      }
-    } else {
-      //이미지가 이미 있을 때 이미지를 새로 선택 안 할 경우 취소
-      setImageFile(null); // 메모리 해제
-      setImagePreview(initialImageUrl);
-    }
-  };
+    if (!file) return;
 
-  const handleClearImage = () => {
-    setImageFile(null);
-    setImagePreview(initialImageUrl);
-    setPresignedUrlObj(null);
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+
+    try {
+      const result = await api.register.getPresignUrl({ originalFile: file.name });
+      setPresignedUrlObj(result);
+    } catch (error) {
+      console.error('presigned URL 가져오기 실패', error);
+    }
   };
 
   const uploadImage = useCallback(async () => {
     if (!imageFile || !presignedUrlObj) return;
 
     try {
-      await api.register.uploadImageWithPresignUrl(presignedUrlObj?.preSignedUrl, imageFile);
+      setIsUploading(true);
+      await api.register.uploadImageWithPresignUrl(presignedUrlObj.preSignedUrl, imageFile);
     } catch (error) {
-      console.log(error, 's3 이미지 업로드 실패');
+      console.error(error, 's3 이미지 업로드 실패');
+    } finally {
+      setIsUploading(false);
     }
   }, [imageFile, presignedUrlObj]);
+
+  const handleClearImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+    setPresignedUrlObj(null);
+  };
 
   //이미지 미리보기
   useEffect(() => {
     if (imageFile && presignedUrlObj) {
-      const url = URL.createObjectURL(imageFile);
-      setImagePreview(url);
       uploadImage();
-      // 언마운트, imageFile 변경될때 실행
-      return () => {
-        URL.revokeObjectURL(url);
-      };
     }
   }, [imageFile, presignedUrlObj, uploadImage]);
 
-  return { imageFile, imagePreview, handleFileChange, handleClearImage, presignedUrlObj };
+  return {
+    imageFile,
+    imagePreview: initialImageUrl ? getImgFromCloudFront(imagePreview) : imagePreview,
+    handleFileChange,
+    handleClearImage,
+    isUploading,
+    presignedUrlObj,
+  };
 }
 
 export default useImagePreview;

@@ -24,7 +24,7 @@ class User {
 
 export const authUserApi = new User();
 
-export class OtherUser {
+export class OtherUserAPI {
   private axios;
   constructor(axios: AxiosInstance) {
     this.axios = axios;

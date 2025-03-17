@@ -7,10 +7,11 @@ import { useParams } from 'react-router-dom';
 interface PostCardImageProps {
   imageUrl?: string;
   lable?: boolean;
+  author: string;
   className?: string;
 }
 
-function PostCardImage({ imageUrl, lable, className }: PostCardImageProps) {
+function PostCardImage({ imageUrl, lable, author, className }: PostCardImageProps) {
   const { userId } = useParams();
   const { user } = useUser();
   return (
@@ -31,7 +32,7 @@ function PostCardImage({ imageUrl, lable, className }: PostCardImageProps) {
       {lable && (
         <div className="flex items-center gap-[3px] absolute left-[10px] bottom-[10px] text-white">
           <span className="text-[11px] font-semibold leading-[130%] tracking-[-0.22px]">
-            teamluddy
+            {author}
           </span>
           <VerifiedLabelIcon className="w-[10.474px] h-[10.378px] fill-white" />
         </div>

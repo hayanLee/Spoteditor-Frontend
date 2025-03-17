@@ -1,25 +1,50 @@
+import { PlaceInLog } from '@/services/apis/types/logAPI.type';
+import useDrawerStore from '@/store/drawerStore';
+import { useEditLogStore } from '@/store/editLogStore';
 import { useRegisterStore } from '@/store/registerStore';
 import { DialogDescription } from '@radix-ui/react-dialog';
 import { ArrowDown, ArrowUp, Trash } from 'lucide-react';
-import { Dispatch, SetStateAction } from 'react';
 import { Drawer } from 'vaul';
 import { Button } from '../ui/button';
 import { DrawerTitle } from '../ui/drawer';
 
-interface ModifyDrawerProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  modifyTarget: kakao.maps.services.PlacesSearchResultItem | null;
-}
+const ModifyDrawer = () => {
+  const isOpen = useDrawerStore((state) => state.isOpen);
+  const targetPlace = useDrawerStore((state) => state.targetPlace);
+  const closeModal = useDrawerStore((state) => state.closeDrawer);
 
-const ModifyDrawer = ({ isOpen, modifyTarget }: ModifyDrawerProps) => {
-  const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
-  const moveUpSelectedPlace = useRegisterStore((state) => state.moveUpSelectedPlace);
-  const moveDownSelectedPlace = useRegisterStore((state) => state.moveDownSelectedPlace);
-  if (!modifyTarget) return null;
-  const handleUpClick = () => moveUpSelectedPlace(modifyTarget);
-  const handleDownClick = () => moveDownSelectedPlace(modifyTarget);
-  const handleDeleteClick = () => removeSelectedPlace(modifyTarget);
+  const {
+    removeSelectedPlace: removeRegisterPlace,
+    moveUpSelectedPlace: moveUpRegisterPlace,
+    moveDownSelectedPlace: moveDownRegisterPlace,
+  } = useRegisterStore();
+
+  const {
+    removeSelectedPlace: removeEditPlace,
+    moveUpSelectedPlace: moveUpEditPlace,
+    moveDownSelectedPlace: moveDownEditPlace,
+  } = useEditLogStore();
+
+  if (!targetPlace) return null;
+  const isEditingLog = 'placeId' in targetPlace; // 등록된 장소
+
+  const handleUpClick = () =>
+    isEditingLog
+      ? moveUpEditPlace(targetPlace as PlaceInLog)
+      : moveUpRegisterPlace(targetPlace as kakao.maps.services.PlacesSearchResultItem);
+
+  const handleDownClick = () =>
+    isEditingLog
+      ? moveDownEditPlace(targetPlace as PlaceInLog)
+      : moveDownRegisterPlace(targetPlace as kakao.maps.services.PlacesSearchResultItem);
+
+  const handleDeleteClick = () => {
+    if (!targetPlace) return;
+    if (isEditingLog) removeEditPlace(targetPlace as PlaceInLog);
+    else removeRegisterPlace(targetPlace as kakao.maps.services.PlacesSearchResultItem);
+    closeModal();
+  };
+
   return (
     <Drawer.Root open={isOpen}>
       <Drawer.Portal>

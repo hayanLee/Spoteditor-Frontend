@@ -38,7 +38,7 @@ const LogCard = ({ isLarge, vertical, log, place, isModal }: LogCardProps) => {
         <div className="absolute inset-0 hover:bg-black/25 transition-colors"></div>
         {!isModal && (
           <span className="flex items-center gap-1 p-2.5 text-white text-text-2xs font-semibold absolute bottom-0">
-            teamluddy
+            {log?.author}
           </span>
         )}
 

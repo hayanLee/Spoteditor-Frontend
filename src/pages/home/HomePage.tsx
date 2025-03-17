@@ -1,26 +1,15 @@
+import MainCarousel from '@/components/Carousel/MainCarousel';
 import ArrowIcon from '@/components/Icons/ArrowIcon';
-import MainPagination from '@/components/Pagination/MainPagination';
-import LogCardSkeleton from '@/components/Skeleton/LogCardSkeleton';
+import MainPageLogCardList from '@/components/LogCard/MainPageLogCardList';
 import { Button } from '@/components/ui/button';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import { REGISTER_SELECT } from '@/constants/pathname';
-import LogCard from '@/features/homepage/LogCard';
 import MainHero from '@/features/homepage/MainHero';
 import TypingText from '@/features/homepage/TypingText';
-import useLogList from '@/hooks/queries/log/useLogList';
-import { cn } from '@/lib/utils';
-import { LogContent } from '@/services/apis/types/logAPI.type';
-import Autoplay from 'embla-carousel-autoplay';
 import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
   const navi = useNavigate();
   const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
-
-  const { data, isPending, isError } = useLogList();
-  const { totalPages, content } = data ?? {};
-
-  const isDataReady = isPending || !data || isError;
 
   return (
     <>
@@ -37,32 +26,7 @@ const HomePage = () => {
         </div>
 
         {/* 컨테이너 */}
-        <Carousel
-          plugins={[Autoplay({ delay: 4000, stopOnInteraction: false })]}
-          opts={{
-            align: 'start',
-            slidesToScroll: 4,
-          }}
-        >
-          <CarouselContent className="flex">
-            {isDataReady
-              ? // 로딩 중
-                [...Array(4)].map((_, idx) => (
-                  <CarouselItem className="flex-none basis-1/1.5 web:basis-1/4" key={idx}>
-                    <LogCardSkeleton />
-                  </CarouselItem>
-                ))
-              : // 데이터 로딩 완료
-                content?.map((log: LogContent) => (
-                  <CarouselItem
-                    className="flex-none basis-1/1.5 web:basis-1/4"
-                    key={log.placeLogId}
-                  >
-                    <LogCard vertical log={log} />
-                  </CarouselItem>
-                ))}
-          </CarouselContent>
-        </Carousel>
+        <MainCarousel />
 
         {/* 에디터 설명 */}
         <div className="flex flex-col justify-center my-20 web:grid web:grid-cols-2 border-primary-100 web:gap-7">
@@ -98,18 +62,7 @@ const HomePage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col web:grid web:grid-cols-4 web:grid-rows-4 web:gap-x-[15px] web:gap-y-10">
-          {content?.map((log: LogContent, idx: number) => {
-            const isLarge = idx === 2;
-
-            return (
-              <div key={idx} className={cn(isLarge && 'col-span-2 row-span-2')}>
-                <LogCard log={log} isLarge={isLarge} />
-              </div>
-            );
-          })}
-        </div>
-        <MainPagination totalPages={totalPages} />
+        <MainPageLogCardList />
       </div>
     </>
   );

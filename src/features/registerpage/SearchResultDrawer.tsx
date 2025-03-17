@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { DrawerPortal, DrawerTitle } from '@/components/ui/drawer';
+import { DrawerFooter, DrawerPortal, DrawerTitle } from '@/components/ui/drawer';
 import { useRegisterStore } from '@/store/registerStore';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Drawer } from 'vaul';
@@ -8,6 +8,7 @@ const snapPoints = ['500px', 1];
 
 interface SearchResultDrawerProps {
   places: kakao.maps.services.PlacesSearchResult;
+  pagination: kakao.maps.Pagination | null;
   onPlaceClick: (place: kakao.maps.services.PlacesSearchResultItem) => void;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -15,16 +16,19 @@ interface SearchResultDrawerProps {
 
 export default function SearchResultDrawer({
   places,
+  pagination,
   onPlaceClick,
   isOpen,
   setIsOpen,
 }: SearchResultDrawerProps) {
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
   const addSelectedPlace = useRegisterStore((state) => state.addSelectedPlace);
+
   const handlePlaceSelect = (place: kakao.maps.services.PlacesSearchResultItem) => {
     addSelectedPlace(place);
     setIsOpen(false);
   };
+
   return (
     <Drawer.Root
       snapPoints={snapPoints}
@@ -76,6 +80,30 @@ export default function SearchResultDrawer({
               ))}
             </ul>
           </div>
+
+          {pagination && (
+            <DrawerFooter className="flex flex-row items-center justify-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!pagination.hasPrevPage}
+                onClick={() => pagination.gotoPage(pagination.current - 1)}
+              >
+                이전
+              </Button>
+              <span className="text-sm text-gray-600">
+                {pagination.current} / {pagination.last}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!pagination.hasNextPage}
+                onClick={() => pagination.gotoPage(pagination.current + 1)}
+              >
+                다음
+              </Button>
+            </DrawerFooter>
+          )}
         </Drawer.Content>
       </DrawerPortal>
     </Drawer.Root>

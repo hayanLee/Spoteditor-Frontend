@@ -11,6 +11,9 @@ export default ({ mode }: ConfigEnv) => {
 
   return defineConfig({
     plugins: [react()],
+    define: {
+      global: {}, // 웹소켓 'global is not defined' 해결
+    },
     base: '/',
     resolve: {
       alias: {

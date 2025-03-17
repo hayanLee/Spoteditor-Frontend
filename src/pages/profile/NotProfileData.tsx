@@ -1,0 +1,10 @@
+export default function NotProfileData() {
+  return (
+    <div className="flex justify-center items-center py-[49px]">
+      <h3 className="font-bold text-center text-text-sm text-primary-200">
+        저장된 장소가 없습니다.
+        <br /> 로그를 둘러본뒤 관심있는 장소를 저장해보세요!
+      </h3>
+    </div>
+  );
+}

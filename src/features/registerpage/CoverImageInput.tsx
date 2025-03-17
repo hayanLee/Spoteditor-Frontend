@@ -4,8 +4,15 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { CircleX } from 'lucide-react';
 import { useRef } from 'react';
+import { Control } from 'react-hook-form';
 
 interface CoverImageInputProps {
+  name: string;
+  control: Control<{
+    title: string;
+    description: string;
+    coverImg: string;
+  }>;
   defaultImg?: string;
   imagePreview: string;
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => Promise<void>;

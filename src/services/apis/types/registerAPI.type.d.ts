@@ -1,3 +1,5 @@
+import { PlaceInLog } from './logAPI.type';
+
 // getPresignUrl
 export interface PresignUrlRequest {
   originalFile: string;
@@ -6,9 +8,6 @@ export interface PresignUrlRequest {
 export interface PresignUrlResponse {
   preSignedUrl: string;
   uuid: string;
-}
-
-export interface PresignedUrlWithName extends PresignUrlResponse {
   originalFile: string;
 }
 
@@ -54,14 +53,12 @@ export interface Image {
   storedFile: string;
 }
 
-export interface ResponsePlace
-  extends Pick<Place, 'name' | 'description' | 'address' | 'category'> {
-  placeId: number;
-  images: Image[];
-}
-
 export interface LogResponse {
   placeLogId: number;
+  userId: 0;
+  userName: 'string';
+  userImage: 'string';
+  isFollowing: true;
   name: string;
   description: string;
   image: Image;
@@ -69,7 +66,7 @@ export interface LogResponse {
   status: 'public'; // 고정된 값
   views: number;
   tags: [];
-  places: ResponsePlace[];
+  places: PlaceInLog[];
   userId: number;
 }
 

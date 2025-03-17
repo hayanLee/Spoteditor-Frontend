@@ -13,8 +13,10 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MyProfileButton from './MyProfileButton';
+import useUser from '@/hooks/queries/user/useUser';
 
 function UserProfileButton() {
+  const { user } = useUser();
   const textRef = useRef<HTMLSpanElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
@@ -42,7 +44,7 @@ function UserProfileButton() {
       <DropdownMenuContent>
         <DropdownMenuItem className="font-bold text-text-lg flex justify-start gap-[5px] px-4 items-center">
           <span ref={textRef} className="truncate">
-            Teamspoteditor
+            {user?.name}
           </span>
           {!isTruncated && <VerifiedLabelIcon />}
         </DropdownMenuItem>

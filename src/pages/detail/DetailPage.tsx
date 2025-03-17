@@ -42,7 +42,6 @@ const DetailPage = () => {
   const isDataReady =
     isLogPending || isPlaceBookmarkPending || isLoading || isLogBookmarkPending || !user;
 
-  const userId = logData?.userId;
   const name = logData?.name ?? '';
   const description = logData?.description ?? '';
   const places = logData?.places ?? [];
@@ -58,7 +57,15 @@ const DetailPage = () => {
   /* handlers */
   const onClickLogBookmark = async () => mutate();
   const onClickBack = () => navi(-1);
-  const onClickShare = () => alert('공유 기능 예정');
+  const onClickShare = () => {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => alert('URL이 클립보드에 복사되었습니다!'))
+      .catch((err) => {
+        alert('URL 복사에 실패했습니다.');
+        console.error('클립보드 복사 실패:', err);
+      });
+  };
   const onClickPencil = () => navi(`/register/edit/${placeLogId}`);
 
   return (
@@ -122,7 +129,12 @@ const DetailPage = () => {
       <div className="flex flex-col px-4 py-2.5 gap-[15px] web:px-[50px] web:py-5">
         <div className="web:grid web:grid-cols-[1fr_3fr] gap-5">
           {/* 프로필  */}
-          <OtherUserProfileSection userId={Number(userId)} />
+          <OtherUserProfileSection
+            userId={Number(logData?.userId)}
+            userName={String(logData?.userName)}
+            userImage={String(logData?.userImage)}
+            isFollowing={Boolean(logData?.isFollowing)}
+          />
 
           {/* 설명 */}
           {isDataReady ? (

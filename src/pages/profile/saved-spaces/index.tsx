@@ -12,6 +12,7 @@ import useOtherUserBookmarkPlaces from '@/hooks/queries/userLog/useOtherUserBook
 import useUserBookmarkPlaces from '@/hooks/queries/userLog/useUserBookmarkPlaces';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { useParams, useSearchParams } from 'react-router-dom';
+import NotProfileData from '../NotProfileData';
 
 function SavedSpaces() {
   const { user } = useUser();
@@ -38,14 +39,18 @@ function SavedSpaces() {
     <>
       {isPending ? (
         <Loading className="min-h-[350px]" />
-      ) : (
+      ) : data?.content.length !== 0 ? (
         <>
           <PostCardWrapper className="mb-[50px]">
             {data?.content.map((place) => (
               <div>
                 {/* 추후 주소가 나오면 링크 컴포넌트로 보내는 기능 추가 */}
                 <MotionCard key={place.placeId}>
-                  <PostCardImage lable imageUrl={getImgFromCloudFront(place.image.storedFile)} />
+                  <PostCardImage
+                    lable
+                    author={place.author}
+                    imageUrl={getImgFromCloudFront(place.image.storedFile)}
+                  />
                   <PostCardTitle title={place.name} />
                   <PostCardLocation
                     sido={place.address.sido}
@@ -63,6 +68,8 @@ function SavedSpaces() {
             />
           </section>
         </>
+      ) : (
+        <NotProfileData />
       )}
     </>
   );

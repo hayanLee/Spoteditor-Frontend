@@ -12,6 +12,7 @@ import {
 import useFollower from '@/hooks/queries/follow/useFollower';
 import useOtherFollower from '@/hooks/queries/follow/useOtherFollower';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
+import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 
 interface FollowerListButtonProps {
@@ -43,8 +44,15 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
   return (
     <Dialog>
       <DialogTrigger asChild className="outline-none">
-        <button className="flex items-center space-x-1">
-          <DialogDescription className="text-black text-[18px]">팔로워</DialogDescription>
+        <button
+          disabled={count <= 0}
+          className={cn('flex items-center space-x-1', count <= 0 && 'text-primarySlate')}
+        >
+          <DialogDescription
+            className={cn('text-black text-[18px]', count <= 0 && 'text-primarySlate')}
+          >
+            팔로워
+          </DialogDescription>
           <span className="font-bold text-center text-[18px]">{count}</span>
         </button>
       </DialogTrigger>
@@ -63,14 +71,17 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
             </button>
           </DialogClose>
         </DialogTitle>
-        <div ref={scrollRef} className="pr-[5px] w-full">
-          <article className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll">
+        <div className="pr-[5px] w-full">
+          <article
+            ref={scrollRef}
+            className="w-full px-[19px] h-[370px] flex flex-col overflow-y-scroll"
+          >
             {isLoading ? (
               <Loading className="w-full pl-[5px]" />
             ) : (
               <>
-                {data?.pages.map((followerList) =>
-                  followerList.content.map((follower) => (
+                {data?.pages?.map((followerList) =>
+                  followerList?.content?.map((follower) => (
                     <DialogClose asChild>
                       <Link
                         to={`/profile/${follower?.userId}`}
@@ -93,7 +104,7 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
                     </DialogClose>
                   ))
                 )}
-                {isFetchingNextPage && <Loading className="w-full" />}
+                {isFetchingNextPage && <Loading className="w-full h-5" />}
               </>
             )}
           </article>

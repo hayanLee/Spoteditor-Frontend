@@ -9,6 +9,7 @@ type GeolocationPermissionState = 'granted' | 'denied' | 'prompt' | null;
 export default function useGeolocationPermission() {
   const [permission, setPermission] = useState<GeolocationPermissionState>(null);
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<{ latitude: number; longitude: number } | null>(null);
 
   useEffect(() => {
     if (!('permissions' in navigator)) return;
@@ -36,8 +37,28 @@ export default function useGeolocationPermission() {
       }
     };
 
-    checkPermission();
-  }, []);
+    const getCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setPosition({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error('현재 위치를 가져오는 중 오류 발생:', error);
+          }
+        );
+      }
+    };
 
-  return { permission, open, setOpen };
+    checkPermission();
+
+    if (permission === 'granted') {
+      getCurrentLocation();
+    }
+  }, [permission]);
+
+  return { permission, open, setOpen, position };
 }

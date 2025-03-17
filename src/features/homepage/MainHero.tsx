@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import CitySearchForm from './CitySearchForm';
 import CourseButton from './CourseButton';
+import CitySearchForm from '../search/CitySearchForm/CitySearchForm';
 
 const categories: string[] = [
   '로.맨.틱 데이트 코스!',
