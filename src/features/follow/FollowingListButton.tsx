@@ -12,7 +12,6 @@ import {
 import useFollowing from '@/hooks/queries/follow/useFollowing';
 import useOtherFollowing from '@/hooks/queries/follow/useOtherFollowing';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
-import FollowingButton from './LogFollowingButton';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import ProfileFollowingButton from './ProfileFollowingButton';
