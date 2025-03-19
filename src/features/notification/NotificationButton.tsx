@@ -17,11 +17,11 @@ import { notificationStore } from '@/store/notificationStore';
 
 function NotificationButton() {
   //useNotificationWebSocket(); //추후 웹소켓 훅 사용해서 실시간 알림 받기
-  const { data: notisData, isLoading: isNotiLoading } = useNotificationList();
+  const { data: notisData = [], isLoading: isNotiLoading } = useNotificationList();
   const { notifications, isNotiCount, readAsRead } = notificationStore();
 
   useEffect(() => {
-    if (notisData) {
+    if (Array.isArray(notisData)) {
       notisData.forEach((noti) => notificationStore.getState().addNotification(noti));
     }
   }, [notisData]);

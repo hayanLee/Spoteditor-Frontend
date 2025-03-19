@@ -11,7 +11,7 @@ export default function BnameButtonList({ sido, onSigunguClick }: BnameButtonLis
   return (
     <>
       {cityDistricts[sido].map((bname) => (
-        <CitySearchButton key={bname} gio={bname} onClick={onSigunguClick} />
+        <CitySearchButton key={bname} gio={bname} onClick={() => onSigunguClick(bname)} />
       ))}
     </>
   );

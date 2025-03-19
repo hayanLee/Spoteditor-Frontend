@@ -26,7 +26,7 @@ class RegisterAPI {
   async createLog(logData: Log) {
     const path = '/api/placelogs';
     const res = await this.#axios.post(path, logData);
-    return res.data;
+    return { data: res.data, status: res.status };
   }
 }
 

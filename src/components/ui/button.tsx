@@ -20,12 +20,12 @@ const buttonVariants = cva(
         true: 'rounded-[60px]',
       },
       size: {
-        xl: 'h-12 px-6 py-[14px] font-semibold text-text-sm',
-        l: 'h-[42px] px-4 py-[11px] text-text-sm',
-        m: 'h-9 px-4 py-2 text-text-sm',
-        sm: 'h-[42px] px-5 py-[14px]  text-[13px] font-semibold leading-[13.65px] tracking-[-0.097px]',
-        s: 'h-7 px-[15px] py-2 text-text-xs',
-        xs: 'h-6 px-2 py-[2px] text-text-xs',
+        xl: 'min-h-12 px-6 py-[14px] font-semibold text-text-sm',
+        l: 'min-h-[42px] px-4 py-[11px] text-text-sm',
+        m: 'min-h-9 px-4 py-2 text-text-sm',
+        sm: 'min-h-[42px] px-5 py-[14px]  text-[13px] font-semibold leading-[13.65px] tracking-[-0.097px]',
+        s: 'min-h-7 px-[15px] py-2 text-text-xs',
+        xs: 'min-h-6 px-2 py-[2px] text-text-xs',
       },
     },
     defaultVariants: {

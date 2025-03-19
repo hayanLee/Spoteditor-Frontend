@@ -37,6 +37,7 @@ const useLogBookmarkMutation = ({ isBookMark, placeLogId }: UseLogBookmarkMutati
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [...logKeys.logBookMark(placeLogId)] });
+      queryClient.refetchQueries({ queryKey: [...logKeys.logBookMark(placeLogId)] });
     },
   });
 };

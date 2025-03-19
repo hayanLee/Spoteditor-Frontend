@@ -18,13 +18,13 @@
 @font-face {
   font-family: 'Untitled Sans';
   src: url('/fonts/test-untitled-sans-bold.woff2') format('woff2');
-  font-weight: bold;
+  font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'Untitled Sans';
   src: url('/fonts/test-untitled-sans-bold-italic.woff2') format('woff2');
-  font-weight: bold;
+  font-weight: 700;
   font-style: italic;
 }
 @font-face {
@@ -60,6 +60,7 @@
 
 html {
   @apply font-pretendard;
+  scroll-behavior: smooth;
 }
 
 @layer base {

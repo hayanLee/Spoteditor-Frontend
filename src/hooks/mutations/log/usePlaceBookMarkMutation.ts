@@ -40,6 +40,7 @@ const usePlaceBookMarkMutation = ({
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [...logKeys.bookMark(placeLogId)] });
+      queryClient.refetchQueries({ queryKey: [...logKeys.bookMark(placeLogId)] });
     },
   });
 };

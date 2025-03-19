@@ -18,7 +18,7 @@ function CitySearchForm() {
   const nav = useNavigate();
   const { permission, position } = useGeolocationPermission();
   const { address } = useLocationToAddress(position?.latitude ?? null, position?.longitude ?? null);
-  const { isDropBox, sido, bname, realBname, openDropBox } = useCitySearchStore();
+  const { isDropBox, sido, bname, openDropBox, closeDropBox } = useCitySearchStore();
 
   const defaultValues = useMemo(
     () => ({
@@ -43,8 +43,7 @@ function CitySearchForm() {
     }
   }, [sido, bname, form]);
 
-  const onSearchSubmit = ({ sido, bname: valueBname }: z.infer<typeof citySearchSchema>) => {
-    const bname = realBname ? realBname : valueBname;
+  const onSearchSubmit = ({ sido, bname }: z.infer<typeof citySearchSchema>) => {
     if (permission === 'prompt') {
       setOpen(true);
     }
@@ -57,12 +56,16 @@ function CitySearchForm() {
   const openDropBoxClick = () => {
     openDropBox();
   };
+
+  useEffect(() => {
+    closeDropBox();
+  }, []);
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSearchSubmit)}
-          className="flex flex-col gap-2.5 web:grid web:grid-cols-[3fr_70px] relative bottom-0"
+          className="flex flex-col gap-2.5 web:grid web:grid-cols-[3fr_70px] relative bottom-0 z-30"
         >
           <div className="grid grid-cols-2 gap-1.5">
             <FormField

@@ -14,6 +14,7 @@ export default function useKakaoAddressName(addressName: string) {
   const [error, setError] = useState<string | null>(null);
   const prevAddress = useRef<string | null>(null);
   const geocoderRef = useRef<kakao.maps.services.Geocoder | null>(null);
+  const callCount = useRef<number>(0); //API 호출 횟수 추적
 
   //입력값 최적화: trim() 적용 후 같은 값이면 메모이제이션
   const memoizedAddress = useMemo(() => addressName.trim(), [addressName]);
@@ -33,6 +34,10 @@ export default function useKakaoAddressName(addressName: string) {
     // 같은 주소에 대한 중복 요청 방지 (마지막 요청된 주소와 비교)
     if (prevAddress.current === memoizedAddress) return;
     prevAddress.current = memoizedAddress;
+    callCount.current += 1; //호출 횟수 증가
+    console.log(
+      `useKakaoAddressName 카카오맵 API 호출 (${callCount.current}번째) | 주소: "${memoizedAddress}"`
+    );
 
     setLoading(true);
     setError(null);

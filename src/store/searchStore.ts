@@ -1,3 +1,4 @@
+import { cityDistricts } from '@/services/data/cityData';
 import { create } from 'zustand';
 
 interface SearchState {
@@ -14,37 +15,32 @@ interface CitySearchState {
   isDropBox: boolean;
   sido: string;
   bname: string;
-  realBname: string;
   openDropBox: () => void;
   closeDropBox: () => void;
   setSido: (sido: string) => void;
   setBname: (bname: string) => void;
-  setRealBname: (realBname: string) => void;
   resetCityState: () => void;
 }
 
-export const useCitySearchStore = create<CitySearchState>((set) => ({
+export const useCitySearchStore = create<CitySearchState>((set, get) => ({
   isDropBox: false,
   sido: '',
   bname: '',
-  realBname: '',
 
-  openDropBox: () => set(() => ({ isDropBox: true })),
-  closeDropBox: () => set(() => ({ isDropBox: false })),
+  openDropBox: () => set(() => ({ isDropBox: true, sido: '', bname: '' })),
+  closeDropBox: () => {
+    const { sido, bname, setBname } = get();
+    if (sido && !bname && cityDistricts[sido]?.length > 0) {
+      setBname(cityDistricts[sido][0]); // sido가 있고 bname이 없으면 첫 번째 bname 자동 설정
+    }
+    set(() => ({ isDropBox: false }));
+  },
   setSido: (sido) => set(() => ({ sido })),
   setBname: (bname) => set(() => ({ bname })),
-  setRealBname: (realBname) => set(() => ({ realBname })),
   resetCityState: () =>
     set(() => ({
       isDropBox: false,
       sido: '',
       bname: '',
-      realBname: '',
     })),
-  /* setSigungus: () =>
-    set((state) => ({
-      sigungus: state.sigungus.includes(state.sigungu)
-        ? state.sigungus // 이미 존재하면 변경하지 않음
-        : [...state.sigungus, state.sigungu], // 새로운 값 추가
-    })), */
 }));

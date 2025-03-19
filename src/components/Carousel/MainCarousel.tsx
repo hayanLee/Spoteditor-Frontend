@@ -1,10 +1,10 @@
+import LogCard from '@/components/LogCard/LogCard';
 import LogCardSkeleton from '@/components/Skeleton/LogCardSkeleton';
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import LogCard from '@/features/homepage/LogCard';
 import useLogList from '@/hooks/queries/log/useLogList';
 import { LogContent } from '@/services/apis/types/logAPI.type';
 import Autoplay from 'embla-carousel-autoplay';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const MainCarousel = () => {
   const { data, isPending, isError } = useLogList();
@@ -12,30 +12,39 @@ const MainCarousel = () => {
   const isDataReady = isPending || !data || isError;
 
   const [api, setApi] = useState<CarouselApi | null>(null);
-  const [current, setCurrent] = useState(0);
-  const [total, setTotal] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    if (api) {
-      const totalSlides = api.scrollSnapList().length;
-      const selectedSlide = api.selectedScrollSnap() + 1;
-
-      setTotal(totalSlides);
-      setCurrent(selectedSlide);
-
-      api.on('select', () => {
-        setCurrent(api.selectedScrollSnap() + 1);
-      });
-    }
+  const updateProgress = useCallback(() => {
+    if (!api) return;
+    const newProgress = api.scrollProgress();
+    setProgress(newProgress);
   }, [api]);
 
-  const progress = total > 0 ? (current / total) * 100 : 0;
+  const handleSetApi = useCallback((carouselApi: CarouselApi | null) => {
+    setApi(carouselApi);
+  }, []);
+
+  useEffect(() => {
+    if (!api) return;
+    const onScroll = () => requestAnimationFrame(updateProgress);
+    api.on('scroll', onScroll);
+
+    return () => {
+      api.off('scroll', onScroll);
+    };
+  }, [api, updateProgress]);
 
   return (
     <>
       <div className="w-full flex justify-end relative bottom-[50px]">
         <div className="w-20 h-1 bg-primary-200">
-          <div className="h-full bg-black" style={{ width: `${progress}%` }}></div>
+          <div
+            className="h-full bg-black transition-transform duration-300 ease-out"
+            style={{
+              transform: `scaleX(${progress})`,
+              transformOrigin: 'left',
+            }}
+          />
         </div>
       </div>
       <Carousel
@@ -43,7 +52,7 @@ const MainCarousel = () => {
         opts={{
           slidesToScroll: 4,
         }}
-        setApi={setApi}
+        setApi={handleSetApi}
       >
         <CarouselContent className="flex">
           {isDataReady

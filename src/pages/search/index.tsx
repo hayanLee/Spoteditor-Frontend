@@ -1,14 +1,14 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import PageLayout from '@/layouts/PageLayout';
-import { cn } from '@/lib/utils';
-import SectionHeader from '@/components/Header/SectionHeader';
-import SearchTitleHeader from '@/features/search/SearchTitleHeader';
 import CustomPagination from '@/components/CustomPagination';
+import SectionHeader from '@/components/Header/SectionHeader';
+import LogCard from '@/components/LogCard/LogCard';
+import SearchNotFound from '@/features/search/SearchNotFound';
+import SearchTitleHeader from '@/features/search/SearchTitleHeader';
 import useSearchAddresLog from '@/hooks/queries/searchLog/useSearchAddresLog';
 import useSearchNameLog from '@/hooks/queries/searchLog/useSearchNameLog';
-import SearchNotFound from '@/features/search/SearchNotFound';
-import LogCard from '@/features/homepage/LogCard';
+import PageLayout from '@/layouts/PageLayout';
+import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 function Search() {
   const location = useLocation();

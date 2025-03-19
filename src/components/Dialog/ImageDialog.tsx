@@ -19,11 +19,7 @@ const ImageDialog = ({ images, triggerImg, triggerAlt }: ImageDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger>
-        <img
-          src={triggerImg}
-          alt={triggerAlt}
-          className="w-[245px] web:w-full aspect-[1/1.3] object-cover"
-        />
+        <img src={triggerImg} alt={triggerAlt} className="h-[425px] aspect-[1/1.3] object-cover" />
       </DialogTrigger>
       <DialogContent className="bg-transparent" hideCloseButton>
         <DialogHeader className="hidden">
