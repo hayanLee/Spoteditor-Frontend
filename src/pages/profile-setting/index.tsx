@@ -61,7 +61,7 @@ function ProfileSetting() {
   });
 
   const { mutate } = useUpdateUser();
-  const { isFormDirty, setIsFormDirty } = useUnsavedChangesWarning(form);
+  const { setIsFormDirty } = useUnsavedChangesWarning(form);
 
   const onSubmit = async (data: z.infer<typeof profileSettingSchema>) => {
     console.log('폼 데이터', data);
@@ -91,10 +91,6 @@ function ProfileSetting() {
   }, [form, onSubmit]);
 
   const handleNavigation = () => {
-    if (isFormDirty) {
-      const confirmLeave = window.confirm('저장하지 않고 나가시겠습니까?');
-      if (!confirmLeave) return;
-    }
     nav(-1); // 이전 페이지로 이동
   };
   return (
