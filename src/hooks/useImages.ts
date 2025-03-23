@@ -146,7 +146,7 @@ function useImages(initialImages: Image[] = []) {
         setIsUploading(false);
       }
     },
-    [state.imageFiles, state.imagePreviews]
+    [state.imageFiles, state.imagePreviews.length]
   );
 
   const handleRemoveImage = useCallback((index: number, isNew: boolean) => {

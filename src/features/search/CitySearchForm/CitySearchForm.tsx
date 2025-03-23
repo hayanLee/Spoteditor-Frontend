@@ -41,7 +41,7 @@ const dropboxVar: Variants = {
 };
 function CitySearchForm() {
   const nav = useNavigate();
-  const { permission, position, setOpen, checkPermission } = useGeolocationPermission();
+  const { position, checkPermission } = useGeolocationPermission();
   const { address } = useLocationToAddress(position?.latitude ?? null, position?.longitude ?? null);
   const { isDropBox, sido, bname, openDropBox } = useCitySearchStore();
 
@@ -72,10 +72,9 @@ function CitySearchForm() {
   }, [sido, bname, form]);
 
   const onSearchSubmit = async ({ sido, bname }: z.infer<typeof citySearchSchema>) => {
-    await checkPermission();
-    if (permission === 'prompt') {
-      setOpen(true);
-      return;
+    const currentPermission = await checkPermission();
+    if (currentPermission === 'prompt') {
+      return; // 모달은 checkPermission에서 열림
     }
     /* 추후 모달창 닫혔을 경우 검색할 수 있는 기능 추가 */
     nav('/search', {

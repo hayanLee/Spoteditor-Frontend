@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 type EditLogStoreStates = {
   places: PlaceInLog[];
+  deletePlaceIds: number[];
 };
 
 type EditLogStoreActions = {
@@ -16,12 +17,14 @@ type EditLogStore = EditLogStoreStates & EditLogStoreActions;
 
 export const useEditLogStore = create<EditLogStore>()((set) => ({
   places: [],
+  deletePlaceIds: [],
 
   setInitialPlaces: (places) => set(() => ({ places })),
 
   removeSelectedPlace: (place) =>
     set((state) => ({
       places: state.places.filter((p) => p.placeId !== place.placeId),
+      deletePlaceIds: [...state.deletePlaceIds, place.placeId],
     })),
 
   moveUpSelectedPlace: (place) =>

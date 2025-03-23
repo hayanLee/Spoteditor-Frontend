@@ -20,7 +20,6 @@ const PlaceEditImagesInput = ({ form, placeName }: PlaceEditImagesInputProps) =>
 
   useEffect(() => {
     // field.value가 변경될 때마다 photos 상태를 업데이트
-    console.log(field.value);
     if (field.value && !isEqual(field.value, photos)) {
       setPhotos(field.value);
     }

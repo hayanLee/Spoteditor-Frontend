@@ -1,6 +1,8 @@
 import ProfileHeader from '@/features/profile/ProfileHeader';
 import TapNavigation from '@/features/profile/TapNavigation';
 import PageLayout from '@/layouts/PageLayout';
+import { copyUrlToClipboard } from '@/utils/copyUrlToClipboard';
+import { Share2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -17,7 +19,13 @@ function Profile() {
   }, [userId, pathname]);
   return (
     <div className="flex w-full flex-col gap-[50px] items-center">
-      <PageLayout>
+      <PageLayout className="relative">
+        <button
+          className=" bg-white/70 border border-primary-100 rounded-full absolute top-[30px] web:top-[59.6px] right-4 web:right-[50px] cursor-pointer z-10 hover:bg-white"
+          onClick={() => copyUrlToClipboard()}
+        >
+          <Share2 className="w-[36px] h-[36px] p-2" />
+        </button>
         <ProfileHeader />
         <TapNavigation />
         <Outlet />
