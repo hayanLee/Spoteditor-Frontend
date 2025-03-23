@@ -50,12 +50,15 @@ const HomePage = () => {
             </div>
           </div>
 
-          <p className="text-primary-300 text-text-sm web:border-t border-b border-primary-100 py-[18px] web:h-full flex items-center web:text-text-lg web:font-regular">
-            내가 좋아하는 숨은 명소와 맛집을 공유하고, 다른 유저들이 여러분의 루트를 참고하며 "내가
-            만든 코스로 누군가 즐거운 하루를 보냈구나!" 하는 느낌, 상상만 해도 행복하지 않나요? 🥰
-            다른 유저들이 참고할 수 있도록 여러분만의 코스를 나눠보세요. 여러분이 만들어준 코스는
-            많은 사람들에게 새로운 영감을 줄 거예요!
-          </p>
+          <div className="flex-col  text-primary-300 text-text-sm web:border-t border-b border-primary-100 py-[18px] web:h-full flex justify-center web:text-text-lg web:font-regular">
+            <p>
+              내가 좋아하는 숨은 명소와 맛집을 공유하고, 다른 유저들이 여러분의 루트를 참고하며
+              "내가 만든 코스로 누군가 즐거운 하루를 보냈구나!" 하는 느낌, 상상만 해도 행복하지
+              않나요? 🥰
+            </p>
+            <p>다른 유저들이 참고할 수 있도록 여러분만의 코스를 나눠보세요.</p>
+            <p>여러분이 만들어준 코스는 많은 사람들에게 새로운 영감을 줄 거예요!</p>
+          </div>
         </div>
 
         {/* 로그 */}

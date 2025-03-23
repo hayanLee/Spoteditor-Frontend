@@ -1,9 +1,5 @@
 import { cn } from '@/lib/utils';
 import VerifiedLabelIcon from '../../../components/Icons/VerifiedLabelIcon';
-import { Bookmark } from 'lucide-react';
-import useUser from '@/hooks/queries/user/useUser';
-import { useParams } from 'react-router-dom';
-
 interface PostCardImageProps {
   imageUrl?: string;
   lable?: boolean;
@@ -12,21 +8,19 @@ interface PostCardImageProps {
 }
 
 function PostCardImage({ imageUrl, lable, author, className }: PostCardImageProps) {
-  const { userId } = useParams();
-  const { user } = useUser();
   return (
     <div
       className={cn(
         'relative flex-1 w-full web:mb-[10px] mobile:mb-[6px] bg-[linear-gradient(180deg,rgba(0,0,0,0)_74.97%,rgba(0,0,0,0.7)_94.58%)]',
         className,
-        'aspect-[324/218]'
+        'aspect-[324/218] overflow-hidden'
       )}
     >
       {imageUrl && (
         <img
           src={imageUrl}
           alt="Post Thumbnail"
-          className="object-cover w-full h-full rounded-md"
+          className="object-cover object-center w-full max-h-full rounded-md"
         />
       )}
       {lable && (
@@ -37,12 +31,7 @@ function PostCardImage({ imageUrl, lable, author, className }: PostCardImageProp
           <VerifiedLabelIcon className="w-[10.474px] h-[10.378px] fill-white" />
         </div>
       )}
-      <div className="absolute inset-0 transition-colors hover:bg-black/25" />
-      {Number(userId) !== user?.userId && (
-        <div className="bg-white absolute top-[15px] right-[15px] p-[11px] z-20">
-          <Bookmark />
-        </div>
-      )}
+      <div className="absolute inset-0 transition-colors group-hover:bg-black/25" />
     </div>
   );
 }

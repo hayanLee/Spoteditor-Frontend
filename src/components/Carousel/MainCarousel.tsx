@@ -4,51 +4,77 @@ import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/componen
 import useLogList from '@/hooks/queries/log/useLogList';
 import { LogContent } from '@/services/apis/types/logAPI.type';
 import Autoplay from 'embla-carousel-autoplay';
-import { useCallback, useEffect, useState } from 'react';
+import throttle from 'lodash/throttle';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MainCarousel = () => {
-  const { data, isPending, isError } = useLogList();
+  const { data, isPending, isError } = useLogList({
+    page: 1,
+    size: 12,
+    direction: 'ASC',
+  });
+
   const { content } = data ?? {};
   const isDataReady = isPending || !data || isError;
 
   const [api, setApi] = useState<CarouselApi | null>(null);
-  const [progress, setProgress] = useState(0);
-
-  const updateProgress = useCallback(() => {
-    if (!api) return;
-    const newProgress = api.scrollProgress();
-    setProgress(newProgress);
-  }, [api]);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const autoplayPlugin = useRef(Autoplay({ delay: 8000, stopOnInteraction: false }));
 
   const handleSetApi = useCallback((carouselApi: CarouselApi | null) => {
     setApi(carouselApi);
   }, []);
 
+  const updateProgressBar = useCallback(() => {
+    if (!api || !progressRef.current) return;
+    const progress = api.scrollProgress();
+    progressRef.current.style.transform = `scaleX(${progress})`;
+  }, [api]);
+
+  const throttledUpdateProgress = useRef(
+    throttle(updateProgressBar, 16, { leading: true, trailing: true })
+  ).current;
+
   useEffect(() => {
     if (!api) return;
-    const onScroll = () => requestAnimationFrame(updateProgress);
-    api.on('scroll', onScroll);
+    updateProgressBar();
+
+    api.on('scroll', throttledUpdateProgress);
+    api.on('select', updateProgressBar);
+    api.on('settle', updateProgressBar); // 스크롤이 정착했을 때
+    api.on('reInit', updateProgressBar); // 캐러셀이 다시 초기화될 때
 
     return () => {
-      api.off('scroll', onScroll);
+      api.off('scroll', throttledUpdateProgress);
+      api.off('select', updateProgressBar);
+      api.on('settle', updateProgressBar);
+      api.on('reInit', updateProgressBar);
+
+      throttledUpdateProgress.cancel();
     };
-  }, [api, updateProgress]);
+  }, [api, updateProgressBar, throttledUpdateProgress]);
+
+  useEffect(() => {
+    return () => {
+      autoplayPlugin.current.stop();
+    };
+  }, []);
 
   return (
     <>
       <div className="w-full flex justify-end relative bottom-[50px]">
         <div className="w-20 h-1 bg-primary-200">
           <div
+            ref={progressRef}
             className="h-full bg-black transition-transform duration-300 ease-out"
             style={{
-              transform: `scaleX(${progress})`,
               transformOrigin: 'left',
             }}
           />
         </div>
       </div>
       <Carousel
-        plugins={[Autoplay({ delay: 8000, stopOnInteraction: false })]}
+        plugins={[autoplayPlugin.current]}
         opts={{
           slidesToScroll: 4,
         }}

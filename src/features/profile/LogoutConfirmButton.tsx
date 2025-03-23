@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useLogout } from '@/hooks/mutations/user/useLogout';
+import useLogout from '@/hooks/mutations/user/useLogout';
 
 export default function LogoutConfirmButton() {
   const { mutate } = useLogout();

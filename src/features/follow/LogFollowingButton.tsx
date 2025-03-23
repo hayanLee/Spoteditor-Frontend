@@ -3,28 +3,19 @@ import { useFollowingMutation } from '@/hooks/mutations/follow/useFollowingMutat
 import { useUnfollowMutation } from '@/hooks/mutations/follow/useUnfollowMutation';
 
 interface LogFollowingButtonProps {
-  userId: number;
-  userName: string;
-  userImage: string;
+  otherUserId: number;
   isFollowing: boolean;
 }
 
-export default function LogFollowingButton({
-  userId,
-  userName,
-  userImage,
-  isFollowing,
-}: LogFollowingButtonProps) {
-  const { mutate: onMutate } = useFollowingMutation({
-    otherUserName: userName,
-    otherUserImage: userImage,
-  });
-  const { mutate: unMutate } = useUnfollowMutation();
+export default function LogFollowingButton({ otherUserId, isFollowing }: LogFollowingButtonProps) {
+  const { mutate: onMutate, status: onStatus } = useFollowingMutation();
+  const { mutate: unMutate, status: unStatus } = useUnfollowMutation();
 
   const mutate = isFollowing ? unMutate : onMutate;
-
+  const status = onStatus || unStatus;
   const onFollowClick = () => {
-    mutate(userId);
+    if (status === 'pending') return;
+    mutate(otherUserId);
   };
 
   return (

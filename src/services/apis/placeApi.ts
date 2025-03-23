@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { PlaceBookMark } from './types/placeAPI.type';
+import { PlaceBookMark, PlaceBookMarkCeck } from './types/placeAPI.type';
 
 class PlaceAPI {
   #axios;
@@ -37,6 +37,17 @@ class PlaceAPI {
     } catch (error) {
       console.error(error);
       return [];
+    }
+  }
+
+  async getPlaceBookMarkCheck(placeId: number): Promise<PlaceBookMarkCeck> {
+    try {
+      const path = `/api/bookmark/check?placeId=${placeId}`;
+      const res = await this.#axios.get(path);
+      return res.data as PlaceBookMarkCeck;
+    } catch (error) {
+      console.error(error);
+      return { isBookmarked: false };
     }
   }
 }

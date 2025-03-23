@@ -87,35 +87,37 @@ export default function FollowingListButton({
               <Loading className="w-full pl-[5px]" />
             ) : (
               <>
-                {data?.pages.map((folloingList) =>
-                  folloingList.content.map((folloing) => (
-                    <DialogClose asChild>
-                      <Link
-                        to={`/profile/${folloing?.userId}`}
-                        key={folloing.userId}
-                        className="flex items-center w-full py-[6px] between justify-between"
-                      >
-                        <figure className="flex items-center gap-[6px]">
-                          <Avatar className="w-11 h-11">
-                            <AvatarImage
-                              src={folloing.imageUrl}
-                              alt={`${folloing.name}님의 프로필`}
-                            />
-                            <AvatarFallback>{folloing.name}</AvatarFallback>
-                          </Avatar>
-                          <figcaption className="font-bold text-text-xs">
-                            {folloing.name}
-                          </figcaption>
-                        </figure>
-                        {isMe && (
-                          <ProfileFollowingButton
-                            otherUserId={folloing.userId}
-                            otherUserName={folloing.name}
-                            otherUserImage={folloing.imageUrl}
-                          />
-                        )}
-                      </Link>
-                    </DialogClose>
+                {data?.pages.map((followingList) =>
+                  followingList.content.map((following) => (
+                    <div
+                      key={following.userId}
+                      className="flex items-center w-full py-[6px] between justify-between"
+                    >
+                      <DialogClose asChild>
+                        <Link
+                          to={`/profile/${following?.userId}`}
+                          className="flex items-center w-full"
+                        >
+                          <figure className="flex items-center gap-[6px]">
+                            <Avatar className="w-11 h-11">
+                              <AvatarImage
+                                src={following.imageUrl}
+                                alt={`${following.name}님의 프로필`}
+                              />
+                              <AvatarFallback>{following.name}</AvatarFallback>
+                            </Avatar>
+                            <figcaption className="font-bold text-text-xs">
+                              {following.name}
+                            </figcaption>
+                          </figure>
+                        </Link>
+                      </DialogClose>
+                      {isMe && (
+                        <div className="z-20">
+                          <ProfileFollowingButton otherUserId={following.userId} />
+                        </div>
+                      )}
+                    </div>
                   ))
                 )}
                 {isFetchingNextPage && <Loading className="w-full h-5" />}

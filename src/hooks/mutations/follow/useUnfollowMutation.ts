@@ -1,11 +1,8 @@
-import { followKeys } from '@/hooks/queries/follow/followQueryKeys';
 import { logKeys } from '@/hooks/queries/log/logQueryKeys';
 import { userKeys } from '@/hooks/queries/user/userQueryKeys';
 import api from '@/services/apis/api';
 import { ApiErrorResponse } from '@/services/apis/types/commonApi';
-import { FollowResponse } from '@/services/apis/types/followAPI';
-import { LogResponse } from '@/services/apis/types/registerAPI.type';
-import { IUser } from '@/services/apis/types/userAPI';
+import { IOhterUser, IUser } from '@/services/apis/types/userAPI';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useParams } from 'react-router-dom';
 
@@ -23,28 +20,22 @@ export function useUnfollowMutation() {
   return useMutation<void, ApiErrorResponse, number>({
     mutationFn: (userId) => api.follow.deleteFollow(userId),
     onMutate: async (userId) => {
-      if (profilePage && userId) {
-        await queryClient.cancelQueries({ queryKey: followKeys.userFollowings(userId) });
+      if (profilePage || detailPage) {
+        await queryClient.cancelQueries({ queryKey: userKeys.otherUser(userId) });
       }
       await queryClient.cancelQueries({ queryKey: userKeys.me() });
-      if (detailPage && placeLogId) {
-        await queryClient.cancelQueries({ queryKey: logKeys.detail(Number(placeLogId)) });
-      }
 
-      const previousFolloings = profilePage
-        ? queryClient.getQueryData(followKeys.userFollowings(userId))
-        : undefined;
+      const previousFolloings =
+        profilePage || detailPage
+          ? queryClient.getQueryData(userKeys.otherUser(userId))
+          : undefined;
       const otherUserPrevious = queryClient.getQueryData(userKeys.me());
-      const logPrevious = detailPage
-        ? queryClient.getQueryData(logKeys.detail(Number(placeLogId)))
-        : undefined;
 
-      if (profilePage && userId) {
-        queryClient.setQueryData(followKeys.userFollowings(userId), (oldData: FollowResponse) => {
-          const fillterData = oldData?.content?.filter((user) => user.userId !== userId);
+      if (profilePage || detailPage) {
+        queryClient.setQueryData(userKeys.otherUser(userId), (oldData: IOhterUser) => {
           return {
             ...oldData,
-            content: fillterData ?? [],
+            isFollowing: false,
           };
         });
       }
@@ -54,21 +45,12 @@ export function useUnfollowMutation() {
           following: oldData?.following - 1,
         };
       });
-      if (detailPage && placeLogId) {
-        queryClient.setQueryData(logKeys.detail(Number(placeLogId)), (oldData: LogResponse) => {
-          const currentIsFollowing = oldData.isFollowing;
-          return {
-            ...oldData,
-            isFollowing: !currentIsFollowing,
-          };
-        });
-      }
-      return { previousFolloings, otherUserPrevious, logPrevious };
+      return { previousFolloings, otherUserPrevious };
     },
 
     onError(_, userId, context: any) {
-      if (profilePage && userId) {
-        queryClient.setQueryData(followKeys.userFollowings(userId), context.previousFolloings);
+      if (profilePage || detailPage) {
+        queryClient.setQueryData(userKeys.otherUser(userId), context.previousFolloings);
       }
       queryClient.setQueryData(userKeys.me(), context.otherUserPrevious);
       if (detailPage && context.logPrevious) {
@@ -77,13 +59,10 @@ export function useUnfollowMutation() {
     },
 
     onSuccess: (_, userId) => {
-      if (profilePage && userId) {
-        queryClient.invalidateQueries({ queryKey: followKeys.userFollowings(userId) });
+      if (profilePage || detailPage) {
+        queryClient.invalidateQueries({ queryKey: userKeys.otherUser(userId) });
       }
       queryClient.invalidateQueries({ queryKey: userKeys.me() });
-      if (detailPage && placeLogId) {
-        queryClient.invalidateQueries({ queryKey: logKeys.detail(Number(placeLogId)) });
-      }
     },
   });
 }

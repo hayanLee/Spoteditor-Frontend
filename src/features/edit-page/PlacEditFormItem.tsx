@@ -1,49 +1,45 @@
 import { Textarea } from '@/components/ui/textarea';
-import { LogEditFormData } from '@/pages/register-page/EditPage';
+import { LogEditFormData } from '@/pages/edit-page/EditPage';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import useDrawerStore from '@/store/drawerStore';
 import { Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
-import { Control, Controller, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
+import { Controller, Path, UseFormReturn } from 'react-hook-form';
 import PlaceEditImagesInput from './PlaceEditImagesInput';
 
 interface PlaceEditFormItemProps {
-  control: Control<LogEditFormData>;
-  place: kakao.maps.services.PlacesSearchResultItem | PlaceInLog;
+  place: PlaceInLog;
   idx: number;
-  setValue: UseFormSetValue<LogEditFormData>;
-  trigger: UseFormTrigger<LogEditFormData>;
+  form: UseFormReturn<LogEditFormData>;
 }
 
-const PlaceEditFormItem = ({ place, idx, control, setValue, trigger }: PlaceEditFormItemProps) => {
+const PlaceEditFormItem = ({ place, idx, form }: PlaceEditFormItemProps) => {
   const isOpen = useDrawerStore((state) => state.isOpen); // 열림 여부
-  const openModal = useDrawerStore((state) => state.openDrawer); // 열림 + 타켓 지정
-  const closeModal = useDrawerStore((state) => state.closeDrawer);
-  const targetPlace = useDrawerStore((state) => state.targetPlace);
-  const targetPlaceId = targetPlace && 'id' in targetPlace ? targetPlace?.id : targetPlace?.placeId;
-
-  const placeId = 'id' in place ? place.id : place.placeId;
-  const placeName = 'place_name' in place ? place.place_name : place.name;
-  const category = 'category_group_name' in place ? place.category_group_name : place.category;
-  const address =
-    'road_address_name' in place ? place.road_address_name : place.address?.roadAddress;
-  const roadAddress =
-    'road_address_name' in place ? place.road_address_name : place.address?.roadAddress;
-  const placeDescription = 'description' in place && place.description;
+  const openLogDrawer = useDrawerStore((state) => state.openLogDrawer); // 열림 + 타켓 지정
+  const closeDrawer = useDrawerStore((state) => state.closeDrawer);
+  const targetPlace = useDrawerStore((state) => state.editTargetPlace);
+  const {
+    name,
+    address: { address, roadAddress },
+    category,
+    description,
+    placeId,
+  } = place;
+  const isTargetPlace = targetPlace?.placeId === placeId;
 
   return (
     <div className="py-[5px]">
-      {/* 장소 설명 */}
+      {/* 장소 정보 */}
       <section className="flex flex-col gap-2">
         <div className="text-text-lg font-bold">
           <div className="flex justify-between">
             <p>{String(idx + 1).padStart(2, '0')}</p>
-            {isOpen && targetPlaceId === placeId ? (
-              <CircleCheck className="fill-black stroke-white" onClick={closeModal} />
+            {isOpen && isTargetPlace ? (
+              <CircleCheck className="fill-black stroke-white" onClick={closeDrawer} />
             ) : (
-              <Circle className="stroke-neutral-200" onClick={() => openModal(place)} />
+              <Circle className="stroke-neutral-200" onClick={() => openLogDrawer(place)} />
             )}
           </div>
-          <p className="flex items-center">{placeName}</p>
+          <p className="flex items-center">{name}</p>
         </div>
 
         <div className="flex flex-col text-primary-400">
@@ -61,14 +57,14 @@ const PlaceEditFormItem = ({ place, idx, control, setValue, trigger }: PlaceEdit
         </div>
       </section>
 
-      {/* 사진 첨부 */}
-      <PlaceEditImagesInput control={control} setValue={setValue} idx={idx} trigger={trigger} />
+      {/* 사진 */}
+      <PlaceEditImagesInput form={form} placeName={name} />
 
       {/* 내용 */}
       <Controller
-        name={`places.${idx}.placeDescription`}
-        control={control}
-        defaultValue={placeDescription || ''}
+        name={`places.${name}.placeDescription` as Path<LogEditFormData>}
+        control={form.control}
+        defaultValue={description || ''}
         render={({ field }) => (
           <Textarea
             {...field}

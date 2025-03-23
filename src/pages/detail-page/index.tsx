@@ -1,4 +1,3 @@
-import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import { SpotIcon, TableIcon } from '@/components/Icons';
 import ModalLogCard from '@/components/LogCard/ModalLogCard';
 import LogCoverSkeleton from '@/components/Skeleton/LogCoverSkeleton';
@@ -13,36 +12,37 @@ import {
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import OtherUserProfileSection from '@/features/profile/OtherUserProfileSection';
-import useDeleteLog from '@/hooks/mutations/log/useDeleteLogMutation';
 import useLogBookmarkMutation from '@/hooks/mutations/log/useLogBookmarkMutation';
 import useLog from '@/hooks/queries/log/useLog';
 import useLogBookMark from '@/hooks/queries/log/useLogBookMark';
 import usePlaceBookMark from '@/hooks/queries/log/usePlaceBookMark';
-import useUser from '@/hooks/queries/user/useUser';
+import useAuth from '@/hooks/queries/user/useAuth';
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import PlaceItem from '@/pages/detail-page/components/PlaceItem';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { useLoginMoalStore } from '@/store/loginStore';
 import { copyUrlToClipboard } from '@/utils/copyUrlToClipboard';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
-import { ArrowLeft, Bookmark, Share2, Trash2 } from 'lucide-react';
+import { ArrowLeft, Bookmark, PencilLine, Share2 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 const DetailPage = () => {
   /* hooks */
   const navi = useNavigate();
   const { placeLogId } = useParams();
   const { isMobile } = useResponsive();
-  const NumericPlaceLogId = Number(placeLogId);
+
   /* query */
-  const { data: logData, isPending: isLogPending } = useLog(NumericPlaceLogId);
-  const { data: LogBookmark, isPending: isLogBookmarkPending } = useLogBookMark(NumericPlaceLogId);
-  const { data: placeBookmark, isPending: isPlaceBookmarkPending } =
-    usePlaceBookMark(NumericPlaceLogId);
-  const { user, isLoading } = useUser();
-  const { mutate: deleteLog } = useDeleteLog(NumericPlaceLogId);
+  const numericPlaceLogId = Number(placeLogId);
+  const { data: logData, isPending: isLogPending } = useLog(numericPlaceLogId);
+  const { data: LogBookmark } = useLogBookMark(numericPlaceLogId);
+  const { data: placeBookmark } = usePlaceBookMark(numericPlaceLogId);
+  const { data: user } = useAuth();
+  const { openLoginModal } = useLoginMoalStore();
+
   /* state */
-  const isDataReady =
-    isLogPending || isPlaceBookmarkPending || isLoading || isLogBookmarkPending || !user;
+  // const isDataReady = isLogPending || isPlaceBookmarkPending || isLogBookmarkPending;
+  const isDataReady = isLogPending;
 
   const name = logData?.name ?? '';
   const description = logData?.description ?? '';
@@ -51,17 +51,22 @@ const DetailPage = () => {
   const isOwner = user?.userId === logData?.userId;
 
   /* mutatation */
-  const { mutate } = useLogBookmarkMutation({
+  const { mutate: logBookmarkMutation } = useLogBookmarkMutation({
     isBookMark: placebookmark,
-    placeLogId: NumericPlaceLogId,
+    placeLogId: numericPlaceLogId,
   });
 
   /* handlers */
-  const onClickLogBookmark = async () => mutate();
+  const onClickLogBookmark = () => {
+    if (LogBookmark === undefined) {
+      openLoginModal();
+      return;
+    }
+    logBookmarkMutation();
+  };
   const onClickBack = () => navi(-1);
   const onClickShare = () => copyUrlToClipboard();
-  // const onClickPencil = () => navi(`/register/edit/${placeLogId}`);
-  const onClickDelete = () => deleteLog();
+  const onClickPencil = () => navi(`/register/edit/${placeLogId}`);
 
   return (
     <>
@@ -96,16 +101,12 @@ const DetailPage = () => {
                   <Share2 />
                 </div>
                 {isOwner && (
-                  <ConfirmDialog
-                    title={name}
-                    description="로그를 삭제하시겠습니까?"
-                    trigger={
-                      <div className=" bg-white/70 border border-primary-100 rounded-full p-2.5 top-[14px] right-2.5 cursor-pointer z-10 hover:bg-white">
-                        <Trash2 />
-                      </div>
-                    }
-                    onConfirm={onClickDelete}
-                  />
+                  <div
+                    className=" bg-white/70 border border-primary-100 rounded-full p-2.5 top-[14px] right-2.5 cursor-pointer z-10 hover:bg-white"
+                    onClick={onClickPencil}
+                  >
+                    <PencilLine />
+                  </div>
                 )}
               </div>
             </div>
@@ -128,12 +129,7 @@ const DetailPage = () => {
       <div className="flex flex-col px-4 py-2.5 gap-[15px] web:px-[50px] web:py-5">
         <div className="web:grid web:grid-cols-[1fr_3fr] gap-5">
           {/* 프로필  */}
-          <OtherUserProfileSection
-            userId={Number(logData?.userId)}
-            userName={String(logData?.userName)}
-            userImage={String(logData?.userImage)}
-            isFollowing={Boolean(logData?.isFollowing)}
-          />
+          <OtherUserProfileSection userId={Number(logData?.userId)} />
 
           {/* 설명 */}
           {isDataReady ? (
@@ -153,13 +149,13 @@ const DetailPage = () => {
                 place={place}
                 key={place.placeId}
                 idx={idx + 1}
-                isBookMark={placeBookmark?.[idx]?.isBookmarked ?? false}
+                isBookMark={placeBookmark?.[idx]?.isBookmarked ?? undefined}
               />
             ))}
       </div>
 
       <div className="fixed bottom-12 right-2.5 web:right-5 flex flex-col gap-2 web:gap-[15px]">
-        {/* 북마크 버튼 */}
+        {/* 로그 북마크 버튼 */}
         <Button
           variant={'outline'}
           className="w-[45px] h-[45px] web:w-[60px] web:h-[60px] border-gray-200 rounded-full"
@@ -197,7 +193,7 @@ const DetailPage = () => {
                   <ModalLogCard
                     key={place.placeId}
                     place={place}
-                    isPlaceBookMark={placeBookmark?.[idx]?.isBookmarked as boolean}
+                    isPlaceBookMark={placeBookmark?.[idx]?.isBookmarked ?? undefined}
                     placeLogId={Number(logData?.placeLogId)}
                   />
                 ))}

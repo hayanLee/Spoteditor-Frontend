@@ -53,12 +53,10 @@ function UserProfileButton() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="m-1">
-          <Link to="">
-            <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
-              <SettingIcon />
-              설정
-            </DropdownMenuItem>
-          </Link>
+          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
+            <SettingIcon />
+            설정
+          </DropdownMenuItem>
           <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
             <HeadPhoneIcon />
             문의하기

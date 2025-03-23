@@ -1,18 +1,30 @@
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { create } from 'zustand';
 
-interface DrawerState {
+/*
+ * 등록 페이지 - PlacesSearchResultItem
+ * 수정 페이지 - PlaceInLog
+ */
+type DrawerStates = {
   isOpen: boolean;
-  targetPlace: kakao.maps.services.PlacesSearchResultItem | PlaceInLog | null;
-  openDrawer: (place: kakao.maps.services.PlacesSearchResultItem | PlaceInLog) => void;
+  newLogTargetPlace: kakao.maps.services.PlacesSearchResultItem | null;
+  editTargetPlace: PlaceInLog | null;
+};
+type DrawerActions = {
+  openNewLogDrawer: (place: kakao.maps.services.PlacesSearchResultItem) => void;
+  openLogDrawer: (place: PlaceInLog) => void;
   closeDrawer: () => void;
-}
+};
 
-const useDrawerStore = create<DrawerState>((set) => ({
+type DrawerStores = DrawerStates & DrawerActions;
+
+const useDrawerStore = create<DrawerStores>((set) => ({
   isOpen: false,
-  targetPlace: null,
-  openDrawer: (place) => set({ isOpen: true, targetPlace: place }),
-  closeDrawer: () => set({ isOpen: false, targetPlace: null }),
+  editTargetPlace: null,
+  newLogTargetPlace: null,
+  openNewLogDrawer: (place) => set({ isOpen: true, newLogTargetPlace: place }),
+  openLogDrawer: (place) => set({ isOpen: true, editTargetPlace: place }),
+  closeDrawer: () => set({ isOpen: false, newLogTargetPlace: null, editTargetPlace: null }),
 }));
 
 export default useDrawerStore;

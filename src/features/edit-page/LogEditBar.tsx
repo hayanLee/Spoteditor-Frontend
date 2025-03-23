@@ -13,7 +13,6 @@ const LogEditBar = ({ logTitle }: LogEditBarProps) => {
   const { placeLogId } = useParams();
   const { mutate: deleteLog } = useDeleteLog(Number(placeLogId));
   const handleBack = () => navi(-1);
-
   const handleClickDelete = () => deleteLog();
   return (
     <div className="flex items-center w-full py-[7px] px-4 justify-between">

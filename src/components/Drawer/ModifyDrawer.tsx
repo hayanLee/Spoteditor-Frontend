@@ -10,7 +10,8 @@ import { DrawerTitle } from '../ui/drawer';
 
 const ModifyDrawer = () => {
   const isOpen = useDrawerStore((state) => state.isOpen);
-  const targetPlace = useDrawerStore((state) => state.targetPlace);
+  const newLogTargetPlace = useDrawerStore((state) => state.newLogTargetPlace);
+  const editTargetPlace = useDrawerStore((state) => state.editTargetPlace);
   const closeModal = useDrawerStore((state) => state.closeDrawer);
 
   const {
@@ -25,8 +26,11 @@ const ModifyDrawer = () => {
     moveDownSelectedPlace: moveDownEditPlace,
   } = useEditLogStore();
 
+  // 현재 선택된 장소를 확인 (수정 페이지인지 등록 페이지인지)
+  const isEditingLog = !!editTargetPlace;
+  const targetPlace = isEditingLog ? editTargetPlace : newLogTargetPlace;
+
   if (!targetPlace) return null;
-  const isEditingLog = 'placeId' in targetPlace; // 등록된 장소
 
   const handleUpClick = () =>
     isEditingLog

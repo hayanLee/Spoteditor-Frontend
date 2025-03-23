@@ -1,7 +1,7 @@
 import PenIcon from '@/components/Icons/PenIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import useImagePreview from '@/hooks/useImagePreview';
-import { useRef } from 'react';
+import { useProfileStore } from '@/store/profileStore';
+import { useEffect, useRef, useState } from 'react';
 
 interface ProfileSettingAvatarProps {
   imageUrl: string;
@@ -10,7 +10,39 @@ interface ProfileSettingAvatarProps {
 export default function ProfileSettingAvatar({ imageUrl }: ProfileSettingAvatarProps) {
   const hiddenInputRef = useRef<HTMLInputElement>(null);
   const handleImageClick = () => hiddenInputRef.current?.click();
-  const { imagePreview, handleFileChange } = useImagePreview(imageUrl);
+  const { setFile } = useProfileStore();
+
+  const initialImageUrl = imageUrl;
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(initialImageUrl);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log('file', file?.name);
+
+    if (file) {
+      setImageFile(file);
+      setFile(file);
+    } else {
+      //이미지가 이미 있을 때 이미지를 새로 선택 안 할 경우 취소
+      setImageFile(null); // 메모리 해제
+      setImagePreview(initialImageUrl);
+    }
+  };
+
+  //이미지 미리보기
+  useEffect(() => {
+    if (imageFile) {
+      const url = URL.createObjectURL(imageFile);
+      setImagePreview(url);
+
+      // 미리보기가 있을 때만 클린업 함수로 메모리 해제
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    }
+  }, [imageFile, initialImageUrl]);
 
   return (
     <div className="flex justify-center ">

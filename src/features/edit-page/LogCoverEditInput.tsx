@@ -3,7 +3,7 @@ import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useImagePreview from '@/hooks/useImagePreview';
-import { LogEditFormData } from '@/pages/register-page/EditPage';
+import { LogEditFormData } from '@/pages/edit-page/EditPage';
 import { CircleX } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import {
@@ -26,12 +26,15 @@ const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInput
   const storedFile = field.value && 'storedFile' in field.value ? field.value.storedFile : ''; // Image일때만 있음
   const { presignedUrlObj, imagePreview, handleFileChange, handleClearImage, isUploading } =
     useImagePreview(storedFile);
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  /* 이미지 변경되면 변경된 필드에 저장 */
   useEffect(() => {
-    if (presignedUrlObj) setValue(name, presignedUrlObj);
-    trigger(name);
+    if (presignedUrlObj) {
+      field.onChange(presignedUrlObj);
+      setValue(name, presignedUrlObj);
+      trigger(name);
+    }
   }, [name, presignedUrlObj, setValue, trigger]);
 
   return (
@@ -71,10 +74,7 @@ const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInput
               <Input
                 type="file"
                 accept="image/*"
-                onChange={async (e) => {
-                  await handleFileChange(e);
-                  field.onChange(presignedUrlObj);
-                }}
+                onChange={async (e) => await handleFileChange(e)}
                 ref={fileInputRef}
                 className="hidden"
               />

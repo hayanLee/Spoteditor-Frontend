@@ -34,12 +34,22 @@ export const LogEditFormSchema = z.object({
     .min(1, '설명은 최소 1자 이상 입력해야 합니다.')
     .max(500, '설명은 500자를 초과할 수 없습니다.'),
   coverImgSrc: z.union([PresignUrlSchema, ImageSchema]),
-  places: z.array(
-    z.object({
-      photos: z
-        .array(z.union([ImageSchema, PresignUrlSchema]))
-        .min(1, '장소 이미지는 최소 1개 이상 입력해야 합니다.'),
-      placeDescription: z.string().optional(),
-    })
+  places: z.record(
+    z
+      .object({
+        placeId: z.number(),
+        placeDescription: z.string().optional(),
+        photos: z.array(z.union([ImageSchema, PresignUrlSchema])).default([]),
+        newPhotos: z.array(PresignUrlSchema).default([]),
+        deleteImageIds: z.array(z.number()).default([]),
+      })
+      .refine(
+        (place) =>
+          !(place.deleteImageIds.length === place.photos.length && place.newPhotos.length < 1),
+        {
+          message: '최소 1개의 이미지는 유지해야 합니다.',
+          path: ['newPhotos'],
+        }
+      )
   ),
 });

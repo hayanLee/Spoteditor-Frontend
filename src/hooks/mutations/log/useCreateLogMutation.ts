@@ -10,7 +10,7 @@ const useCreateLogMutation = () => {
 
   return useMutation({
     mutationFn: async (formatedLog: Log) => {
-      return await api.register.createLog(formatedLog);
+      return await api.log.createLog(formatedLog);
     },
     onSuccess: (result) => {
       if (!result?.data.placeLogId) return;
@@ -18,6 +18,9 @@ const useCreateLogMutation = () => {
 
       queryClient.invalidateQueries({ queryKey: logKeys.detail(result.data.placeLogId) });
       queryClient.invalidateQueries({ queryKey: logKeys.list() });
+      
+      queryClient.refetchQueries({ queryKey: logKeys.detail(result.data.placeLogId) });
+      queryClient.refetchQueries({ queryKey: logKeys.list() });
     },
     onError: (error) => {
       console.error('로그 등록 실패:', error);

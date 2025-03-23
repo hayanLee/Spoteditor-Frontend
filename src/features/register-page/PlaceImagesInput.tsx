@@ -50,14 +50,14 @@ const PlaceImagesInput = ({ control, setValue, idx, trigger }: PlaceImagesInputP
               <div className="relative m-1 shrink-0" key={previewIdx}>
                 <Input
                   type="image"
-                  src={previewURL}
+                  src={previewURL.previewUrl}
                   alt="장소 이미지"
                   className="h-[300px] object-cover p-0 "
                 />
                 <CircleX
                   className="stroke-primary-300 fill-slate-100 stroke-1 absolute top-2 right-2  cursor-pointer hover:fill-slate-50/50"
                   onClick={() => {
-                    handleRemoveImage(previewIdx);
+                    handleRemoveImage(previewIdx, false);
                   }}
                 />
               </div>

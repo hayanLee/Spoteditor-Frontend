@@ -2,6 +2,7 @@ import MainLayout from '@/layouts/MainLayout';
 import RegisterLayout from '@/layouts/RegisterLayout';
 import DetailPage from '@/pages/detail-page';
 import PlacesCollectionPage from '@/pages/detail-page/PlacesCollectionPage';
+import EditPage from '@/pages/edit-page/EditPage';
 import NotFoundPage from '@/pages/error-page';
 import HomePage from '@/pages/home';
 import Notice from '@/pages/notice';
@@ -11,17 +12,11 @@ import ProfileSetting from '@/pages/profile-setting';
 import MyLogs from '@/pages/profile/my-logs';
 import SavedLogs from '@/pages/profile/saved-logs';
 import SavedSpaces from '@/pages/profile/saved-spaces';
-import {
-  EditPage,
-  MapPage,
-  NewPlacePage,
-  SearchPage,
-  SelectPage,
-  WritePage,
-} from '@/pages/register-page';
+import { MapPage, NewPlacePage, SearchPage, SelectPage, WritePage } from '@/pages/register-page';
 import LogWritePage from '@/pages/register-page/LogWritePage';
 import Search from '@/pages/search';
 import { createBrowserRouter } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 
 const router = createBrowserRouter([
   {
@@ -50,8 +45,13 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: 'profile-setting',
-        element: <ProfileSetting />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: 'profile-setting',
+            element: <ProfileSetting />,
+          },
+        ],
       },
       {
         path: 'notice',
@@ -64,16 +64,21 @@ const router = createBrowserRouter([
     ],
   },
   {
-    element: <RegisterLayout />,
-    errorElement: <NotFoundPage />,
+    element: <ProtectedRoute />,
     children: [
-      { path: '/register/select', element: <SelectPage /> },
-      { path: '/register/search', element: <SearchPage /> },
-      { path: '/register/details', element: <LogWritePage /> },
-      { path: '/register/maps', element: <MapPage /> },
-      { path: '/register/newPlace', element: <NewPlacePage /> },
-      { path: '/write', element: <WritePage /> },
-      { path: '/register/edit/:placeLogId', element: <EditPage /> },
+      {
+        element: <RegisterLayout />,
+        errorElement: <NotFoundPage />,
+        children: [
+          { path: '/register/select', element: <SelectPage /> },
+          { path: '/register/search', element: <SearchPage /> },
+          { path: '/register/details', element: <LogWritePage /> },
+          { path: '/register/maps', element: <MapPage /> },
+          { path: '/register/newPlace', element: <NewPlacePage /> },
+          { path: '/write', element: <WritePage /> },
+          { path: '/register/edit/:placeLogId', element: <EditPage /> },
+        ],
+      },
     ],
   },
   {

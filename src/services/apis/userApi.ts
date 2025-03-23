@@ -1,28 +1,40 @@
-import { currentAuth } from '@/services/apis/authApi';
 import { IOhterUser, IUpdateUser, IUser } from '@/services/apis/types/userAPI';
+import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { AxiosInstance } from 'axios';
 
-class User {
-  private authApi = currentAuth;
+export class UserAPI {
+  private axios;
+  constructor(axios: AxiosInstance) {
+    this.axios = axios;
+  }
 
   /* 로그인된 사용자 정보 가져오기 */
   async getUser(): Promise<IUser> {
-    const response = await this.authApi.get('/users');
-    return response.data;
+    const response = await this.axios.get('/api/users');
+    const data = response.data;
+
+    return {
+      ...data,
+      profileImage: {
+        ...data.profileImage,
+        imageUrl:
+          data.profileImage.imageId === null
+            ? data.profileImage.imageUrl
+            : getImgFromCloudFront(data.profileImage.imageUrl),
+      },
+    };
   }
 
   async deleteUser() {
-    const response = await this.authApi.delete('/users');
+    const response = await this.axios.delete('/api/users');
     return response.data;
   }
 
   async patchUser(userData: IUpdateUser): Promise<IUpdateUser> {
-    const response = await this.authApi.patch('/users', userData);
+    const response = await this.axios.patch('/api/users', userData);
     return response.data;
   }
 }
-
-export const authUserApi = new User();
 
 export class OtherUserAPI {
   private axios;
@@ -31,7 +43,18 @@ export class OtherUserAPI {
   }
 
   async getOtherUser(userId: number): Promise<IOhterUser> {
-    const response = await this.axios.get(`/api/user/${userId}`);
-    return response.data;
+    const response = await this.axios.get(`/api/users/${userId}`);
+    const data = response.data;
+
+    return {
+      ...data,
+      profileImage: {
+        ...data.profileImage,
+        imageUrl:
+          data.profileImage.imageId === null
+            ? data.profileImage.imageUrl
+            : getImgFromCloudFront(data.profileImage.imageUrl),
+      },
+    };
   }
 }

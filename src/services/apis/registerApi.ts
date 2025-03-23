@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios';
-import { Log, PresignUrlRequest, PresignUrlResponse } from './types/registerAPI.type';
+import { PresignUrlRequest, PresignUrlResponse } from './types/registerAPI.type';
 
 class RegisterAPI {
   #axios;
@@ -21,12 +21,6 @@ class RegisterAPI {
     });
     console.log(res);
     return res.status;
-  }
-
-  async createLog(logData: Log) {
-    const path = '/api/placelogs';
-    const res = await this.#axios.post(path, logData);
-    return { data: res.data, status: res.status };
   }
 }
 

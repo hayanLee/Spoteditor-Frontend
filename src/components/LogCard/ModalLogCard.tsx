@@ -2,12 +2,13 @@ import usePlaceBookMarkMutation from '@/hooks/mutations/log/usePlaceBookMarkMuta
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { useLoginMoalStore } from '@/store/loginStore';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Bookmark } from 'lucide-react';
 import React, { memo } from 'react';
 type ModalLogCard = {
   place?: PlaceInLog;
-  isPlaceBookMark?: boolean;
+  isPlaceBookMark?: boolean | undefined;
   placeLogId: number;
 };
 
@@ -19,8 +20,13 @@ const ModalLogCard = memo(({ place, isPlaceBookMark, placeLogId }: ModalLogCard)
   });
 
   const { isMobile } = useResponsive();
+  const { openLoginModal } = useLoginMoalStore();
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (isPlaceBookMark === undefined) {
+      openLoginModal();
+      return;
+    }
     placeBookmarkMutation();
   };
 

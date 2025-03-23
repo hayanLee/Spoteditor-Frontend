@@ -14,6 +14,7 @@ import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import NotProfileData from '../NotProfileData';
+import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
 
 function SavedLogs() {
   const { user } = useUser();
@@ -36,6 +37,7 @@ function SavedLogs() {
 
   const data = isMySaveLogs ? mySaveLogsData : otherSaveLogsData;
   const isPending = isMySaveLogs ? isMySaveLogsPending : isOtherSaveLogsPending;
+
   return (
     <>
       {isPending ? (
@@ -44,8 +46,8 @@ function SavedLogs() {
         <>
           <PostCardWrapper className="mb-[50px]">
             {data?.content.map((log) => (
-              <Link to={`/log/${log.placeLogId}`}>
-                <MotionCard key={log.placeLogId}>
+              <MotionCard key={log.placeLogId} className="relative group">
+                <Link to={`/log/${log.placeLogId}`}>
                   <PostCardImage
                     lable
                     author={log.author}
@@ -57,8 +59,9 @@ function SavedLogs() {
                     bname={log.address.bname}
                     sigungu={log.address.sigungu}
                   />
-                </MotionCard>
-              </Link>
+                </Link>
+                {user && <SaveLogBookMarkButton placeLogId={log.placeLogId} />}
+              </MotionCard>
             ))}
           </PostCardWrapper>
           <section className="mt-[50px]">

@@ -41,7 +41,7 @@ export default function SearchResultDrawer({
       <DrawerPortal>
         <Drawer.Content
           data-testid="content"
-          className="z-50 fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+          className="web:max-w-[724px] web:mx-auto z-50 fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
         >
           <div className="mx-auto mt-4 mb-6 h-2 w-[100px] rounded-full bg-primary-100 dark:bg-neutral-800" />
           <DrawerTitle className="hidden">검색 장소 리스트</DrawerTitle>

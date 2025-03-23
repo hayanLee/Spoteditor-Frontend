@@ -13,10 +13,8 @@ import { useNavigate } from 'react-router-dom';
 const MapPage = () => {
   const navi = useNavigate();
   const { mapContainerRef, place, geocoder, isLoading, initMap, map } = useKakaoMap();
-
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
-
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [markers, setMarkers] = useState<kakao.maps.Marker[] | null>([]); // 검색 결과 마커들
@@ -24,23 +22,12 @@ const MapPage = () => {
   const [pagination, setPagination] = useState<kakao.maps.Pagination | null>(null); // 페이지네이션
 
   useEffect(() => {
+    console.log('맵초기화');
     initMap();
   }, []);
 
-  /* '지역 + 키워드'로 파싱 */
-  const parseQuery = (query: string) => {
-    const queryParts = query.split(' ');
-    if (queryParts.length === 2) {
-      const region = queryParts[0];
-      const keyword = queryParts.slice(1).join('');
-      return { region, keyword };
-    } else {
-      const keyword = queryParts[0];
-      return { keyword };
-    }
-  };
-
   const getRegionLocation = (region: string): Promise<{ lat: number; lon: number }> => {
+    console.log('주소변환');
     return new Promise((resolve, reject) => {
       geocoder?.addressSearch(region, (result, status) => {
         if (status === 'OK') {
@@ -56,7 +43,7 @@ const MapPage = () => {
   /* 검색어 입력 */
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    console.log('검색어 입력');
     if (!inputRef.current || !place || !map) return;
 
     removeMarker(); // 기존 검색어 마크 지우기
@@ -192,6 +179,19 @@ const MapPage = () => {
       </div>
     </div>
   );
+};
+
+/* '지역 + 키워드'로 파싱 */
+const parseQuery = (query: string) => {
+  const queryParts = query.split(' ');
+  if (queryParts.length === 2) {
+    const region = queryParts[0];
+    const keyword = queryParts.slice(1).join('');
+    return { region, keyword };
+  } else {
+    const keyword = queryParts[0];
+    return { keyword };
+  }
 };
 
 export default MapPage;

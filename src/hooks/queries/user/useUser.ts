@@ -1,20 +1,16 @@
-import { authUserApi } from '@/services/apis/userApi';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { userKeys } from '@/hooks/queries/user/userQueryKeys';
+import api from '@/services/apis/api';
 
 type UserState = 'userOnly' | 'nonUserOnly';
 
 export default function useUser(userState?: UserState) {
-  const { pathname } = useLocation();
-
-  const profilePage = pathname.startsWith('/profile');
-
-  const { data, error } = useQuery({
+  const { data, error, isFetching } = useQuery({
     queryKey: userKeys.me(),
-    queryFn: () => authUserApi.getUser(),
-    staleTime: profilePage ? 0 : Infinity,
+    queryFn: () => api.user.getUser(),
+    staleTime: Infinity,
   });
 
   const nav = useNavigate();
@@ -32,5 +28,5 @@ export default function useUser(userState?: UserState) {
     }
   }, [data, error, nav, userState]);
 
-  return { user: data, isLoading: !data && !error };
+  return { user: data, isLoading: isFetching };
 }

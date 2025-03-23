@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { LogsQueryParams } from './types/logAPI.type';
-import { UpdateRequest } from './types/registerAPI.type';
+import { Log, UpdateRequest } from './types/registerAPI.type';
 
 class LogAPI {
   #axios;
@@ -22,6 +22,13 @@ class LogAPI {
     return res.data;
   }
 
+  async createLog(logData: Log) {
+    const path = '/api/placelogs';
+    const res = await this.#axios.post(path, logData);
+    console.log('로그 등록', res);
+    return { data: res.data, status: res.status };
+  }
+
   async deleteLog(placeLogId: number) {
     const path = `/api/placelogs/${placeLogId}`;
     const res = await this.#axios.delete(path);
@@ -32,7 +39,7 @@ class LogAPI {
     console.log(placeLogId, '보내는 데이터', requestData);
     const path = `/api/placelogs/${placeLogId}`;
     const res = await this.#axios.patch(path, requestData);
-    if (res.status === 200) return { success: true };
+    if (res.status === 200) return { data: res.data, isSuccess: true };
     console.log('로그 업데이트', res);
   }
 

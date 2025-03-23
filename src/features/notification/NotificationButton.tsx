@@ -19,6 +19,7 @@ function NotificationButton() {
   //useNotificationWebSocket(); //추후 웹소켓 훅 사용해서 실시간 알림 받기
   const { data: notisData = [], isLoading: isNotiLoading } = useNotificationList();
   const { notifications, isNotiCount, readAsRead } = notificationStore();
+  console.log('notifications', notifications);
 
   useEffect(() => {
     if (Array.isArray(notisData)) {
@@ -52,7 +53,11 @@ function NotificationButton() {
             <NotNotification />
           ) : (
             notisData?.map((noti) => (
-              <NotificationItem {...noti} readAsReadClick={() => readAsRead(noti.id)} />
+              <NotificationItem
+                key={noti.id}
+                {...noti}
+                readAsReadClick={() => readAsRead(noti.id)}
+              />
             ))
           )}
         </section>

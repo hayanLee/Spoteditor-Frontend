@@ -2,63 +2,65 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-class AuthClient {
+export class AuthClient {
   private instance: AxiosInstance;
-  private lastRefreshAttempt: number = 0; // 마지막 Refresh 요청 시각 저장
-  private refreshFailed: boolean = false; // RefreshToken 만료 후 재요청 방지
+  private refreshPromise: Promise<any> | null = null;
+  private refreshFailed: boolean = false; // refresh 실패 시 추가 요청 방지
 
   constructor(baseURL: string) {
     this.instance = axios.create({
       baseURL,
-      withCredentials: true,
+      withCredentials: true, // httpOnly 쿠키 포함
     });
-
     this.setupInterceptors();
   }
 
   private setupInterceptors() {
-    /* 요청 인터셉터: AccessToken 자동 포함 */
+    // 요청 인터셉터: 필요한 경우 헤더 등에 추가 작업 가능
     this.instance.interceptors.request.use(
-      (config) => {
-        // 필요 시, 토큰을 자동으로 포함할 수 있도록 설정 가능 (예: localStorage에서 가져오기)
-        return config;
-      },
+      (config) => config,
       (error) => Promise.reject(error)
     );
 
-    /* 응답 인터셉터: AccessToken 갱신 처리 */
+    // 응답 인터셉터: 403 에러 발생 시 refresh 요청 시도
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error) => {
         const originalRequest = error.config;
-        const now = Date.now();
 
-        // 1분 내에 RefreshToken 재요청 금지
+        // 이미 refresh 실패한 상태면 바로 거절
         if (this.refreshFailed) {
-          console.warn('🚨 RefreshToken이 만료됨 → 추가 요청 차단');
+          console.warn('RefreshToken이 만료되어 추가 요청 차단');
           return Promise.reject(error);
         }
 
-        // 403 응답 시 1분 내 재요청 방지
+        // 403 에러이고 아직 재시도하지 않은 경우에만 refresh 시도
         if (error.response?.status === 403 && !originalRequest._retry) {
-          if (now - this.lastRefreshAttempt < 60000) {
-            console.warn('⏳ 1분 이내에 RefreshToken 요청이 실행됨. 중복 요청 방지.');
-            return Promise.reject(error);
+          originalRequest._retry = true;
+
+          // refresh 요청이 진행 중이면 해당 Promise 재사용
+          if (!this.refreshPromise) {
+            this.refreshPromise = this.instance
+              .post('/api/auth/refresh')
+              .then((res) => {
+                console.log('새로운 AccessToken 발급 성공');
+                return res.data;
+              })
+              .catch((err) => {
+                console.error('RefreshToken 재발급 실패 → 로그아웃 필요');
+                this.refreshFailed = true;
+                throw err;
+              })
+              .finally(() => {
+                this.refreshPromise = null;
+              });
           }
 
-          originalRequest._retry = true;
-          this.lastRefreshAttempt = now; // 마지막 시도 시간 기록
-
           try {
-            console.log('AccessToken 만료 → RefreshToken으로 재발급 요청');
-            await this.instance.post('/auth/refresh');
-            console.log('새로운 AccessToken 발급 완료, 요청 재시도');
-
-            originalRequest.withCredentials = true;
-            return this.instance(originalRequest); // 기존 요청 재시도
+            await this.refreshPromise;
+            // refresh 후 원래 요청 재시도
+            return this.instance(originalRequest);
           } catch (err) {
-            console.error('RefreshToken도 만료 → 로그아웃 필요');
-            this.refreshFailed = true; // RefreshToken 만료 상태 설정 (1분 동안 재시도 안 함)
             return Promise.reject(err);
           }
         }
@@ -74,22 +76,18 @@ class AuthClient {
 
   async logoutUser() {
     try {
-      console.log('로그아웃 요청 시작...');
-      const res = await this.instance.post('/auth/logout');
-      console.log('로그아웃 성공');
-
-      //로그아웃 시 RefreshToken 관련 상태 초기화
+      console.log('로그아웃 요청 시작');
+      const res = await this.instance.post('/api/auth/logout');
+      // 로그아웃 후 refresh 관련 상태 초기화
       this.refreshFailed = false;
-      this.lastRefreshAttempt = 0;
-
       return res.data;
     } catch (error) {
-      console.error('로그아웃 실패:', error);
+      console.error('로그아웃 실패', error);
       return Promise.reject(error);
     }
   }
 }
 
-export const authClient = new AuthClient(`${API_BASE_URL}/api`);
+export const authClient = new AuthClient(`${API_BASE_URL}`);
 export const currentAuth = authClient.getInstance();
 export const logoutAuth = () => authClient.logoutUser();

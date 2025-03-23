@@ -17,7 +17,7 @@ export default function CitySearchDropbox() {
     closeDropBox();
   };
   return (
-    <section className="z-[1111] web:z-10 mobile:fixed mobile:top-0 mobile:left-0 web:absolute web:top-[93px] bg-white w-screen h-screen web:h-auto web:max-w-[calc(100%)] px-4 web:py-5 web:pl-[30px] web:pr-5 flex flex-col gap-[18px] web:gap-2.5">
+    <>
       <header className="flex items-center justify-between py-3">
         <div className="flex justify-start gap-1 web:gap-2.5 mobile:flex-col web:justify-between web:items-center">
           <h3 className="font-bold text-text-2xl">도시선택</h3>
@@ -26,7 +26,7 @@ export default function CitySearchDropbox() {
           </h4>
         </div>
         <div>
-          <button onClick={closeDropBox}>
+          <button type="button" onClick={closeDropBox}>
             <XIcon className="w-[34px] h-[34px]" />
           </button>
         </div>
@@ -41,6 +41,6 @@ export default function CitySearchDropbox() {
           {sido && !bname && <BnameButtonList sido={sido} onSigunguClick={onBnameClick} />}
         </section>
       </div>
-    </section>
+    </>
   );
 }

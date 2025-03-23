@@ -8,22 +8,53 @@ import useUnsavedChangesWarning from '@/hooks/form/useUnsavedChangesWarning';
 import useUpdateUser from '@/hooks/mutations/user/useUpdateUser';
 import useUser from '@/hooks/queries/user/useUser';
 import PageLayout from '@/layouts/PageLayout';
+import api from '@/services/apis/api';
 import { profileSettingSchema } from '@/services/schemas/profileSchema';
+import { useProfileStore } from '@/store/profileStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import Resizer from 'react-image-file-resizer';
+
+export const resizeFile = (file: File): Promise<File> => {
+  return new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      150, // max width
+      150, // max height
+      'WEBP', // format (JPEG, PNG, WEBP)
+      80, // quality (0~100)
+      0, // rotation
+      (uri) => {
+        resolve(uri as File);
+      },
+      'file' // output type (base64, blob, file)
+    );
+  });
+};
+
+const fetchPresignedUrl = async (file: File) => {
+  try {
+    const result = await api.register.getPresignUrl({ originalFile: file.name });
+
+    return result;
+  } catch (error) {
+    console.error('presigned URL 가져오기 실패', error);
+  }
+};
 
 function ProfileSetting() {
   const nav = useNavigate();
   const { user } = useUser('userOnly');
+  const { file } = useProfileStore();
 
   const form = useForm({
     resolver: zodResolver(profileSettingSchema),
     defaultValues: {
       name: user?.name ?? '',
-      imageUrl: user?.imageUrl ?? 'https://github.com/shadcn.png',
+      imageUrl: user?.profileImage.imageUrl ?? '',
       description: user?.description ?? '',
       instagramId: user?.instagramId ?? '',
     },
@@ -32,8 +63,25 @@ function ProfileSetting() {
   const { mutate } = useUpdateUser();
   const { isFormDirty, setIsFormDirty } = useUnsavedChangesWarning(form);
 
-  const onSubmit = (data: z.infer<typeof profileSettingSchema>) => {
-    mutate(data);
+  const onSubmit = async (data: z.infer<typeof profileSettingSchema>) => {
+    console.log('폼 데이터', data);
+    const { name, description, instagramId } = data;
+
+    console.log('useProfileStore', file);
+    if (!file) return;
+    const resizingFile = await resizeFile(file);
+
+    const presignedUrl = await fetchPresignedUrl(resizingFile);
+    if (!presignedUrl) return;
+    await api.register.uploadImageWithPresignUrl(presignedUrl.preSignedUrl, resizingFile);
+
+    mutate({
+      name,
+      description,
+      instagramId,
+      originalFile: resizingFile.name,
+      uuid: presignedUrl.uuid,
+    });
     setIsFormDirty(false);
   };
 
@@ -54,7 +102,7 @@ function ProfileSetting() {
       <div className="w-screen web:w-[661px] flex flex-col px-4 web:px-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full">
-            <ProfileSettingAvatar imageUrl={String(user?.imageUrl)} />
+            <ProfileSettingAvatar imageUrl={String(user?.profileImage.imageUrl)} />
             <p className="mt-8 mb-4 font-bold text-text-lg web:text-text-2xl">프로필 편집</p>
             <ProfileSettingForm />
             <AccountSettings />

@@ -17,6 +17,8 @@ interface CustomPaginationProps {
 export default function CustomPagination({ currentPage, totalPages }: CustomPaginationProps) {
   const [_, setSearchParams] = useSearchParams();
 
+  if (totalPages === 1) return null;
+
   const handlePageChange = (page: number) => {
     setSearchParams({ pageNumber: page.toString(), totalPages: totalPages.toString() });
   };
@@ -63,7 +65,7 @@ export default function CustomPagination({ currentPage, totalPages }: CustomPagi
               </PaginationLink>
             </PaginationItem>
           ) : (
-            <PaginationEllipsis />
+            <PaginationEllipsis key={idx} />
           )
         )}
         {shouldShowRightArrow && (

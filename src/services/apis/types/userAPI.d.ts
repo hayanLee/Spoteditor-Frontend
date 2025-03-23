@@ -24,7 +24,7 @@ export interface IUser {
   userId: number;
   name: string;
   instagramId: string;
-  imageUrl: string;
+  profileImage: { imageId: number | null; imageUrl: string };
   description: string;
   follower: number;
   following: number;
@@ -36,7 +36,8 @@ export interface IOhterUser extends IUser {
 
 export interface IUpdateUser {
   name: string;
-  imageUrl: string;
+  originalFile: string;
+  uuid: string;
   description: string;
   instagramId: string;
 }

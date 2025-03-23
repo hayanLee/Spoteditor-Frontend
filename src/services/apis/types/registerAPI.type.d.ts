@@ -71,47 +71,18 @@ export interface LogResponse {
 }
 
 // 수정 request
-interface UpdateLogTitleRequest {
-  name: string;
-}
-interface UpdateLogDescriptionRequest {
-  description: string;
-}
-interface UpdateLogCoverRequest {
-  originalFile: string;
-  uuid: string;
-}
-interface UpdateStatusRequest {
-  status: 'public';
-}
-interface DeleteTagsRequest {
-  deleteTags: Tag[];
-}
-interface AddTagsRequest {
-  addTags: Tag[];
-}
-interface DeletePlaceIdsRequest {
-  deletePlaceIds: number[];
-}
-interface AddPlacesRequest {
-  addPlaces: Place[];
-}
-interface UpdatePlacesRequest {
-  updatePlaces: {
-    id: number;
-    description: string;
-    deleteImageIds: number[];
-    originalFiles: string[];
-    uuids: string[];
+export type UpdateRequest = {
+  name?: string;
+  description?: string;
+  originalFile?: string;
+  uuid?: string;
+  deletePlaceIds?: number[];
+  addPlaces?: Place[];
+  updatePlaces?: {
+    id?: number;
+    description?: string;
+    deleteImageIds?: number[];
+    originalFiles?: string[];
+    uuids?: string[];
   }[];
-}
-export type UpdateRequest =
-  | UpdateLogTitleRequest
-  | UpdateLogDescriptionRequest
-  | UpdateLogCoverRequest
-  | UpdateStatusRequest
-  | DeleteTagsRequest
-  | AddTagsRequest
-  | DeletePlaceIdsRequest
-  | AddPlacesRequest
-  | UpdatePlacesRequest;
+};

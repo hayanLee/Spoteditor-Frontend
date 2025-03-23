@@ -2,7 +2,7 @@ import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { create } from 'zustand';
 
 type EditLogStoreStates = {
-  selectedPlaces: PlaceInLog[];
+  places: PlaceInLog[];
 };
 
 type EditLogStoreActions = {
@@ -15,39 +15,39 @@ type EditLogStoreActions = {
 type EditLogStore = EditLogStoreStates & EditLogStoreActions;
 
 export const useEditLogStore = create<EditLogStore>()((set) => ({
-  selectedPlaces: [],
+  places: [],
 
-  setInitialPlaces: (places) => set(() => ({ selectedPlaces: places })),
+  setInitialPlaces: (places) => set(() => ({ places })),
 
   removeSelectedPlace: (place) =>
     set((state) => ({
-      selectedPlaces: state.selectedPlaces.filter((p) => p.placeId !== place.placeId),
+      places: state.places.filter((p) => p.placeId !== place.placeId),
     })),
 
   moveUpSelectedPlace: (place) =>
     set((state) => {
-      const index = state.selectedPlaces.findIndex((p) => p.placeId === place.placeId);
+      const index = state.places.findIndex((p) => p.placeId === place.placeId);
       if (index > 0) {
-        const newSelectedPlaces = [...state.selectedPlaces];
+        const newSelectedPlaces = [...state.places];
         const target = newSelectedPlaces[index];
 
         newSelectedPlaces.splice(index, 1);
         newSelectedPlaces.splice(index - 1, 0, target);
-        return { selectedPlaces: newSelectedPlaces };
+        return { places: newSelectedPlaces };
       }
       return state;
     }),
 
   moveDownSelectedPlace: (place) =>
     set((state) => {
-      const index = state.selectedPlaces.findIndex((p) => p.placeId === place.placeId);
-      if (index < state.selectedPlaces.length - 1) {
-        const newSelectedPlaces = [...state.selectedPlaces];
+      const index = state.places.findIndex((p) => p.placeId === place.placeId);
+      if (index < state.places.length - 1) {
+        const newSelectedPlaces = [...state.places];
         const target = newSelectedPlaces[index];
 
         newSelectedPlaces.splice(index, 1);
         newSelectedPlaces.splice(index + 1, 0, target);
-        return { selectedPlaces: newSelectedPlaces };
+        return { places: newSelectedPlaces };
       }
       return state;
     }),

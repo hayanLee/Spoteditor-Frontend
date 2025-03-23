@@ -3,10 +3,13 @@ import useLogBookMark from '@/hooks/queries/log/useLogBookMark';
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { LogContent } from '@/services/apis/types/logAPI.type';
+import { useLoginMoalStore } from '@/store/loginStore';
+
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
-import { Bookmark, Loader2 } from 'lucide-react';
+import { Bookmark } from 'lucide-react';
 import React, { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 type LogCardProps = {
   isLarge?: boolean; // latest의 3번째 이미지
   vertical?: boolean; // popularity 세로형 vs latest 가로형
@@ -15,19 +18,25 @@ type LogCardProps = {
 
 const LogCard = memo(({ isLarge, vertical, log }: LogCardProps) => {
   const navi = useNavigate();
-  const { data, isPending } = useLogBookMark(Number(log?.placeLogId));
+  const { data } = useLogBookMark(Number(log?.placeLogId));
   const isBookmarked = data?.isBookmarked;
-
   const { mutate: logBookmarkMutation } = useLogBookmarkMutation({
     isBookMark: data?.isBookmarked,
     placeLogId: Number(log?.placeLogId),
   });
 
+  const { isMobile } = useResponsive();
+  const { openLoginModal } = useLoginMoalStore();
+
   const handleCardClick = () => navi(`/log/${log?.placeLogId}`);
 
-  const { isMobile } = useResponsive();
   const handleBookmarkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!data) {
+      openLoginModal();
+      return;
+    }
+
     logBookmarkMutation();
   };
 
@@ -58,19 +67,16 @@ const LogCard = memo(({ isLarge, vertical, log }: LogCardProps) => {
           onClick={handleBookmarkClick}
           className="bg-white absolute top-4 right-4 p-[11px] opacity-0 group-hover:opacity-100 group/bookmark"
         >
-          {isPending ? (
-            <Loader2 className="animate-spin text-gray-400" size={20} />
-          ) : (
-            <Bookmark
-              className={cn(
-                'group-hover/bookmark:text-primary-400',
-                isBookmarked && 'fill-black stroke-black'
-              )}
-              size={20}
-            />
-          )}
+          <Bookmark
+            className={cn(
+              'group-hover/bookmark:text-primary-400',
+              isBookmarked && 'fill-black stroke-black'
+            )}
+            size={20}
+          />
         </div>
       </div>
+
       {/* 설명 */}
       <div className="text-text-sm web:text-text-md">
         <h5 className="font-bold">{log?.name} </h5>

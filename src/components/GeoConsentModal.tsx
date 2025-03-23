@@ -10,14 +10,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import useGeolocationPermission from '@/hooks/useGeolocationPermission';
+import { useGeolocationStore } from '@/store/geoStore';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function GeoConsentModal() {
   const nav = useNavigate();
   const { pathname } = useLocation();
-  const { open, setOpen } = useGeolocationPermission();
+  const { open, setOpen } = useGeolocationStore();
 
   /* 위치 요청 함수 (모달에서 동의 시 실행) */
   const requestLocation = () => {
@@ -50,7 +50,7 @@ export default function GeoConsentModal() {
       >
         <section className="flex items-center justify-end w-full p-4 web:p-0">
           <DialogClose asChild className="bg-transparent focus:outline-none focus:ring-0">
-            <button onClick={() => handleClose(false)}>
+            <button>
               <XIcon className="w-[34px] h-[34px]" />
             </button>
           </DialogClose>
@@ -71,9 +71,9 @@ export default function GeoConsentModal() {
           </DialogHeader>
           <DialogFooter className="flex flex-row items-center gap-2 py-5">
             <Button
+              onClick={() => setOpen(false)}
               variant="outline"
               className="flex-1 font-semibold"
-              onClick={() => handleClose(false)}
             >
               거절
             </Button>

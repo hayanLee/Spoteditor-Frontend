@@ -4,6 +4,7 @@ import { UseFormReturn } from 'react-hook-form';
 
 export default function useUnsavedChangesWarning(form: UseFormReturn<any>) {
   const [isFormDirty, setIsFormDirty] = useState(false);
+  const [proceedNavigation, setProceedNavigation] = useState(false);
 
   // 1. 폼 변경 감지
   useEffect(() => {
@@ -14,12 +15,12 @@ export default function useUnsavedChangesWarning(form: UseFormReturn<any>) {
     return () => subscription.unsubscribe();
   }, [form]);
 
-  // 2. 페이지 이탈 감지 (beforeunload)
+  // 2. beforeunload 감지 (브라우저 닫기/새로고침)
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       if (isFormDirty) {
         event.preventDefault();
-        event.returnValue = ''; // 크롬에서는 빈 문자열 필요
+        event.returnValue = '';
       }
     };
 
@@ -29,27 +30,27 @@ export default function useUnsavedChangesWarning(form: UseFormReturn<any>) {
     };
   }, [isFormDirty]);
 
-  // 3. 뒤로가기 및 페이지 이동 감지 (useBlocker 활용)
+  // 3. 라우터 이동 감지 및 차단
   const blocker = useBlocker(({ currentLocation, nextLocation }) => {
-    if (isFormDirty && currentLocation.pathname !== nextLocation.pathname) {
+    // 진행 여부 결정: 취소 시 false 반환
+    if (isFormDirty && currentLocation.pathname !== nextLocation.pathname && !proceedNavigation) {
       const confirmLeave = window.confirm('저장하지 않고 나가시겠습니까?');
-      return !confirmLeave;
+      if (confirmLeave) {
+        setProceedNavigation(true); // 다음 useEffect에서 proceed 처리
+        return false; // 진행 허용
+      } else {
+        return true; // 차단
+      }
     }
     return false;
   });
 
+  // blocker.proceed()는 confirm이 true일 때만 실행
   useEffect(() => {
-    if (blocker.state === 'blocked') {
-      blocker.proceed(); // 사용자 선택에 따라 이동 결정
+    if (blocker.state === 'blocked' && proceedNavigation) {
+      blocker.proceed();
     }
-  }, [blocker]);
-
-  // 4. form.reset()이 호출될 때 isFormDirty 초기화
-  useEffect(() => {
-    const resetListener = () => setIsFormDirty(false);
-    form.reset();
-    form.setValue('resetListener', resetListener);
-  }, [form]);
+  }, [blocker, proceedNavigation]);
 
   return { isFormDirty, setIsFormDirty };
 }

@@ -3,14 +3,15 @@ import { userKeys } from '@/hooks/queries/user/userQueryKeys';
 import { logoutAuth } from '@/services/apis/authApi';
 import { useNavigate } from 'react-router-dom';
 
-export function useLogout() {
+export default function useLogout() {
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutAuth,
     onSuccess() {
-      queryClient.removeQueries({ queryKey: userKeys.all });
+      queryClient.removeQueries({ queryKey: userKeys.me() });
+      queryClient.removeQueries({ queryKey: userKeys.auth() });
       nav('/', { replace: true });
     },
     onError(err) {

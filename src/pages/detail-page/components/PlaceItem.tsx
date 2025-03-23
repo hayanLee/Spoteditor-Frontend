@@ -5,6 +5,7 @@ import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import { Image } from '@/services/apis/types/registerAPI.type';
+import { useLoginMoalStore } from '@/store/loginStore';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { Bookmark, Clock, MapPin } from 'lucide-react';
 import { useParams } from 'react-router-dom';
@@ -12,20 +13,26 @@ import { useParams } from 'react-router-dom';
 interface PlaceItemProps {
   place: PlaceInLog;
   idx: number;
-  isBookMark: boolean;
+  isBookMark: boolean | undefined;
 }
 
 const PlaceItem = ({ place, idx, isBookMark }: PlaceItemProps) => {
   const { placeLogId } = useParams();
   const { name, description, address, images, placeId } = place;
   const { isMobile } = useResponsive();
-  const { mutate } = usePlaceBookMarkMutation({
-    isBookMark,
+  const { mutate: placeBookmarkMutation } = usePlaceBookMarkMutation({
+    isBookMark: Boolean(isBookMark),
     placeId,
     placeLogId: Number(placeLogId),
   });
-
-  const onClickPlaceBookMark = () => mutate();
+  const { openLoginModal } = useLoginMoalStore();
+  const onClickPlaceBookMark = () => {
+    if (isBookMark === undefined) {
+      openLoginModal();
+      return;
+    }
+    placeBookmarkMutation();
+  };
 
   return (
     <div className="border-t border-primary-100 pt-[15px] pb-10 web:grid web:grid-cols-[1fr_3fr] web:gap-[15px] web:py-5">

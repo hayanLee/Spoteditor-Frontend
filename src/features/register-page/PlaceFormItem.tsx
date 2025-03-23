@@ -1,6 +1,5 @@
 import { Textarea } from '@/components/ui/textarea';
 import { LogWriteFormData } from '@/pages/register-page/LogWritePage';
-import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import useDrawerStore from '@/store/drawerStore';
 import { Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
 import { Control, Controller, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
@@ -8,7 +7,7 @@ import PlaceImagesInput from './PlaceImagesInput';
 
 interface PlaceFormItemProps {
   control: Control<LogWriteFormData>;
-  place: kakao.maps.services.PlacesSearchResultItem | PlaceInLog;
+  place: kakao.maps.services.PlacesSearchResultItem;
   idx: number;
   setValue: UseFormSetValue<LogWriteFormData>;
   trigger: UseFormTrigger<LogWriteFormData>;
@@ -16,19 +15,9 @@ interface PlaceFormItemProps {
 
 const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItemProps) => {
   const isOpen = useDrawerStore((state) => state.isOpen); // 열림 여부
-  const openModal = useDrawerStore((state) => state.openDrawer); // 열림 + 타켓 지정
+  const openModal = useDrawerStore((state) => state.openNewLogDrawer); // 열림 + 타켓 지정
   const closeModal = useDrawerStore((state) => state.closeDrawer);
-  const targetPlace = useDrawerStore((state) => state.targetPlace);
-  const targetPlaceId = targetPlace && 'id' in targetPlace ? targetPlace?.id : targetPlace?.placeId;
-
-  const placeId = 'id' in place ? place.id : place.placeId;
-  const placeName = 'place_name' in place ? place.place_name : place.name;
-  const category = 'category_group_name' in place ? place.category_group_name : place.category;
-  const address =
-    'road_address_name' in place ? place.road_address_name : place.address?.roadAddress;
-  const roadAddress =
-    'road_address_name' in place ? place.road_address_name : place.address?.roadAddress;
-  const placeDescription = 'description' in place && place.description;
+  const targetPlace = useDrawerStore((state) => state.newLogTargetPlace);
 
   return (
     <div className="py-[5px]">
@@ -37,26 +26,26 @@ const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItem
         <div className="text-text-lg font-bold">
           <div className="flex justify-between">
             <p>{String(idx + 1).padStart(2, '0')}</p>
-            {isOpen && targetPlaceId === placeId ? (
+            {isOpen && targetPlace?.id === place.id ? (
               <CircleCheck className="fill-black stroke-white" onClick={closeModal} />
             ) : (
               <Circle className="stroke-neutral-200" onClick={() => openModal(place)} />
             )}
           </div>
-          <p className="flex items-center">{placeName}</p>
+          <p className="flex items-center">{place.place_name}</p>
         </div>
 
         <div className="flex flex-col text-primary-400">
           <div className="flex gap-2 items-center text-text-sm">
             <Clock size={16} />
-            <p className="after:ml-1.5">{category}</p>
+            <p className="after:ml-1.5">{place.category_group_name}</p>
           </div>
           <div className="flex gap-2 items-center text-text-sm">
             <MapPin size={16} />
             <p className="after:ml-1.5 after:content-['|'] after:text-primary-100">
-              {address.split(' ')[0]}
+              {place.road_address_name.split(' ')[0]}
             </p>
-            <p>{roadAddress}</p>
+            <p>{place.road_address_name}</p>
           </div>
         </div>
       </section>
@@ -68,7 +57,6 @@ const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItem
       <Controller
         name={`places.${idx}.placeDescription`}
         control={control}
-        defaultValue={placeDescription || ''}
         render={({ field }) => (
           <Textarea
             {...field}
