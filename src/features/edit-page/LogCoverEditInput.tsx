@@ -3,25 +3,18 @@ import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import useImagePreview from '@/hooks/useImagePreview';
-import { LogEditFormData } from '@/pages/edit-page/EditPage';
+import { LogEditFormData } from '@/pages/edit-page';
 import { CircleX } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import {
-  Control,
-  Controller,
-  useController,
-  UseFormSetValue,
-  UseFormTrigger,
-} from 'react-hook-form';
+import { Control, Controller, useController, UseFormReturn } from 'react-hook-form';
 
 interface CoverImageInputProps {
   name: 'coverImgSrc';
   control: Control<LogEditFormData>;
-  setValue: UseFormSetValue<LogEditFormData>;
-  trigger: UseFormTrigger<LogEditFormData>;
+  form: UseFormReturn<LogEditFormData>;
 }
 
-const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInputProps) => {
+const LogCoverEditInput = ({ name, control, form }: CoverImageInputProps) => {
   const { field } = useController({ name, control });
   const storedFile = field.value && 'storedFile' in field.value ? field.value.storedFile : ''; // Image일때만 있음
   const { presignedUrlObj, imagePreview, handleFileChange, handleClearImage, isUploading } =
@@ -30,13 +23,11 @@ const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInput
 
   /* 이미지 변경되면 변경된 필드에 저장 */
   useEffect(() => {
-    if (presignedUrlObj) {
+    if (presignedUrlObj !== null) {
       field.onChange(presignedUrlObj);
-      setValue(name, presignedUrlObj);
-      trigger(name);
+      form.setValue(name, presignedUrlObj);
     }
-  }, [name, presignedUrlObj, setValue, trigger]);
-
+  }, [presignedUrlObj]);
   return (
     <Controller
       control={control}
@@ -45,15 +36,15 @@ const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInput
         return (
           <>
             {/* 커버 이미지 */}
-            <div className="relative mb-3">
+            <div className="relative mb-3 w-full max-h-[300px]">
               {isUploading ? (
                 <Loading className="h-[300px]" />
               ) : (
                 imagePreview && (
                   <img
-                    src={imagePreview}
+                    src={imagePreview as string}
                     alt="커버 이미지"
-                    className="w-full aspect-[2/1] object-cover"
+                    className="w-full h-full object-cover"
                   />
                 )
               )}
@@ -63,7 +54,8 @@ const LogCoverEditInput = ({ name, control, setValue, trigger }: CoverImageInput
                   className="stroke-primary-100 absolute top-4 right-4 cursor-pointer hover:fill-slate-50/50"
                   onClick={() => {
                     handleClearImage();
-                    field.onChange(null);
+                    field.onChange({});
+                    form.trigger(name);
                   }}
                 />
               )}

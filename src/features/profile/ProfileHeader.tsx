@@ -68,7 +68,7 @@ function ProfileHeader() {
             <Link to="/profile-setting">
               <Button
                 variant="outline"
-                className="mt-[10px] web:mt-[15px] p-2 w-[50px] web:w-[60px] h-[24px] web:h-[28px] rounded-[60px] font-medium text-text-xs"
+                className="mt-[10px] min-h-0 web:mt-[15px] p-2 w-[50px] web:w-[60px] h-[24px] web:h-[28px] rounded-[60px] font-medium text-text-xs"
               >
                 편집
               </Button>

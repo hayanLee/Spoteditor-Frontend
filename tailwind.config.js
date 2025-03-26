@@ -44,6 +44,10 @@ module.exports = {
         formBlack: '#242528',
         primarySlate: '#ABAFB5',
 
+        light: {
+          300: '#ABAFB5',
+          400: '#81858F',
+        },
         primary: {
           50: '#F5F5F6',
           100: '#E5E6E8',

@@ -38,7 +38,10 @@ const LogWritePage = () => {
 
   /* states */
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
-  const resetSelectedPlaces = useRegisterStore((state) => state.resetSelectedPlaces);
+  const resetSelectedPlaces = useRegisterStore((state) => state.clearAllSelections);
+  const selectedWhom = useRegisterStore((state) => state.experience.selectedWhom);
+  const selectedMoods = useRegisterStore((state) => state.experience.selectedMoods);
+
   const [sido = '', , bname = ''] = selectedPlaces[0]?.address_name?.split(' ') || [];
 
   /* handlers */
@@ -49,7 +52,10 @@ const LogWritePage = () => {
       originalFile: coverImgSrc?.originalFile || '',
       uuid: coverImgSrc?.uuid || '',
       status: 'public',
-      tags: [],
+      tags: [
+        ...selectedWhom.map((whom) => ({ name: whom, category: 'WITH_WHOM' as const })),
+        ...selectedMoods.map((mood) => ({ name: mood, category: 'MOOD' as const })),
+      ],
       places: places.map((place, idx) => {
         return {
           name: selectedPlaces[idx].place_name,
@@ -143,6 +149,8 @@ const LogWritePage = () => {
           </div>
         </form>
       </Form>
+
+      {/* <Button onClick={() => console.log(form.formState.errors)}>확인</Button> */}
 
       {/* 버튼 */}
       <div className="pt-2 pb-3 px-4 ">

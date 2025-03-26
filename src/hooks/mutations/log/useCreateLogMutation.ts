@@ -17,10 +17,7 @@ const useCreateLogMutation = () => {
       navi(`/log/${result.data.placeLogId}`, { replace: true });
 
       queryClient.invalidateQueries({ queryKey: logKeys.detail(result.data.placeLogId) });
-      queryClient.invalidateQueries({ queryKey: logKeys.list() });
-      
-      queryClient.refetchQueries({ queryKey: logKeys.detail(result.data.placeLogId) });
-      queryClient.refetchQueries({ queryKey: logKeys.list() });
+      queryClient.invalidateQueries({ queryKey: ['log', 'user', 'list'] });
     },
     onError: (error) => {
       console.error('로그 등록 실패:', error);

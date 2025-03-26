@@ -26,7 +26,6 @@ const CoverImageInput = ({
   handleClearImage,
 }: CoverImageInputProps) => {
   const coverUploadInputRef = useRef<HTMLInputElement>(null);
-  console.log(imagePreview);
   return (
     <>
       {(imagePreview || defaultImg) && (

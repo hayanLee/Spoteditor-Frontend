@@ -31,8 +31,8 @@ export default function CitySearchDropbox() {
           </button>
         </div>
       </header>
-      <div className="flex justify-center">
-        <section className="grid grid-cols-2 web:flex web:justify-center web:items-center gap-[5px] flex-wrap">
+      <div className="flex justify-center web:justify-start">
+        <section className="grid grid-cols-2 web:flex web:justify-start web:items-center gap-[5px] flex-wrap mobile:w-[343px]">
           {!sido &&
             !bname &&
             cityCategories.map((sido) => (

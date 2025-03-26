@@ -15,12 +15,12 @@ interface CustomPaginationProps {
 }
 
 export default function CustomPagination({ currentPage, totalPages }: CustomPaginationProps) {
+  if (totalPages <= 1 || !currentPage) return null;
+
   const [_, setSearchParams] = useSearchParams();
 
-  if (totalPages === 1) return null;
-
   const handlePageChange = (page: number) => {
-    setSearchParams({ pageNumber: page.toString(), totalPages: totalPages.toString() });
+    setSearchParams({ pageNumber: page.toString() });
   };
 
   const shouldShowLeftArrow = currentPage >= 3;

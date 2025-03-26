@@ -16,7 +16,8 @@ function TapNavigation() {
         <Separator orientation="vertical" className="web:h-[20px] mobile:h-[18px]" />
       </div>
       <Button
-        className="rounded-[60px] web:text-text-sm mobile:text-text-xs"
+        size="s"
+        className="rounded-[60px] px-4 py-[11px] h-7 web:h-9 web:text-text-sm font-untitled"
         onClick={handleGotoRegisterPage}
       >
         Upload

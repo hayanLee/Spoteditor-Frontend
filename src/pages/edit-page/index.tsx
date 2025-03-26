@@ -1,28 +1,43 @@
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import ModifyDrawer from '@/components/Drawer/ModifyDrawer';
+import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import LogCoverEditInput from '@/features/edit-page/LogCoverEditInput';
 import LogEditBar from '@/features/edit-page/LogEditBar';
 import PlaceEditFormItem from '@/features/edit-page/PlacEditFormItem';
+import OptionEditSection from '@/features/register-page/OptionEditSection';
 import useUpdateLogMutation from '@/hooks/mutations/log/useUpdateLogMutation';
 import useLog from '@/hooks/queries/log/useLog';
 import { cn } from '@/lib/utils';
-import { Image, PresignUrlResponse, UpdateRequest } from '@/services/apis/types/registerAPI.type';
+import {
+  Image,
+  PresignUrlResponse,
+  Tag,
+  UpdateRequest,
+} from '@/services/apis/types/registerAPI.type';
 import { LogEditFormSchema } from '@/services/schemas/logSchema';
 import { useEditLogStore } from '@/store/editLogStore';
+import { useRegisterStore } from '@/store/registerStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
 import { useEffect } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export interface LogEditFormData {
   title: string;
   description: string;
   coverImgSrc: Image | PresignUrlResponse | null;
   places: { [placeName: string]: PlaceItem } | null;
+  tags: TagsItem | null;
+}
+
+export interface TagsItem {
+  defaultTags: string[];
+  addTags?: Tag[];
+  deleteTags?: Tag[];
 }
 
 export interface PlaceItem {
@@ -34,11 +49,16 @@ export interface PlaceItem {
 }
 
 const EditPage = () => {
+  const navi = useNavigate();
   const { placeLogId } = useParams();
   const { data: logData, isPending: isLogPending } = useLog(Number(placeLogId));
   const places = useEditLogStore((state) => state.places); // 장소 클라이언트로 관리하기 위해
   const setInitialPlaces = useEditLogStore((state) => state.setInitialPlaces);
   const deletePlaceIds = useEditLogStore((state) => state.deletePlaceIds);
+  const setWhom = useRegisterStore((state) => state.setWhom);
+  const setMood = useRegisterStore((state) => state.setMood);
+  const clearSelections = useRegisterStore((state) => state.clearAllSelections);
+
   const { mutate } = useUpdateLogMutation();
 
   const form = useForm<LogEditFormData>({
@@ -49,12 +69,17 @@ const EditPage = () => {
       description: '',
       coverImgSrc: null,
       places: {},
+      tags: null,
     },
   });
 
   useEffect(() => {
     if (!isLogPending && logData?.places) {
       setInitialPlaces(logData?.places);
+      setWhom(
+        logData.tags.filter((item) => item.category === 'WITH_WHOM').map((item) => item.name)
+      );
+      setMood(logData.tags.filter((item) => item.category === 'MOOD').map((item) => item.name));
 
       const placesData = logData?.places.reduce((acc, item) => {
         acc[item.name] = {
@@ -72,6 +97,7 @@ const EditPage = () => {
         description: logData?.description,
         coverImgSrc: logData?.image,
         places: placesData,
+        tags: { defaultTags: logData?.tags.map((tag) => tag.name), addTags: [], deleteTags: [] },
       });
 
       return () => {
@@ -80,8 +106,10 @@ const EditPage = () => {
           description: '',
           coverImgSrc: null,
           places: {},
+          tags: null,
         });
         setInitialPlaces([]);
+        clearSelections();
       };
     }
   }, [isLogPending, logData?.places]);
@@ -103,7 +131,6 @@ const EditPage = () => {
       updateData.uuid = newCover?.uuid;
     }
     if (dirtyFields.places) {
-      console.log(dirtyFields.places);
       const changedPlaces = Object.keys(dirtyFields.places).reduce((acc, placeName) => {
         acc[placeName] = {
           name: placeName,
@@ -124,7 +151,13 @@ const EditPage = () => {
       if (updatedPlaces.length > 0) updateData.updatePlaces = updatedPlaces;
     }
     if (deletePlaceIds.length > 0) updateData.deletePlaceIds = deletePlaceIds;
+    if (dirtyFields.tags) {
+      const addTags = form.getValues('tags.addTags');
+      const deleteTags = form.getValues('tags.deleteTags');
 
+      if (addTags?.length) updateData.addTags = addTags;
+      if (deleteTags?.length) updateData.deleteTags = deleteTags;
+    }
     // updateData에 데이터가 있으면 한 번에 API 호출
     if (Object.keys(updateData).length > 0) {
       try {
@@ -172,12 +205,7 @@ const EditPage = () => {
             )}
           />
           {/* 커버 이미지 */}
-          <LogCoverEditInput
-            name="coverImgSrc"
-            control={form.control}
-            setValue={form.setValue}
-            trigger={form.trigger}
-          />
+          <LogCoverEditInput name="coverImgSrc" control={form.control} form={form} />
           {/* 로그 설명 */}
           <FormField
             name="description"
@@ -202,6 +230,12 @@ const EditPage = () => {
               <PlaceEditFormItem key={place.placeId} form={form} place={place} idx={idx} />
             ))}
           </div>
+
+          {/* 태그 */}
+          <div className="flex flex-col gap-5 grow px-4">
+            <OptionEditSection title="누구와" storeKey="selectedWhom" form={form} />
+            <OptionEditSection title="하루 스타일" storeKey="selectedMoods" form={form} />
+          </div>
         </form>
       </Form>
 
@@ -209,10 +243,9 @@ const EditPage = () => {
         onClick={() => {
           console.log(form.watch());
           console.log(form.formState.errors);
-          console.log(
-            !!Object.keys(form.formState.errors).length &&
-              !Object.keys(form.formState.dirtyFields).length
-          );
+          console.log('error', Object.values(form.formState.errors).length > 0); //
+          console.log(!form.formState.isDirty && deletePlaceIds.length === 0); // 폼이 변경되지 않았음
+          console.log(form.formState.dirtyFields);
         }}
       >
         체크
@@ -221,16 +254,22 @@ const EditPage = () => {
       {/* 버튼 */}
       <div className="pt-2 pb-3 px-4 ">
         <ModifyDrawer />
-        <ConfirmDialog
-          title="로그를 등록하시겠어요?"
-          showCheckbox={true}
-          checkboxLabel="비공개"
-          onConfirm={form.handleSubmit(onSubmit)}
-          disabled={
-            (!Object.keys(form.formState.dirtyFields).length && deletePlaceIds.length === 0) ||
-            !!Object.keys(form.formState.errors).length
-          }
-        />
+        <div className="grid grid-cols-2 gap-2.5">
+          <Button variant={'outline'} onClick={() => navi(-1)}>
+            취소
+          </Button>
+
+          <ConfirmDialog
+            title="로그를 등록하시겠어요?"
+            showCheckbox={true}
+            checkboxLabel="비공개"
+            onConfirm={form.handleSubmit(onSubmit)}
+            disabled={
+              Object.values(form.formState.errors).length > 0 || // 에러가 있을때
+              (!form.formState.isDirty && deletePlaceIds.length === 0) // 폼이 변경되지 않았고 삭제된 것이 없을 때
+            }
+          />
+        </div>
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ class RegisterAPI {
         'Content-Type': 'application/octet-stream',
       },
     });
-    console.log(res);
+    // console.log(res);
     return res.status;
   }
 }

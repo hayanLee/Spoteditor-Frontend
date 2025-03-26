@@ -18,8 +18,8 @@ const HomePage = () => {
 
       <div className="flex flex-col px-4 web:px-[50px]">
         {/* 제목 */}
-        <div className="flex items-end justify-between mt-10 mb-6 font-untitled">
-          <div className="text-xl font-semibold web:text-2xl">
+        <div className="flex items-end justify-between mt-10 mb-6">
+          <div className="text-xl font-semibold web:text-2xl !leading-[120%] font-untitled">
             <h3 className="text-primary-300">Sort by</h3>
             <h3 className="text-primary-950">Popularity</h3>
           </div>
@@ -30,10 +30,10 @@ const HomePage = () => {
 
         {/* 에디터 설명 */}
         <div className="flex flex-col justify-center my-20 web:grid web:grid-cols-2 border-primary-100 web:gap-7">
-          <div className="py-[18px] border-t border-b flex flex-col justify-center web:py-10">
+          <div className="py-[18px] border-t border-b flex flex-col justify-center web:py-10 gap-[15px] web:gap-6">
             <TypingText text='모든 유저가 특별한 "에디터"가 될 수 있어요!' />
 
-            <div className="flex my-[15px]">
+            <div className="flex">
               <Button
                 className="rounded-full text-text-sm text-white py-2.5 px-6 web:text-text-md web:py-3"
                 onClick={handleGotoRegisterPage}
@@ -50,7 +50,7 @@ const HomePage = () => {
             </div>
           </div>
 
-          <div className="flex-col  text-primary-300 text-text-sm web:border-t border-b border-primary-100 py-[18px] web:h-full flex justify-center web:text-text-lg web:font-regular">
+          <div className="flex-col text-light-300 text-text-sm web:border-t border-b border-primary-100 py-[18px] web:h-full flex justify-center web:text-text-lg web:font-regular web:px-5">
             <p>
               내가 좋아하는 숨은 명소와 맛집을 공유하고, 다른 유저들이 여러분의 루트를 참고하며
               "내가 만든 코스로 누군가 즐거운 하루를 보냈구나!" 하는 느낌, 상상만 해도 행복하지

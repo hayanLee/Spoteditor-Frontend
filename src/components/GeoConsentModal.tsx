@@ -17,7 +17,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 export default function GeoConsentModal() {
   const nav = useNavigate();
   const { pathname } = useLocation();
-  const { open, setOpen } = useGeolocationStore();
+  const { open, setOpen, permission } = useGeolocationStore();
 
   /* 위치 요청 함수 (모달에서 동의 시 실행) */
   const requestLocation = () => {
@@ -36,7 +36,13 @@ export default function GeoConsentModal() {
   /* 모달 닫을 때, 현재 경로가 /register로 시작하면 홈으로 이동 */
   const handleClose = (isOpen: boolean) => {
     setOpen(isOpen);
-    if (!isOpen && pathname.startsWith('/register')) {
+    if (pathname.startsWith('/register') && permission !== 'granted' && !isOpen) {
+      nav(-1);
+    }
+  };
+  const onCencelClick = () => {
+    setOpen(false);
+    if (pathname.startsWith('/register') && permission !== 'granted') {
       nav(-1);
     }
   };
@@ -70,11 +76,7 @@ export default function GeoConsentModal() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row items-center gap-2 py-5">
-            <Button
-              onClick={() => setOpen(false)}
-              variant="outline"
-              className="flex-1 font-semibold"
-            >
+            <Button onClick={onCencelClick} variant="outline" className="flex-1 font-semibold">
               거절
             </Button>
             <Button className="font-semibold web:flex-1" onClick={requestLocation}>

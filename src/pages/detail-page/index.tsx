@@ -21,11 +21,12 @@ import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import PlaceItem from '@/pages/detail-page/components/PlaceItem';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
+import { Tag } from '@/services/apis/types/registerAPI.type';
 import { useLoginMoalStore } from '@/store/loginStore';
 import { copyUrlToClipboard } from '@/utils/copyUrlToClipboard';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { ArrowLeft, Bookmark, PencilLine, Share2 } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 const DetailPage = () => {
   /* hooks */
   const navi = useNavigate();
@@ -35,20 +36,22 @@ const DetailPage = () => {
   /* query */
   const numericPlaceLogId = Number(placeLogId);
   const { data: logData, isPending: isLogPending } = useLog(numericPlaceLogId);
-  const { data: LogBookmark } = useLogBookMark(numericPlaceLogId);
-  const { data: placeBookmark } = usePlaceBookMark(numericPlaceLogId);
+  const { data: LogBookmark, isPending: isLogBookmarkPending } = useLogBookMark(numericPlaceLogId);
+  const { data: placeBookmark, isPending: isPlaceBookmarkPending } =
+    usePlaceBookMark(numericPlaceLogId);
   const { data: user } = useAuth();
   const { openLoginModal } = useLoginMoalStore();
 
   /* state */
-  // const isDataReady = isLogPending || isPlaceBookmarkPending || isLogBookmarkPending;
-  const isDataReady = isLogPending;
+  const isDataReady = isLogPending || isPlaceBookmarkPending || isLogBookmarkPending;
 
   const name = logData?.name ?? '';
   const description = logData?.description ?? '';
   const places = logData?.places ?? [];
   const placebookmark = LogBookmark?.isBookmarked ?? false;
+  const tags = logData?.tags;
   const isOwner = user?.userId === logData?.userId;
+  const isPrivate = logData?.status === 'private';
 
   /* mutatation */
   const { mutate: logBookmarkMutation } = useLogBookmarkMutation({
@@ -66,7 +69,7 @@ const DetailPage = () => {
   };
   const onClickBack = () => navi(-1);
   const onClickShare = () => copyUrlToClipboard();
-  const onClickPencil = () => navi(`/register/edit/${placeLogId}`);
+  const onClickPencil = () => navi(`/edit/${placeLogId}`);
 
   return (
     <>
@@ -84,8 +87,9 @@ const DetailPage = () => {
               />
             )}
 
+            {/* 배너에 있는 버튼 */}
             <div>
-              <div className="absolute flex flex-col top-4 left-4 space-y-2">
+              <div className="absolute flex flex-col top-4 left-2.5 web:left-4 space-y-2">
                 <div
                   className=" bg-white/70 border border-primary-100 rounded-full p-2.5 top-0 left-2.5 cursor-pointer z-10 hover:bg-white"
                   onClick={onClickBack}
@@ -93,7 +97,7 @@ const DetailPage = () => {
                   <ArrowLeft />
                 </div>
               </div>
-              <div className="absolute flex flex-col top-4 right-4 space-y-2">
+              <div className="absolute flex flex-col top-4 right-2.5 web:right-4 space-y-2">
                 <div
                   className=" bg-white/70 border border-primary-100 rounded-full p-2.5 top-[14px] right-2.5 cursor-pointer z-10 hover:bg-white"
                   onClick={onClickShare}
@@ -113,13 +117,26 @@ const DetailPage = () => {
 
             <div className="absolute top-0 left-0 w-full h-full bg-cover-gradient"></div>
             <div className="flex flex-col absolute bottom-0 px-4 py-6 gap-2 web:px-[50px] web:py-8">
-              <h3 className="text-lg web:text-2xl font-bold text-white">{name}</h3>
-
-              <div className="flex items-center gap-1 text-text-xs web:text-text-sm ">
-                <span className="text-white bg-white/30 px-4 py-1.5 rounded-full gap-1 flex items-center">
-                  <SpotIcon className="stroke-white" />
-                  <span>{places.length}</span>
+              {isPrivate && (
+                <span className="py-2 px-[14.5px] rounded-full bg-error-500 w-fit text-text-sm font-medium text-white my-1.5">
+                  비공개
                 </span>
+              )}
+              <h3 className="text-lg web:text-2xl font-bold text-white">{name}</h3>
+              <div className="flex gap-1 flex-wrap">
+                {tags?.map((item: Tag) => (
+                  <div className="flex items-center gap-1 text-text-xs web:text-text-sm ">
+                    <span className="text-white bg-white/30 px-4 py-1.5 rounded-full gap-1 flex items-center">
+                      <span>{item.name}</span>
+                    </span>
+                  </div>
+                ))}
+                <div className="flex items-center gap-1 text-text-xs web:text-text-sm ">
+                  <span className="text-white bg-white/30 px-4 py-1.5 rounded-full gap-1 flex items-center">
+                    <SpotIcon className="stroke-white" />
+                    <span>{places.length}</span>
+                  </span>
+                </div>
               </div>
             </div>
           </>
@@ -135,7 +152,7 @@ const DetailPage = () => {
           {isDataReady ? (
             <Skeleton className="h-5 w-[400px]" />
           ) : (
-            <p className="text-primary-400 text-text-sm web:grow web:text-text-lg web:py-1.5">
+            <p className="text-light-400 text-text-sm web:grow web:text-text-lg web:py-1.5">
               {description}
             </p>
           )}
@@ -158,20 +175,22 @@ const DetailPage = () => {
         {/* 로그 북마크 버튼 */}
         <Button
           variant={'outline'}
+          fullRounded
           className="w-[45px] h-[45px] web:w-[60px] web:h-[60px] border-gray-200 rounded-full"
           onClick={onClickLogBookmark}
         >
           <Bookmark className={cn('!size-6 web:!size-8', placebookmark && 'fill-black')} />
         </Button>
         {/* 장소 모아 보기 버튼 */}
-
         {isMobile ? (
           <Button
             variant={'outline'}
             className="w-[45px] h-[45px] web:w-[60px] web:h-[60px] border-gray-200 rounded-full"
-            onClick={() => navi(`/log/${placeLogId}/placesCollection`)}
+            asChild
           >
-            <TableIcon className="!size-5 web:!size-7" />
+            <Link to={`/log/${placeLogId}/placesCollection`}>
+              <TableIcon className="!size-5 web:!size-7" />
+            </Link>
           </Button>
         ) : (
           <Dialog>
@@ -193,7 +212,7 @@ const DetailPage = () => {
                   <ModalLogCard
                     key={place.placeId}
                     place={place}
-                    isPlaceBookMark={placeBookmark?.[idx]?.isBookmarked ?? undefined}
+                    isPlaceBookMark={placeBookmark?.[idx]?.isBookmarked}
                     placeLogId={Number(logData?.placeLogId)}
                   />
                 ))}

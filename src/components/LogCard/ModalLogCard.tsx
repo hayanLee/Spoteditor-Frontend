@@ -31,7 +31,7 @@ const ModalLogCard = memo(({ place, isPlaceBookMark, placeLogId }: ModalLogCard)
   };
 
   return (
-    <div className={cn('h-full gap-1.5')}>
+    <div className="h-full">
       {/* 이미지 */}
       <div className={cn('relative grow group cursor-pointer')}>
         <img
@@ -56,9 +56,9 @@ const ModalLogCard = memo(({ place, isPlaceBookMark, placeLogId }: ModalLogCard)
         </div>
       </div>
       {/* 설명 */}
-      <div className="text-text-sm web:text-text-md">
+      <div className="text-text-sm mt-[5px]">
         <h5 className="font-bold">{place?.name} </h5>
-        <h6 className="text-primary-300 font-normal">
+        <h6 className="text-light-300 font-normal">
           {place && `${place.address.sido} | ${place.address.sigungu}`}
         </h6>
       </div>

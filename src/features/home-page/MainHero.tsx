@@ -22,7 +22,7 @@ const MainHero = () => {
   return (
     <>
       <div className="web:z-20 bg-black px-4 py-[30px] gap-9 flex flex-col web:grid web:grid-cols-2 web:gap-[30px] web:px-[50px] web:py-10 relative">
-        <div className="flex flex-col justify-between web:justify-center">
+        <div className="flex flex-col justify-between web:justify-around ">
           <div className="text-white text-md font-medium web:text-xl pb-[25px]">
             반가워요! <br />
             Spoteditor는 "어디 가서 놀지?"
@@ -58,7 +58,7 @@ const MainHero = () => {
             isOpen ? 'max-h-[345px] opacity-100' : 'max-h-0 opacity-0'
           )}
         >
-          <div className="text-primary-500 text-text-sm web:text-text-xl grow flex flex-col justify-center">
+          <div className="text-primary-500 text-text-sm web:text-text-lg grow flex flex-col justify-center">
             <p>
               사실 어디 놀러 갈지 정하는 게 의외로 스트레스잖아요? 맛집도 찾고, 사진 찍기 좋은 곳도
               골라야 하고, 이동 동선도 생각해야 하고... 아, 머리 아파!{' '}

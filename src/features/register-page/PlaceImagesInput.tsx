@@ -30,6 +30,7 @@ const PlaceImagesInput = ({ control, setValue, idx, trigger }: PlaceImagesInputP
   return (
     <>
       <Button
+        type="button"
         variant="outline"
         className="border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 mt-[15px] mb-2.5"
         onClick={() => fileInputRef.current?.click()}

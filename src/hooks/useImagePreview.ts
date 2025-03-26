@@ -1,21 +1,29 @@
 import api from '@/services/apis/api';
 import { PresignUrlResponse } from '@/services/apis/types/registerAPI.type';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
+import { resizeImageToWebp } from '@/utils/resizeImageToWebp';
 import { useCallback, useEffect, useState } from 'react';
 
 function useImagePreview(initialImageUrl = '') {
   const [imageFile, setImageFile] = useState<File | null>(null); // 새로운 이미지 파일
-  const [imagePreview, setImagePreview] = useState<string>(initialImageUrl); // 미리보기 URL
+  const [imagePreview, setImagePreview] = useState<string | File | Blob>(initialImageUrl); // 미리보기 URL
   const [presignedUrlObj, setPresignedUrlObj] = useState<PresignUrlResponse | null>(null); // presigned URL
   const [isUploading, setIsUploading] = useState<boolean>(false); // 업로드 상태
 
   /* 파일 변경 핸들러 */
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    try {
+      const resizedImageBase64 = await resizeImageToWebp(file, null, null, 90, 'base64');
+      const resizedImageFile = await resizeImageToWebp(file, null, null, 80, 'file');
+
+      setImagePreview(resizedImageBase64);
+      setImageFile(resizedImageFile as File);
+    } catch (error) {
+      console.error('이미지 리사이징 실패', error);
+    }
   };
 
   /* presigned URL 요청 */

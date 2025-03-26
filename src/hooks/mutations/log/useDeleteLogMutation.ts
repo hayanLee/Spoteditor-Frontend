@@ -12,6 +12,7 @@ const useDeleteLog = (placeLogId: number) => {
     mutationFn: () => api.log.deleteLog(placeLogId),
     onSuccess: () => {
       queryClient.removeQueries({ queryKey: logKeys.detail(placeLogId) });
+      queryClient.invalidateQueries({ queryKey: ['log', 'user', 'list'] });
       navi(HOME);
     },
     onError: (error) => {

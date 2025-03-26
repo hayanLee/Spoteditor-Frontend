@@ -22,12 +22,10 @@ const MapPage = () => {
   const [pagination, setPagination] = useState<kakao.maps.Pagination | null>(null); // 페이지네이션
 
   useEffect(() => {
-    console.log('맵초기화');
     initMap();
   }, []);
 
   const getRegionLocation = (region: string): Promise<{ lat: number; lon: number }> => {
-    console.log('주소변환');
     return new Promise((resolve, reject) => {
       geocoder?.addressSearch(region, (result, status) => {
         if (status === 'OK') {
@@ -43,7 +41,6 @@ const MapPage = () => {
   /* 검색어 입력 */
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('검색어 입력');
     if (!inputRef.current || !place || !map) return;
 
     removeMarker(); // 기존 검색어 마크 지우기

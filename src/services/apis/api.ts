@@ -29,8 +29,8 @@ class API {
     this.user = new UserAPI(this.#authClient);
     this.otherUser = new OtherUserAPI(this.#axios);
     this.userLog = new UserLogAPI(this.#authClient);
-    this.register = new RegisterAPI(this.#axios);
-    this.log = new LogAPI(this.#axios);
+    this.register = new RegisterAPI(this.#authClient);
+    this.log = new LogAPI(this.#authClient);
     this.place = new PlaceAPI(this.#axios);
     this.follow = new FollowAPI(this.#axios);
     this.searchLog = new SearchLog(this.#axios);

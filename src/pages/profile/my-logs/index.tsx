@@ -6,13 +6,13 @@ import {
   PostCardLocation,
   PostCardTitle,
   PostCardWrapper,
+  ProfileMyLogFallback,
 } from '@/features/profile/PostCard';
 import useUser from '@/hooks/queries/user/useUser';
 import useOtherUserLogs from '@/hooks/queries/userLog/useOtherUserLogs';
 import useUserLogs from '@/hooks/queries/userLog/useUserLogs';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
-import NotProfileData from '../NotProfileData';
 import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
 
 function MyLogs() {
@@ -41,7 +41,7 @@ function MyLogs() {
     <>
       {isPending ? (
         <Loading className="min-h-[350px]" />
-      ) : data?.content.length !== 0 ? (
+      ) : data?.content.length === 0 ? (
         <>
           <PostCardWrapper className="mb-[50px]">
             {data?.content?.map((log) => (
@@ -70,7 +70,7 @@ function MyLogs() {
           </section>
         </>
       ) : (
-        <NotProfileData />
+        <ProfileMyLogFallback />
       )}
     </>
   );

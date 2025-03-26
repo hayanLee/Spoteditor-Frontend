@@ -1,13 +1,22 @@
 import GeoConsentModal from '@/components/GeoConsentModal';
 import { KakaoMapProvider } from '@/contexts/KakaoMap.context';
 import useGeolocationPermission from '@/hooks/useGeolocationPermission';
-import { Outlet, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 
 const RegisterLayout = () => {
   /* /register로 시작하는 url 진입 시 위치권한 동의 여부에 따라 모달창 렌더링*/
-  const { pathname } = useLocation();
-  const isRegister = pathname.startsWith('/register');
-  const { open } = useGeolocationPermission();
+  const { setOpen, permission, checkPermission } = useGeolocationPermission();
+
+  useEffect(() => {
+    checkPermission();
+  }, []);
+
+  useEffect(() => {
+    if (permission !== 'granted') {
+      setOpen(true);
+    }
+  }, [permission]);
   return (
     <div className="flex flex-col items-center h-screen mx-auto web:w-[724px]">
       <div className="w-full h-full grow">
@@ -15,7 +24,7 @@ const RegisterLayout = () => {
           <Outlet />
         </KakaoMapProvider>
       </div>
-      {isRegister && open && <GeoConsentModal />}
+      {permission !== 'granted' && <GeoConsentModal />}
     </div>
   );
 };

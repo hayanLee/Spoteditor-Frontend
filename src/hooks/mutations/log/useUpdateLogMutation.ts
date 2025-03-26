@@ -16,6 +16,7 @@ const useUpdateLogMutation = () => {
     onSuccess: (result) => {
       if (result) {
         queryClient.invalidateQueries({ queryKey: logKeys.detail(result.data.placeLogId) });
+        queryClient.invalidateQueries({ queryKey: ['log', 'user', 'list'] });
         navi(`/log/${result.data.placeLogId}`, { replace: true });
       }
     },

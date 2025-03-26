@@ -1,8 +1,9 @@
+import EditLayout from '@/layouts/EditLayout';
 import MainLayout from '@/layouts/MainLayout';
 import RegisterLayout from '@/layouts/RegisterLayout';
 import DetailPage from '@/pages/detail-page';
 import PlacesCollectionPage from '@/pages/detail-page/PlacesCollectionPage';
-import EditPage from '@/pages/edit-page/EditPage';
+import EditPage from '@/pages/edit-page';
 import NotFoundPage from '@/pages/error-page';
 import HomePage from '@/pages/home';
 import Notice from '@/pages/notice';
@@ -76,8 +77,17 @@ const router = createBrowserRouter([
           { path: '/register/maps', element: <MapPage /> },
           { path: '/register/newPlace', element: <NewPlacePage /> },
           { path: '/write', element: <WritePage /> },
-          { path: '/register/edit/:placeLogId', element: <EditPage /> },
         ],
+      },
+    ],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <EditLayout />,
+        errorElement: <NotFoundPage />,
+        children: [{ path: '/edit/:placeLogId', element: <EditPage /> }],
       },
     ],
   },

@@ -11,10 +11,10 @@ class PlaceAPI {
     try {
       const path = `/api/bookmark`;
       const res = await this.#axios.post(path, { placeId });
-      console.log('장소 북마크 추가', res);
+      // console.log('장소 북마크 추가', res);
       if (res.status !== 201) throw new Error('장소 북마크 실패');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -22,10 +22,10 @@ class PlaceAPI {
     try {
       const path = `/api/bookmark`;
       const res = await this.#axios.delete(path, { data: { placeId } });
-      console.log('장소 북마크 삭제', res);
+      // console.log('장소 북마크 삭제', res);
       if (res.status !== 204) throw new Error('장소 북마크 삭제 실패');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

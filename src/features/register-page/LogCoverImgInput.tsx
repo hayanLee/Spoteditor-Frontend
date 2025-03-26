@@ -40,7 +40,7 @@ const LogCoverImgInput = ({ name, control, setValue, trigger }: CoverImageInputP
               ) : (
                 imagePreview && (
                   <img
-                    src={imagePreview}
+                    src={imagePreview as string}
                     alt="커버 이미지"
                     className="w-full aspect-[2/1] object-cover"
                   />

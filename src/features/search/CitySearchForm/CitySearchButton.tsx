@@ -11,7 +11,7 @@ export default function CitySearchButton({ gio, onClick }: CitySearchButtonProps
       type="button"
       variant="ghost"
       onClick={() => onClick(gio)}
-      className="px-2.5 py-[15px] w-[169px] web:w-[145px] text-primarySlate"
+      className="px-2.5 py-[15px] w-full web:w-[145px] text-primarySlate"
     >
       {gio}
     </Button>

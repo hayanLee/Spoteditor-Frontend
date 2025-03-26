@@ -1,8 +1,15 @@
+import { Button } from '@/components/ui/button';
+
 const CourseButton = ({ category }: { category: string }) => {
   return (
-    <button className="bg-transparent rounded-full border border-primary-800 text-text-sm py-[6px] px-[14px] text-white web:px-[14px] web:py-2.5 ">
+    <Button
+      variant={'transparent'}
+      size={'m'}
+      fullRounded
+      className="text-white border border-primary-800"
+    >
       {category}
-    </button>
+    </Button>
   );
 };
 
