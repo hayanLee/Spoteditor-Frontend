@@ -26,7 +26,7 @@ export default function LogFollowingButton({ otherUserId, isFollowing }: LogFoll
       className="font-medium"
       fullRounded
     >
-      {isFollowing ? '팔로잉' : '팔로워'}
+      {isFollowing ? '팔로잉' : '팔로우'}
     </Button>
   );
 }

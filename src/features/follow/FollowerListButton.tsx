@@ -93,6 +93,7 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
                             <AvatarImage
                               src={follower.imageUrl}
                               alt={`${follower.name}님의 프로필`}
+                              className="object-cover object-center"
                             />
                             <AvatarFallback>{follower.name}</AvatarFallback>
                           </Avatar>

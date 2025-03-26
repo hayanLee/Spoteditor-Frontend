@@ -64,10 +64,12 @@ function ProfileSetting() {
   const { setIsFormDirty } = useUnsavedChangesWarning(form);
 
   const onSubmit = async (data: z.infer<typeof profileSettingSchema>) => {
-    console.log('폼 데이터', data);
-    const { name, description, instagramId } = data;
+    const { name, description } = data;
 
-    console.log('useProfileStore', file);
+    const instagramId = data.instagramId.startsWith('@')
+      ? data.instagramId
+      : `@${data.instagramId}`;
+
     if (!file) return;
     const resizingFile = await resizeFile(file);
 

@@ -27,7 +27,7 @@ export default function ProfileFollowingButton({ otherUserId }: ProfileFollowing
       className="font-medium"
       fullRounded
     >
-      {userData && userData?.isFollowing ? '팔로잉' : '팔로워'}
+      {userData && userData?.isFollowing ? '팔로잉' : '팔로우'}
     </Button>
   );
 }

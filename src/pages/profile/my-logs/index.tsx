@@ -41,7 +41,7 @@ function MyLogs() {
     <>
       {isPending ? (
         <Loading className="min-h-[350px]" />
-      ) : data?.content.length === 0 ? (
+      ) : data?.content.length !== 0 ? (
         <>
           <PostCardWrapper className="mb-[50px]">
             {data?.content?.map((log) => (

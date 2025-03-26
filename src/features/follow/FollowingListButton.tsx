@@ -103,6 +103,7 @@ export default function FollowingListButton({
                               <AvatarImage
                                 src={following.imageUrl}
                                 alt={`${following.name}님의 프로필`}
+                                className="object-cover object-center"
                               />
                               <AvatarFallback>{following.name}</AvatarFallback>
                             </Avatar>

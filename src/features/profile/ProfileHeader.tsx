@@ -29,7 +29,11 @@ function ProfileHeader() {
         <section className="flex flex-col items-center justify-start w-full pb-5 web:pb-[30px]">
           <section>
             <Avatar className="w-[60px] h-[60px]">
-              <AvatarImage src={data?.profileImage.imageUrl} alt={`${data?.name}님의 프로필`} />
+              <AvatarImage
+                src={data?.profileImage.imageUrl}
+                alt={`${data?.name}님의 프로필`}
+                className="object-cover object-center"
+              />
             </Avatar>
           </section>
           <section className="gap-[6px] flex justify-center items-center my-3">
