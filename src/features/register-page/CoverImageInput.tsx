@@ -47,7 +47,7 @@ const CoverImageInput = ({
       <div className="px-4 w-full">
         <Input
           type="file"
-          accept="image/*"
+          accept=".jpg,.jpeg,.png,.webp,.avif"
           onChange={handleFileChange}
           ref={coverUploadInputRef}
           className="hidden"

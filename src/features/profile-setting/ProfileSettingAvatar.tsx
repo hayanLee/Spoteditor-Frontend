@@ -19,8 +19,6 @@ export default function ProfileSettingAvatar({ imageUrl }: ProfileSettingAvatarP
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log('file', file?.name);
-
     if (file) {
       setImageFile(file);
       setFile(file);
@@ -60,7 +58,7 @@ export default function ProfileSettingAvatar({ imageUrl }: ProfileSettingAvatarP
         </button>
         <input
           type="file"
-          accept="image/*"
+          accept=".jpg,.jpeg,.png,.webp,.avif"
           id="imageUrl"
           ref={hiddenInputRef}
           onChange={handleFileChange}

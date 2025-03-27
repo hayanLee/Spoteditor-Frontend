@@ -13,6 +13,7 @@ export default function useUpdateUser() {
       queryClient.invalidateQueries({ queryKey: userKeys.auth() });
       queryClient.refetchQueries({ queryKey: userKeys.me() });
       queryClient.refetchQueries({ queryKey: userKeys.auth() });
+      console.log('프로필 업데이트 성공');
     },
     onError(err) {
       console.error('프로필 업데이트 실패:', err);

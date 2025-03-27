@@ -4,6 +4,7 @@ import PlaceListItem from '@/features/register-page/PlaceListItem';
 import RegisterSearchBar from '@/features/register-page/RegisterSearchBar';
 import SelectedPlacePreview from '@/features/register-page/SelectedPlacePreview';
 import { useRegisterStore } from '@/store/registerStore';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SearchPage = () => {
@@ -11,6 +12,11 @@ const SearchPage = () => {
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const recentSearchPlaces = useRegisterStore((state) => state.recentSearchPlaces);
   const removeSelectedPlace = useRegisterStore((state) => state.removeSelectedPlace);
+
+  // 전체보기
+  const [showAllRecentSearchPlaces, setShowAllRecentSearchPlaces] = useState(false);
+  const handleShowAllClick = () => setShowAllRecentSearchPlaces(true);
+
   return (
     <div className="h-full flex flex-col">
       <RegisterSearchBar to={REGISTER_SELECT} />
@@ -21,14 +27,16 @@ const SearchPage = () => {
         {/* 최근 검색 */}
         <div className="w-full">
           <h3 className="text-text-2xl font-bold pt-5 pb-2.5">최근 검색한 장소</h3>
-          {recentSearchPlaces?.map((place, idx) => (
-            <PlaceListItem key={idx} place={place} />
-          ))}
+          {recentSearchPlaces
+            ?.slice(0, showAllRecentSearchPlaces ? recentSearchPlaces.length : 5)
+            .map((place, idx) => (
+              <PlaceListItem key={idx} place={place} />
+            ))}
         </div>
 
         {/* 5개부터 활성화 */}
-        {recentSearchPlaces.length > 4 && (
-          <Button className="w-full" variant={'ghost'}>
+        {recentSearchPlaces.length > 4 && !showAllRecentSearchPlaces && (
+          <Button className="w-full" variant={'ghost'} onClick={handleShowAllClick}>
             전체보기
           </Button>
         )}

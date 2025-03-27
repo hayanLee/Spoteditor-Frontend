@@ -72,14 +72,16 @@ export const useRegisterStore = create<RegisterStore>()((set) => ({
     }),
 
   addSelectedPlace: (place) =>
-    set((state) => ({
-      selectedPlaces: state.selectedPlaces.some((item) => item.id === place.id)
-        ? state.selectedPlaces
-        : [...state.selectedPlaces, place],
-      recentSearchPlaces: state.recentSearchPlaces.some((item) => item.id === place.id)
-        ? state.recentSearchPlaces
-        : [...state.recentSearchPlaces, place],
-    })),
+    set((state) => {
+      const isPlaceSelected = state.selectedPlaces.some((item) => item.id === place.id);
+      return {
+        selectedPlaces: isPlaceSelected ? state.selectedPlaces : [...state.selectedPlaces, place],
+        recentSearchPlaces: state.recentSearchPlaces.some((item) => item.id === place.id)
+          ? state.recentSearchPlaces
+          : [...state.recentSearchPlaces, place],
+      };
+    }),
+
   removeSelectedPlace: (place) =>
     set((state) => ({
       selectedPlaces: state.selectedPlaces.filter((item) => item.id !== place.id),

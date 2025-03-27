@@ -66,7 +66,7 @@ const PlaceImagesInput = ({ control, setValue, idx, trigger }: PlaceImagesInputP
 
             <Input
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png,.webp,.avif"
               onChange={async (e) => {
                 await handleFileChange(e);
                 field.onChange(presignedUrlObjs);

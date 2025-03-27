@@ -1,24 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useBlocker } from 'react-router-dom';
-import { UseFormReturn } from 'react-hook-form';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 
-export default function useUnsavedChangesWarning(form: UseFormReturn<any>) {
-  const [isFormDirty, setIsFormDirty] = useState(false);
+type CompareFn<T> = (current: T) => boolean;
+
+export default function useUnsavedChangesWarning<T extends FieldValues>(
+  form: UseFormReturn<T>,
+  isChanged: CompareFn<T>
+) {
   const [proceedNavigation, setProceedNavigation] = useState(false);
 
-  // 1. 폼 변경 감지
-  useEffect(() => {
-    const subscription = form.watch(() => {
-      setIsFormDirty(true);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [form]);
-
-  // 2. beforeunload 감지 (브라우저 닫기/새로고침)
+  // 1. 새로고침 또는 브라우저 닫기 경고
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (isFormDirty) {
+      if (isChanged(form.getValues())) {
         event.preventDefault();
         event.returnValue = '';
       }
@@ -28,29 +23,29 @@ export default function useUnsavedChangesWarning(form: UseFormReturn<any>) {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isFormDirty]);
+  }, [form, isChanged]);
 
-  // 3. 라우터 이동 감지 및 차단
+  // 2. 페이지 이동 경고
   const blocker = useBlocker(({ currentLocation, nextLocation }) => {
-    // 진행 여부 결정: 취소 시 false 반환
-    if (isFormDirty && currentLocation.pathname !== nextLocation.pathname && !proceedNavigation) {
+    if (
+      isChanged(form.getValues()) &&
+      currentLocation.pathname !== nextLocation.pathname &&
+      !proceedNavigation
+    ) {
       const confirmLeave = window.confirm('저장하지 않고 나가시겠습니까?');
       if (confirmLeave) {
-        setProceedNavigation(true); // 다음 useEffect에서 proceed 처리
-        return false; // 진행 허용
-      } else {
-        return true; // 차단
+        setProceedNavigation(true);
+        return false;
       }
+      return true;
     }
     return false;
   });
 
-  // blocker.proceed()는 confirm이 true일 때만 실행
+  // 3. 유저가 확인 누르면 진행
   useEffect(() => {
     if (blocker.state === 'blocked' && proceedNavigation) {
       blocker.proceed();
     }
   }, [blocker, proceedNavigation]);
-
-  return { isFormDirty, setIsFormDirty };
 }

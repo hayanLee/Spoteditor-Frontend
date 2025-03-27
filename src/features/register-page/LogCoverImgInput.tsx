@@ -62,7 +62,7 @@ const LogCoverImgInput = ({ name, control, setValue, trigger }: CoverImageInputP
             <div className="px-4 w-full">
               <Input
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp,.avif"
                 onChange={async (e) => {
                   await handleFileChange(e);
                   field.onChange(presignedUrlObj);

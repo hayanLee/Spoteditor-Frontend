@@ -65,7 +65,7 @@ const LogCoverEditInput = ({ name, control, form }: CoverImageInputProps) => {
             <div className="px-4 w-full">
               <Input
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png,.webp,.avif"
                 onChange={async (e) => await handleFileChange(e)}
                 ref={fileInputRef}
                 className="hidden"

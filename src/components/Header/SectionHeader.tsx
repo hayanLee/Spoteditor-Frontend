@@ -20,7 +20,7 @@ function SectionHeader({
     <header className={cn('flex flex-col', className)}>
       <h2
         className={cn(
-          'text-[24px] web:text-[32px] leading-[120%] tracking-[-0.48px] web:tracking-[-0.64px] text-primary-400 font-untitled font-medium',
+          'text-[24px] web:text-[32px] leading-[120%] tracking-[-0.48px] web:tracking-[-0.64px] text-primary-400 font-untitled font-semibold',
           labelClassName
         )}
       >
@@ -28,7 +28,7 @@ function SectionHeader({
       </h2>
       <h2
         className={cn(
-          'text-[24px] web:text-[32px] leading-[120%] tracking-[-0.48px] web:tracking-[-0.64px] text-primary-950 font-untitled font-medium',
+          'text-[24px] web:text-[32px] leading-[120%] tracking-[-0.48px] web:tracking-[-0.64px] text-primary-950 font-untitled font-semibold',
           queryClassName
         )}
       >

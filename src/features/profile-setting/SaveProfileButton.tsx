@@ -40,7 +40,7 @@ function SaveProfileButton({ userId, onTrigger }: SaveProfileButtonProps) {
         </DialogDescription>
         <DialogClose asChild className="flex justify-end w-full">
           <div className="space-x-[15px]">
-            <Button onClick={onUpdateClick} size="sm" className="w-[100px]">
+            <Button type="button" onClick={onUpdateClick} size="sm" className="w-[100px]">
               확인
             </Button>
           </div>

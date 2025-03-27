@@ -77,7 +77,7 @@ const PlaceEditImagesInput = ({ form, placeName }: PlaceEditImagesInputProps) =>
 
             <Input
               type="file"
-              accept="image/*"
+              accept=".jpg,.jpeg,.png,.webp,.avif"
               onChange={handleFileChange}
               ref={fileInputRef}
               className="hidden"

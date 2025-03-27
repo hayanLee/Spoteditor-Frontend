@@ -8,6 +8,7 @@ import useOtherUser from '@/hooks/queries/user/useOtherUser';
 import ProfileHeaderSkeleton from '@/components/Skeleton/ProfileHeaderSkeleton';
 import FollowingListButton from '../follow/FollowingListButton';
 import FollowerListButton from '../follow/FollowerListButton';
+import ProfileFollowingButton from '../follow/ProfileFollowingButton';
 
 function ProfileHeader() {
   const { userId } = useParams();
@@ -68,7 +69,7 @@ function ProfileHeader() {
             </h3>
             <h3>{data?.instagramId ? data.instagramId : '@spoteditorofficial'}</h3>
           </section>
-          {isMe && (
+          {isMe ? (
             <Link to="/profile-setting">
               <Button
                 variant="outline"
@@ -77,6 +78,11 @@ function ProfileHeader() {
                 편집
               </Button>
             </Link>
+          ) : (
+            <ProfileFollowingButton
+              otherUserId={Number(otherUserData?.userId)}
+              className="mt-[10px] min-h-0 web:mt-[15px] p-2 w-[50px] web:w-[60px] h-[24px] web:h-[28px] rounded-[60px] font-medium text-text-xs"
+            />
           )}
         </section>
       )}

@@ -35,9 +35,9 @@ export interface IOhterUser extends IUser {
 }
 
 export interface IUpdateUser {
-  name: string;
-  originalFile: string;
-  uuid: string;
-  description: string;
-  instagramId: string;
+  name?: string;
+  originalFile?: string;
+  uuid?: string;
+  description?: string;
+  instagramId?: string;
 }
