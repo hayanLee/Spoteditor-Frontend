@@ -99,6 +99,7 @@ const LogWritePage = () => {
                     form.formState.errors.title && 'placeholder:text-error-500'
                   )}
                 />
+                <FormMessage className="w-full" />
                 {field.value && (
                   <CircleX
                     className="stroke-white fill-primary-100 absolute stroke-1 top-2 right-4  cursor-pointer hover:fill-slate-50/50"

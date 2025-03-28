@@ -63,10 +63,10 @@ const MainCarousel = () => {
   return (
     <>
       <div className="w-full flex justify-end relative bottom-[50px]">
-        <div className="w-20 h-1 bg-primary-200">
+        <div className="w-20 h-1 bg-primary-200 rounded-full">
           <div
             ref={progressRef}
-            className="h-full bg-black transition-transform duration-300 ease-out"
+            className="h-full bg-black transition-transform duration-300 ease-out rounded-full"
             style={{
               transformOrigin: 'left',
             }}

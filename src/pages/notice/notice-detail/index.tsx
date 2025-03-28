@@ -5,7 +5,7 @@ import NoticeDetailInfo from '@/features/notice/notice-detail/NoticeDetailInfo';
 
 function NoticeDetail() {
   return (
-    <div className="flex justify-center w-full h-[300vh]">
+    <div className="flex justify-center w-full h-[140vh]">
       <div className="max-w-[724px] w-full">
         <NoticeDetailHeader
           title="스팟에디터 ‘서비스 이용약관’ 변경에 

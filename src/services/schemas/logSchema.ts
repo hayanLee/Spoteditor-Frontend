@@ -18,7 +18,10 @@ export const ImageSchema = z.object({
 });
 
 export const LogWriteFormSchema = z.object({
-  title: z.string().min(1, '제목은 최소 1자 이상 입력해야 합니다.'),
+  title: z
+    .string()
+    .min(1, '제목은 최소 1자 이상 입력해야 합니다.')
+    .max(30, '제목은 30자를 초과할 수 없습니다.'),
   description: z
     .string()
     .min(1, '설명은 최소 1자 이상 입력해야 합니다.')
@@ -28,7 +31,10 @@ export const LogWriteFormSchema = z.object({
 });
 
 export const LogEditFormSchema = z.object({
-  title: z.string().min(1, '제목은 최소 1자 이상 입력해야 합니다.'),
+  title: z
+    .string()
+    .min(1, '제목은 최소 1자 이상 입력해야 합니다.')
+    .max(30, '제목은 30자를 초과할 수 없습니다.'),
   description: z
     .string()
     .min(1, '설명은 최소 1자 이상 입력해야 합니다.')

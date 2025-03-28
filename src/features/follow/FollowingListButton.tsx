@@ -56,15 +56,18 @@ export default function FollowingListButton({
           className={cn('flex items-center space-x-1', count <= 0 && 'text-primarySlate')}
         >
           <DialogDescription
-            className={cn('text-black text-[18px]', count <= 0 && 'text-primarySlate')}
+            className={cn(
+              'text-black text-text-md web:text-text-2xl font-regular',
+              count <= 0 && 'text-primarySlate'
+            )}
           >
             팔로잉
           </DialogDescription>
-          <span className="font-bold text-center text-[18px]">{count}</span>
+          <span className="font-bold text-center text-text-md web:text-text-2xl">{count}</span>
         </button>
       </DialogTrigger>
       <DialogContent hideCloseButton className="w-[340px] web:w-[348px] h-420 p-0 overflow-hidden">
-        <DialogTitle className="grid grid-cols-3 w-full mb-2 section-heading h-[50px] px-2.5">
+        <DialogTitle className="grid grid-cols-3 w-full mb-2 text-text-2xl font-bold h-[50px] px-2.5">
           <div />
           <div className="flex items-center justify-center">
             <span className="text-center">팔로잉</span>

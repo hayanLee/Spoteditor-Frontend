@@ -19,6 +19,13 @@
 
 @font-face {
   font-family: 'Untitled Sans';
+  src: url('/fonts/untitled/test-untitled-sans-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Untitled Sans';
   src: url('/fonts/untitled/test-untitled-sans-light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
@@ -39,25 +46,6 @@ html {
 @layer base {
   :root {
     --radius: 0.5rem;
-  }
-}
-
-.section-heading {
-  @apply text-[18px] font-bold leading-[27px] tracking-[-0.36px];
-}
-
-@layer components {
-  .form-section-heading {
-    @apply font-bold web:text-[18px] mobile:text-[14px];
-  }
-  .form-label {
-    @apply font-bold text-[14px];
-  }
-  .form-count {
-    @apply text-[11px] text-[#ABAFB5];
-  }
-  .form-field-border-bttom {
-    @apply border-b border-b-[#E5E6E8];
   }
 }
 
@@ -89,4 +77,16 @@ html {
 .scroll-container {
   overflow-y: auto; /* 스크롤 가능하도록 설정 */
   padding-right: 4px; /* 콘텐츠와 스크롤바 사이의 간격 추가 */
+}
+
+/* 공지사항 상세페이지 마스킹 슬라이드 애니메이션 */
+.mask-slide {
+  -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
+  mask-image: linear-gradient(to right, black 50%, transparent 100%);
+  -webkit-mask-size: 200% 100%;
+  mask-size: 200% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0%;
+  mask-position: 100% 0%;
 }

@@ -53,18 +53,21 @@ function UserProfileButton() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="m-1">
-          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
+          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm font-regular">
             <SettingIcon />
             설정
           </DropdownMenuItem>
-          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm">
+          <DropdownMenuItem className="flex items-center justify-start gap-2 px-4 py-3 text-text-sm font-regular">
             <HeadPhoneIcon />
             문의하기
           </DropdownMenuItem>
         </div>
         <DropdownMenuSeparator />
         <div className="m-1">
-          <DropdownMenuItem asChild className="flex items-center justify-start text-text-sm">
+          <DropdownMenuItem
+            asChild
+            className="flex items-center justify-start text-text-sm font-regular"
+          >
             <LogoutButton />
           </DropdownMenuItem>
         </div>
@@ -72,11 +75,11 @@ function UserProfileButton() {
         <div className="flex items-center justify-start px-4 py-[10px] gap-[15px] text-[#81858F]">
           <Link to="/notice" className="flex">
             <DropdownMenuItem>
-              <button className="text-text-xs">공지사항</button>
+              <button className="text-text-xs font-regular">공지사항</button>
             </DropdownMenuItem>
           </Link>
-          <button className="text-text-xs">이용약관</button>
-          <button className="text-text-xs">개인정보처리방침</button>
+          <button className="text-text-xs font-regular">이용약관</button>
+          <button className="text-text-xs font-regular">개인정보처리방침</button>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

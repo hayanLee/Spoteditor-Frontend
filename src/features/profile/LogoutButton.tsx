@@ -20,8 +20,8 @@ function LogoutButton() {
         </button>
       </DialogTrigger>
       <DialogContent className="w-[300px] web:w-[390px] p-6">
-        <DialogTitle className="w-full mb-2 text-text-2xl section-heading">로그아웃</DialogTitle>
-        <DialogDescription className="w-full mb-4 text-text-sm text-primary-500 text-start">
+        <DialogTitle className="w-full mb-2 font-bold text-text-2xl">로그아웃</DialogTitle>
+        <DialogDescription className="w-full mb-4 text-text-sm font-regular text-primary-500 text-start">
           로그아웃 하시겠어요?
         </DialogDescription>
         <DialogClose asChild className="flex justify-end w-full">

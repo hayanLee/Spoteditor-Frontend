@@ -1,18 +1,18 @@
 import GeoConsentModal from '@/components/GeoConsentModal';
 import { Button } from '@/components/ui/button';
-import useGeolocationPermission from '@/hooks/useGeolocationPermission';
-import { useEffect, useMemo } from 'react';
-import CitySearchDropbox from './CitySearchDropbox';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { citySearchSchema } from '@/services/schemas/searchSchema';
-import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import useGeolocationPermission from '@/hooks/useGeolocationPermission';
 import useLocationToAddress from '@/hooks/useLocationToAddress';
-import { useNavigate } from 'react-router-dom';
+import { citySearchSchema } from '@/services/schemas/searchSchema';
 import { useCitySearchStore } from '@/store/searchStore';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion, useMotionTemplate, Variants } from 'motion/react';
+import { useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
+import CitySearchDropbox from './CitySearchDropbox';
 
 const dropboxVar: Variants = {
   start: {
@@ -99,9 +99,7 @@ function CitySearchForm() {
               name="sido"
               render={({ field }) => (
                 <FormItem className="flex flex-col bg-white px-3 py-2.5 gap-2">
-                  <FormLabel className="text-primary-400 text-text-sm">
-                    어디로 놀러갈까요?
-                  </FormLabel>
+                  <FormLabel className="!text-light-400 text-text-sm">어디로 놀러갈까요?</FormLabel>
                   <FormControl>
                     <Input
                       onClick={openDropBoxClick}
@@ -120,7 +118,7 @@ function CitySearchForm() {
               name="bname"
               render={({ field }) => (
                 <FormItem className="flex flex-col bg-white px-3 py-2.5 gap-2">
-                  <FormLabel className="text-primary-400 text-text-sm">더 상세히 검색!</FormLabel>
+                  <FormLabel className="!text-light-400 text-text-sm">더 상세히 검색!</FormLabel>
                   <FormControl>
                     <Input
                       onClick={openDropBoxClick}
@@ -136,7 +134,7 @@ function CitySearchForm() {
           </div>
           <Button
             type="submit"
-            className="h-full font-medium text-white rounded-none bg-primary-950 text-text-sm hover:bg-primary-900"
+            className="h-full font-medium text-white rounded-none bg-light-950 text-text-sm hover:bg-primary-900"
           >
             검색
           </Button>

@@ -8,7 +8,7 @@ interface PostCardLocationProps {
 
 function PostCardLocation({ sido, bname, sigungu }: PostCardLocationProps) {
   return (
-    <h4 className="flex items-center text-text-sm text-primarySlate web:text-text-md">
+    <h4 className="flex items-center text-text-sm web:text-text-md font-regular text-primarySlate">
       <span>{sido}</span>
       <div className="mx-2">
         <Separator orientation="vertical" className="h-3 bg-primarySlate" />

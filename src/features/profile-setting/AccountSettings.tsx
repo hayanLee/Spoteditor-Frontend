@@ -3,7 +3,7 @@ import DeleteAccountConfirmButton from '@/features/profile-setting/DeleteAccount
 export default function AccountSettings() {
   return (
     <section className="mt-10">
-      <p className="mb-4 font-bold text-text-lg web:text-text-2xl">계정 설정</p>
+      <p className="mb-4 font-bold text-text-md web:text-text-2xl">계정 설정</p>
       <div className="flex items-center justify-between py-[5px]">
         <p className="font-bold text-text-sm">계정 삭제</p>
         <DeleteAccountConfirmButton />

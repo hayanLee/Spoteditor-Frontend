@@ -47,6 +47,7 @@ module.exports = {
         light: {
           300: '#ABAFB5',
           400: '#81858F',
+          950: '#242528',
         },
         primary: {
           50: '#F5F5F6',

@@ -21,7 +21,7 @@ const RegisterSearchBar = forwardRef(
 
     return (
       <form
-        className="border-b flex items-center w-full px-4 py-[7px]"
+        className="border-b flex items-center w-full px-4 web:pl-0 py-[7px]"
         onSubmit={onSubmit}
         onClick={() => navi(MAPS)}
       >

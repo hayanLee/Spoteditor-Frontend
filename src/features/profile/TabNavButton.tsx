@@ -15,7 +15,10 @@ function TabNavButton({ params, navText }: TabNavButtonProps) {
     <div className="relative">
       <button
         onClick={() => nav(params)}
-        className={cn('py-2 web:py-3 font-bold ', match ? ' text-black' : 'text-[#CDCFD4]')}
+        className={cn(
+          'py-2 web:py-3 font-bold text-text-sm web:text-text-xl',
+          match ? ' text-black' : 'text-primary-200'
+        )}
       >
         {navText}
       </button>

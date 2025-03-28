@@ -129,7 +129,7 @@ function ProfileSetting() {
         <Form {...form}>
           <form className="flex flex-col w-full">
             <ProfileSettingAvatar imageUrl={String(user?.profileImage.imageUrl)} />
-            <p className="mt-8 mb-4 font-bold text-text-lg web:text-text-2xl">프로필 편집</p>
+            <p className="mt-8 mb-4 font-bold text-text-md web:text-text-2xl">프로필 편집</p>
             <ProfileSettingForm />
             <AccountSettings />
             <section className="flex justify-between mt-[50px]">

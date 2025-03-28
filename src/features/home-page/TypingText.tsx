@@ -30,8 +30,8 @@ export default function TypingText({ text }: { text: string }) {
   }, []);
 
   return (
-    <span className="min-h-[70px] web:min-h-fit">
-      <motion.span className="whitespace-pre-wrap font-bold text-md web:text-xl">
+    <span className="min-h-[60px] web:min-h-fit">
+      <motion.span className="whitespace-pre-wrap leading-[135%] font-bold text-md web:text-xl">
         {displayText}
       </motion.span>
 

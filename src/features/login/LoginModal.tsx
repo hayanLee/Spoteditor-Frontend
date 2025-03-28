@@ -32,14 +32,14 @@ function LoginModal() {
         <div className="flex w-[339px] flex-col items-center gap-[20px]">
           <DialogHeader>
             <DialogTitle>Spoteditor</DialogTitle>
-            <DialogTitle>로그인</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-2xl">로그인</DialogTitle>
+            <DialogDescription className="text-text-sm font-regular">
               지금 로그인 하시고 매일 새로운 Spoteditor의
               <br /> 업데이트 소식을 확인해보세요.
             </DialogDescription>
           </DialogHeader>
           <KakaoLoginButton />
-          <p className="text-text-xs text-center text-[#6D727D] w-[320px]">
+          <p className="text-text-xs font-regular text-center text-primary-500 w-[320px]">
             로그인은 <span className="underline underline-offset-2">개인정보보호정책</span> 및
             <span className="underline underline-offset-2">서비스약관</span>에 동의하는 것을
             의미하며, 서비스 이용을 위해 이메일과 이름, 프로필 이미지를 수집합니다.

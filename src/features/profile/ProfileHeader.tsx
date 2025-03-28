@@ -56,8 +56,8 @@ function ProfileHeader() {
               count={data?.following || 0}
             />
           </section>
-          <section className="flex my-[7px] flex-col gap-[10px] web:gap-[15px] items-center text-primarySlate text-text-xs web:text-text-sm">
-            <h3 className="font-medium text-center">
+          <section className="flex my-[7px] flex-col gap-[10px] web:gap-[15px] items-center text-primarySlate font-medium text-center text-text-xs web:text-text-sm">
+            <h3>
               {data?.description ? (
                 data?.description
               ) : (

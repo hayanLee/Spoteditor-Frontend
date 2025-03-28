@@ -48,7 +48,7 @@ export default function CustomPagination({ currentPage, totalPages }: CustomPagi
   };
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="font-untitled text-text-2xs web:text-[13px]">
         {shouldShowLeftArrow && (
           <PaginationItem>
             <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} />

@@ -19,7 +19,7 @@ const HomePage = () => {
       <div className="flex flex-col px-4 web:px-[50px]">
         {/* 제목 */}
         <div className="flex items-end justify-between mt-10 mb-6">
-          <div className="text-xl font-semibold web:text-2xl !leading-[120%] font-untitled">
+          <div className="text-xl font-medium web:text-2xl !leading-[120%] font-untitled">
             <h3 className="text-primary-300">Sort by</h3>
             <h3 className="text-primary-950">Popularity</h3>
           </div>
@@ -63,7 +63,7 @@ const HomePage = () => {
 
         {/* 로그 */}
         <div className="mb-6 font-untitled">
-          <div className="text-xl font-semibold web:text-2xl">
+          <div className="text-xl font-medium web:text-2xl">
             <h3 className="text-primary-300">Latest</h3>
             <h3 className="text-primary-950">Log</h3>
           </div>

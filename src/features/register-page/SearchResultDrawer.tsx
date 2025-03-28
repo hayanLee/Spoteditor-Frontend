@@ -51,7 +51,10 @@ export default function SearchResultDrawer({
                 <li
                   key={index}
                   className="py-2.5 px-4 flex justify-between items-center hover:bg-primary-50"
-                  onClick={() => onPlaceClick(place)}
+                  onClick={() => {
+                    onPlaceClick(place);
+                    handlePlaceSelect(place);
+                  }}
                 >
                   <div>
                     <div className="flex items-center gap-[3px] font-medium mb-[3px]">

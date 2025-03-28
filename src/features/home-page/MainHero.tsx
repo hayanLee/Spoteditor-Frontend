@@ -15,10 +15,9 @@ const categories: string[] = [
   '친구랑 다양하고 알차게 보낸 하루',
 ];
 const MainHero = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { isDropBox } = useCitySearchStore();
   const { isWeb } = useResponsive();
-
   return (
     <>
       <div className="web:z-20 bg-black px-4 py-[30px] gap-9 flex flex-col web:grid web:grid-cols-2 web:gap-[30px] web:px-[50px] web:py-10 relative">
@@ -37,24 +36,21 @@ const MainHero = () => {
         </div>
 
         {/* 접히는 부분 */}
-        {/* 위쪽 */}
         <div
-          className={`w-4 h-4 transition-all duration-300 absolute bottom-0 right-0 cursor-pointer [clip-path:polygon(0%_0%,100%_0%,0%_100%)] web:hidden
+          className={`w-5 h-5 transition-all duration-300 absolute bottom-0 right-0 cursor-pointer [clip-path:polygon(0%_0%,100%_0%,0%_100%)] web:hidden
           ${isOpen ? 'bg-primary-500' : 'bg-black'}`}
           onClick={() => setIsOpen(!isOpen)}
-        ></div>
-        {/* 아래쪽 */}
+        />
         <div
-          className={`w-4 h-4 transition-all duration-300 absolute bottom-0 right-0 cursor-pointer [clip-path:polygon(100%_0%,0%_100%,100%_100%)] web:hidden
+          className={`w-5 h-5 transition-all duration-300 absolute bottom-0 right-0 cursor-pointer [clip-path:polygon(100%_0%,0%_100%,100%_100%)] web:hidden
           ${isOpen ? 'bg-white' : 'bg-primary-500'}`}
           onClick={() => setIsOpen(!isOpen)}
-        ></div>
+        />
 
         {/* 접히는 설명 */}
-
         <div
           className={cn(
-            'flex flex-col transition-all duration-300 web:px-5 web:py-0.5 gap-5 justify-between',
+            'flex flex-col transition-all duration-300 web:px-5 web:py-0.5 gap-5 justify-between web:max-h-[345px] web:opacity-100',
             isOpen ? 'max-h-[345px] opacity-100' : 'max-h-0 opacity-0'
           )}
         >
