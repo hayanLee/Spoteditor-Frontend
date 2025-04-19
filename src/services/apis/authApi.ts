@@ -35,7 +35,10 @@ export class AuthClient {
         }
 
         // 403 에러이고 아직 재시도하지 않은 경우에만 refresh 시도
-        if (error.response?.status === 403 && !originalRequest._retry) {
+        if (
+          error.response?.status === 403 &&
+          !originalRequest._retry 
+        ) {
           originalRequest._retry = true;
 
           // refresh 요청이 진행 중이면 해당 Promise 재사용

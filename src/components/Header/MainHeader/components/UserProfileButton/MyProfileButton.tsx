@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function MyProfileButton() {
   const nav = useNavigate();
-  const { user } = useUser();
+  const { data: user } = useUser();
 
   const onProfileClick = () => {
     const params = user?.userId;

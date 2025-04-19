@@ -1,6 +1,6 @@
+import CustomPagination from '@/components/CustomPagination';
 import Loading from '@/components/Loading';
 import MotionCard from '@/components/MotionCard';
-import CustomPagination from '@/components/CustomPagination';
 import {
   PostCardImage,
   PostCardLocation,
@@ -8,15 +8,15 @@ import {
   PostCardWrapper,
   ProfileMyLogFallback,
 } from '@/features/profile/PostCard';
+import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
 import useUser from '@/hooks/queries/user/useUser';
 import useOtherUserLogs from '@/hooks/queries/userLog/useOtherUserLogs';
 import useUserLogs from '@/hooks/queries/userLog/useUserLogs';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
-import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 function MyLogs() {
-  const { user } = useUser();
+  const { data: user } = useUser();
   const { userId } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -66,7 +66,10 @@ function MyLogs() {
             ))}
           </PostCardWrapper>
           <section className="mt-[50px]">
-            <CustomPagination currentPage={data?.pageNumber!} totalPages={data?.totalPages!} />
+            <CustomPagination
+              currentPage={data?.pageNumber ?? 1}
+              totalPages={data?.totalPages ?? 1}
+            />
           </section>
         </>
       ) : (

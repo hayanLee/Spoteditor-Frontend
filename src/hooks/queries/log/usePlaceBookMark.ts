@@ -1,10 +1,10 @@
 import api from '@/services/apis/api';
 import { useQuery } from '@tanstack/react-query';
-import useAuth from '../user/useAuth';
+import useUser from '../user/useUser';
 import { logKeys } from './logQueryKeys';
 
 const usePlaceBookMark = (placeLogId: number) => {
-  const { data: user } = useAuth();
+  const { data: user } = useUser();
   return useQuery({
     queryKey: [...logKeys.bookMark(placeLogId)],
     queryFn: () => api.place.getPlaceBookMark(placeLogId),

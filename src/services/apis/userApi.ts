@@ -1,6 +1,7 @@
 import { IOhterUser, IUpdateUser, IUser } from '@/services/apis/types/userAPI';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
 import { AxiosInstance } from 'axios';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
 
 export class UserAPI {
   private axios;
@@ -18,7 +19,9 @@ export class UserAPI {
       profileImage: {
         ...data.profileImage,
         imageUrl:
-          data.profileImage.imageId === null
+          data.profileImage.imageUrl === null
+            ? userDefaultAvatar
+            : data.profileImage.imageId === null
             ? data.profileImage.imageUrl
             : getImgFromCloudFront(data.profileImage.imageUrl),
       },

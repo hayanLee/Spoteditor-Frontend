@@ -9,7 +9,7 @@ import {
 import { useLoginMoalStore } from '@/store/loginStore';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import XIcon from '@/components/Icons/XIcon';
-import KakaoLoginButton from '@/features/login/KakaoLoginButton';
+import SocialLoginButtons from './SocialLoginButtons/SocialLoginButtons';
 
 function LoginModal() {
   const { isOpen, closeLoginModal } = useLoginMoalStore();
@@ -38,7 +38,7 @@ function LoginModal() {
               <br /> 업데이트 소식을 확인해보세요.
             </DialogDescription>
           </DialogHeader>
-          <KakaoLoginButton />
+          <SocialLoginButtons />
           <p className="text-text-xs font-regular text-center text-primary-500 w-[320px]">
             로그인은 <span className="underline underline-offset-2">개인정보보호정책</span> 및
             <span className="underline underline-offset-2">서비스약관</span>에 동의하는 것을

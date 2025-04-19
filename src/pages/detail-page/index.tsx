@@ -16,7 +16,7 @@ import useLogBookmarkMutation from '@/hooks/mutations/log/useLogBookmarkMutation
 import useLog from '@/hooks/queries/log/useLog';
 import useLogBookMark from '@/hooks/queries/log/useLogBookMark';
 import usePlaceBookMark from '@/hooks/queries/log/usePlaceBookMark';
-import useAuth from '@/hooks/queries/user/useAuth';
+import useUser from '@/hooks/queries/user/useUser';
 import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import PlaceItem from '@/pages/detail-page/components/PlaceItem';
@@ -39,7 +39,7 @@ const DetailPage = () => {
   const { data: LogBookmark, isPending: isLogBookmarkPending } = useLogBookMark(numericPlaceLogId);
   const { data: placeBookmark, isPending: isPlaceBookmarkPending } =
     usePlaceBookMark(numericPlaceLogId);
-  const { data: user } = useAuth();
+  const { data: user } = useUser();
   const { openLoginModal } = useLoginMoalStore();
 
   /* state */

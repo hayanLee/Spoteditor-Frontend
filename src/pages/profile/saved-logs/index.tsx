@@ -1,24 +1,23 @@
 import CustomPagination from '@/components/CustomPagination';
 import Loading from '@/components/Loading';
 import MotionCard from '@/components/MotionCard';
+import ProfileFallbackMessage from '@/features/profile/fallback/ProfileFallbackMessage';
 import {
   PostCardImage,
   PostCardLocation,
   PostCardTitle,
   PostCardWrapper,
 } from '@/features/profile/PostCard';
+import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
 import useUser from '@/hooks/queries/user/useUser';
 import useOtherUserBookmarkLogs from '@/hooks/queries/userLog/useOtherUserBookmarkLogs';
 import useUserBookmarkLogs from '@/hooks/queries/userLog/useUserBookmarkLogs';
 import { getImgFromCloudFront } from '@/utils/getImgFromCloudFront';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
-import SaveLogBookMarkButton from '@/features/profile/profileBookMark/SaveLogBookMarkButton';
 import { useLayoutEffect } from 'react';
-import ProfileFallbackMessage from '@/features/profile/fallback/ProfileFallbackMessage';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 function SavedLogs() {
-  const { user } = useUser();
+  const { data: user } = useUser();
   const { userId } = useParams();
   const [searchParams] = useSearchParams();
 

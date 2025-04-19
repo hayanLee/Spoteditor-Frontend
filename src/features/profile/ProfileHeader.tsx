@@ -1,18 +1,18 @@
 import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
+import ProfileHeaderSkeleton from '@/components/Skeleton/ProfileHeaderSkeleton';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Link, useParams } from 'react-router-dom';
-import useUser from '@/hooks/queries/user/useUser';
 import useOtherUser from '@/hooks/queries/user/useOtherUser';
-import ProfileHeaderSkeleton from '@/components/Skeleton/ProfileHeaderSkeleton';
-import FollowingListButton from '../follow/FollowingListButton';
+import useUser from '@/hooks/queries/user/useUser';
+import { Link, useParams } from 'react-router-dom';
 import FollowerListButton from '../follow/FollowerListButton';
+import FollowingListButton from '../follow/FollowingListButton';
 import ProfileFollowingButton from '../follow/ProfileFollowingButton';
 
 function ProfileHeader() {
   const { userId } = useParams();
-  const { user, isLoading: userLoading } = useUser();
+  const { data: user, isLoading: userLoading } = useUser();
 
   const isMe = user?.userId === Number(userId);
   const { data: otherUserData, isLoading: otherUserLoading } = useOtherUser(Number(userId), {

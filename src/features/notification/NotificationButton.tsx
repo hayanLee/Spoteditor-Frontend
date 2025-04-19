@@ -10,15 +10,16 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import useNotificationList from '@/hooks/queries/notification/useNotificationList';
+import { notificationStore } from '@/store/notificationStore';
+import { useEffect } from 'react';
 import NotNotification from './NotNotification';
 import NotificationItem from './NotificationItem';
-import { useEffect } from 'react';
-import { notificationStore } from '@/store/notificationStore';
 
 function NotificationButton() {
   //useNotificationWebSocket(); //추후 웹소켓 훅 사용해서 실시간 알림 받기
   const { data: notisData = [], isLoading: isNotiLoading } = useNotificationList();
   const { notifications, isNotiCount, readAsRead } = notificationStore();
+  // console.log('notifications', notifications);
 
   useEffect(() => {
     if (Array.isArray(notisData)) {

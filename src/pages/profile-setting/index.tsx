@@ -4,6 +4,7 @@ import AccountSettings from '@/features/profile-setting/AccountSettings';
 import ProfileSettingAvatar from '@/features/profile-setting/ProfileSettingAvatar';
 import ProfileSettingForm from '@/features/profile-setting/ProfileSettingForm/ProfileSettingForm';
 import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
+import useUnsavedChangesWarning from '@/hooks/form/useUnsavedChangesWarning';
 import useUpdateUser from '@/hooks/mutations/user/useUpdateUser';
 import useUser from '@/hooks/queries/user/useUser';
 import PageLayout from '@/layouts/PageLayout';
@@ -13,10 +14,9 @@ import { useProfileStore } from '@/store/profileStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import Resizer from 'react-image-file-resizer';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import Resizer from 'react-image-file-resizer';
-import useUnsavedChangesWarning from '@/hooks/form/useUnsavedChangesWarning';
 
 export const resizeFile = (file: File): Promise<File> => {
   return new Promise((resolve) => {
@@ -47,7 +47,7 @@ const fetchPresignedUrl = async (file: File) => {
 
 function ProfileSetting() {
   const nav = useNavigate();
-  const { user } = useUser('userOnly');
+  const { data: user } = useUser();
   const { file, clearFile } = useProfileStore();
 
   const form = useForm({
@@ -141,7 +141,7 @@ function ProfileSetting() {
               >
                 취소
               </Button>
-              <SaveProfileButton userId={user?.userId!} onTrigger={handleSaveClick} />
+              {user && <SaveProfileButton userId={user?.userId} onTrigger={handleSaveClick} />}
             </section>
           </form>
         </Form>
