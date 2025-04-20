@@ -134,7 +134,7 @@ function loadKakaoMapSDK(loadedCallback: () => void) {
 
 /* geolocation */
 async function getCurrentLocation(): Promise<{ lat: number; lon: number }> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         resolve({
@@ -143,7 +143,11 @@ async function getCurrentLocation(): Promise<{ lat: number; lon: number }> {
         });
       },
       (error) => {
-        reject(error);
+        console.error('위치 정보 가져오기 실패, 서울시청으로 기본 위치 설정', error);
+        resolve({
+          lat: 37.5665,
+          lon: 126.978,
+        });
       }
     );
   });

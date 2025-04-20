@@ -2,59 +2,58 @@ import { CameraIcon } from '@/components/Icons';
 import Loading from '@/components/Loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import useImagePreview from '@/hooks/useImagePreview';
+import useImageUpload from '@/hooks/useImageUpload';
+import { cn } from '@/lib/utils';
+import { LogEditFormData } from '@/pages/edit-page';
 import { LogWriteFormData } from '@/pages/register-page/LogWritePage';
 import { CircleX } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Control, Controller, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
-
-interface CoverImageInputProps {
-  name: 'coverImgSrc';
-  control: Control<LogWriteFormData>;
-  setValue: UseFormSetValue<LogWriteFormData>;
-  trigger: UseFormTrigger<LogWriteFormData>;
+import { Controller, useController, useFormContext } from 'react-hook-form';
+interface LogCoverImgInputprops {
+  isEditMode?: boolean;
 }
+const LogCoverImgInput = ({ isEditMode }: LogCoverImgInputprops) => {
+  const { control, setValue, formState } = useFormContext<LogWriteFormData | LogEditFormData>();
+  const { field } = useController({ name: 'coverImgSrc', control });
+  const storedFile =
+    isEditMode && field.value && 'storedFile' in field.value ? field.value.storedFile : '';
 
-const LogCoverImgInput = ({ name, control, setValue, trigger }: CoverImageInputProps) => {
   const { presignedUrlObj, imagePreview, handleFileChange, handleClearImage, isUploading } =
-    useImagePreview();
-
+    useImageUpload(storedFile);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
-    if (presignedUrlObj) setValue(name, presignedUrlObj);
-    trigger(name);
-  }, [name, presignedUrlObj, setValue, trigger]);
+    if (presignedUrlObj) setValue('coverImgSrc', presignedUrlObj, { shouldValidate: true });
+  }, [presignedUrlObj, setValue]);
 
   return (
     <Controller
+      name="coverImgSrc"
       control={control}
-      name={name}
       render={({ field }) => {
         return (
           <>
             {/* 커버 이미지 */}
-            <div className="relative mb-3">
+            <div className={cn(imagePreview && 'relative mb-3 w-full')}>
               {isUploading ? (
                 <Loading className="h-[300px]" />
               ) : (
                 imagePreview && (
-                  <img
-                    src={imagePreview as string}
-                    alt="커버 이미지"
-                    className="w-full aspect-[2/1] object-cover"
-                  />
+                  <>
+                    <img
+                      src={imagePreview as string}
+                      alt="업로드된 커버 이미지"
+                      className="w-full aspect-[2/1] object-cover"
+                    />
+                    <CircleX
+                      className="stroke-light-300 stroke-1 fill-light-100 absolute top-4 right-4 cursor-pointer hover:brightness-105 "
+                      onClick={() => {
+                        handleClearImage();
+                        field.onChange(null);
+                      }}
+                      size={24}
+                    />
+                  </>
                 )
-              )}
-
-              {!isUploading && imagePreview && (
-                <CircleX
-                  className="stroke-primary-100 absolute top-4 right-4 cursor-pointer hover:fill-slate-50/50"
-                  onClick={() => {
-                    handleClearImage();
-                    field.onChange(null);
-                  }}
-                />
               )}
             </div>
 
@@ -73,7 +72,10 @@ const LogCoverImgInput = ({ name, control, setValue, trigger }: CoverImageInputP
               {!imagePreview && (
                 <Button
                   variant="outline"
-                  className="border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 my-3"
+                  className={cn(
+                    'border w-full border-dashed gap-[5px] text-primary-600 px-2.5 py-3 my-3',
+                    formState.errors.coverImgSrc && 'bg-error-100'
+                  )}
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <CameraIcon className="stroke-primary-600" />

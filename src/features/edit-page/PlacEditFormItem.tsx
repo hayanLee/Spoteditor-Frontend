@@ -3,16 +3,16 @@ import { LogEditFormData } from '@/pages/edit-page';
 import { PlaceInLog } from '@/services/apis/types/logAPI.type';
 import useDrawerStore from '@/store/drawerStore';
 import { Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
-import { Controller, Path, UseFormReturn } from 'react-hook-form';
+import { Controller, Path, useFormContext } from 'react-hook-form';
 import PlaceEditImagesInput from './PlaceEditImagesInput';
 
 interface PlaceEditFormItemProps {
   place: PlaceInLog;
   idx: number;
-  form: UseFormReturn<LogEditFormData>;
 }
 
-const PlaceEditFormItem = ({ place, idx, form }: PlaceEditFormItemProps) => {
+const PlaceEditFormItem = ({ place, idx }: PlaceEditFormItemProps) => {
+  const { control } = useFormContext();
   const isOpen = useDrawerStore((state) => state.isOpen); // 열림 여부
   const openLogDrawer = useDrawerStore((state) => state.openLogDrawer); // 열림 + 타켓 지정
   const closeDrawer = useDrawerStore((state) => state.closeDrawer);
@@ -24,7 +24,6 @@ const PlaceEditFormItem = ({ place, idx, form }: PlaceEditFormItemProps) => {
     description,
     placeId,
   } = place;
-  const isTargetPlace = targetPlace?.placeId === placeId;
 
   return (
     <div className="py-[5px]">
@@ -33,7 +32,7 @@ const PlaceEditFormItem = ({ place, idx, form }: PlaceEditFormItemProps) => {
         <div className="text-text-lg font-bold">
           <div className="flex justify-between">
             <p>{String(idx + 1).padStart(2, '0')}</p>
-            {isOpen && isTargetPlace ? (
+            {isOpen && targetPlace?.placeId === placeId ? (
               <CircleCheck className="fill-black stroke-white" onClick={closeDrawer} />
             ) : (
               <Circle className="stroke-neutral-200" onClick={() => openLogDrawer(place)} />
@@ -58,18 +57,19 @@ const PlaceEditFormItem = ({ place, idx, form }: PlaceEditFormItemProps) => {
       </section>
 
       {/* 사진 */}
-      <PlaceEditImagesInput form={form} placeName={name} />
+      <PlaceEditImagesInput placeName={name} />
 
       {/* 내용 */}
       <Controller
         name={`places.${name}.placeDescription` as Path<LogEditFormData>}
-        control={form.control}
+        control={control}
         defaultValue={description || ''}
         render={({ field }) => (
           <Textarea
             {...field}
             value={(field.value as string) ?? ''}
-            className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            variant={'ghost'}
+            size={'lg'}
             placeholder="내용을 입력해주세요. (최대 500자)"
           />
         )}

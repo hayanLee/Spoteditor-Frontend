@@ -1,12 +1,12 @@
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import ModifyDrawer from '@/components/Drawer/ModifyDrawer';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import LogCoverEditInput from '@/features/edit-page/LogCoverEditInput';
 import LogEditBar from '@/features/edit-page/LogEditBar';
 import PlaceEditFormItem from '@/features/edit-page/PlacEditFormItem';
+import LogCoverImgInput from '@/features/register-page/LogCoverImgInput';
 import OptionEditSection from '@/features/register-page/OptionEditSection';
 import useUpdateLogMutation from '@/hooks/mutations/log/useUpdateLogMutation';
 import useLog from '@/hooks/queries/log/useLog';
@@ -23,7 +23,7 @@ import { useRegisterStore } from '@/store/registerStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
 import { useEffect } from 'react';
-import { FieldValues, useForm } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export interface LogEditFormData {
@@ -44,8 +44,6 @@ export interface PlaceItem {
   placeId: number;
   placeDescription?: string;
   photos?: Image[]; // 이미지 관련 정보를 객체로 관리
-  newPhotos?: PresignUrlResponse[];
-  deleteImageIds?: number[];
 }
 
 const EditPage = () => {
@@ -86,8 +84,6 @@ const EditPage = () => {
           placeId: item.placeId,
           placeDescription: item.description || '',
           photos: item.images,
-          newPhotos: [],
-          deleteImageIds: [],
         };
         return acc;
       }, {} as { [placeId: string]: PlaceItem });
@@ -143,9 +139,6 @@ const EditPage = () => {
         return {
           id: place.placeId, // 해당 장소의 ID
           description: place.placeDescription, // 장소 설명
-          deleteImageIds: place.deleteImageIds || [], // 삭제된 이미지 아이디들 (있다면)
-          originalFiles: place.newPhotos?.map((file) => file.originalFile) || [], // 새로운 파일들 (파일명만 저장)
-          uuids: place.newPhotos?.map((file) => file.uuid) || [], // presigned URL에 대응하는 UUID 목록
         };
       });
       if (updatedPlaces.length > 0) updateData.updatePlaces = updatedPlaces;
@@ -172,10 +165,9 @@ const EditPage = () => {
   };
   return (
     <div className="h-full flex flex-col">
-      {/* 헤더 */}
       <LogEditBar logTitle={form.watch('title')} />
 
-      <Form {...form}>
+      <FormProvider {...form}>
         <form
           className="flex flex-col items-center grow min-h-0 overflow-y-auto scrollbar-hide "
           onSubmit={form.handleSubmit(onSubmit)}
@@ -185,19 +177,18 @@ const EditPage = () => {
             name="title"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="flex flex-col items-center w-full border-b px-4 relative">
+              <FormItem className="flex w-full px-4">
                 <Input
                   {...field}
                   placeholder="제목을 입력해주세요. (최대 30자) *"
                   className={cn(
-                    "placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0",
+                    "placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0 border-b border-gray-100",
                     form.formState.errors.title && 'placeholder:text-error-500'
                   )}
                 />
-                <FormMessage className="w-full" />
                 {field.value && (
                   <CircleX
-                    className="stroke-white fill-primary-100 absolute stroke-1 top-2 right-4  cursor-pointer hover:fill-slate-50/50"
+                    className="h-full stroke-white fill-light-100  stroke-1 top-2  cursor-pointer"
                     size={24}
                     onClick={() => form.setValue(field.name, '')}
                   />
@@ -206,18 +197,22 @@ const EditPage = () => {
             )}
           />
           {/* 커버 이미지 */}
-          <LogCoverEditInput name="coverImgSrc" control={form.control} form={form} />
+          <LogCoverImgInput isEditMode />
           {/* 로그 설명 */}
           <FormField
             name="description"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="px-4 w-full">
+              <FormItem className="w-full">
                 <FormControl>
                   <Textarea
                     {...field}
-                    className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm  placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    variant={'ghost'}
+                    size={'lg'}
                     placeholder="내용을 입력해주세요. (최대 500자)"
+                    className={cn(
+                      form.formState.errors.description && 'placeholder:text-error-500'
+                    )}
                   />
                 </FormControl>
                 <FormMessage />
@@ -228,7 +223,7 @@ const EditPage = () => {
           {/* 장소 */}
           <div className="flex flex-col w-full mt-3 px-4">
             {places.map((place, idx) => (
-              <PlaceEditFormItem key={place.placeId} form={form} place={place} idx={idx} />
+              <PlaceEditFormItem key={place.placeId} place={place} idx={idx} />
             ))}
           </div>
 
@@ -238,19 +233,7 @@ const EditPage = () => {
             <OptionEditSection title="하루 스타일" storeKey="selectedMoods" form={form} />
           </div>
         </form>
-      </Form>
-
-      {/* <Button
-        onClick={() => {
-          console.log(form.watch());
-          console.log(form.formState.errors);
-          console.log('error', Object.values(form.formState.errors).length > 0); //
-          console.log(!form.formState.isDirty && deletePlaceIds.length === 0); // 폼이 변경되지 않았음
-          console.log(form.formState.dirtyFields);
-        }}
-      >
-        체크
-      </Button> */}
+      </FormProvider>
 
       {/* 버튼 */}
       <div className="pt-2 pb-3 px-4 ">

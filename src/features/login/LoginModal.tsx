@@ -1,3 +1,4 @@
+import XIcon from '@/components/Icons/XIcon';
 import {
   Dialog,
   DialogClose,
@@ -6,13 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useLoginMoalStore } from '@/store/loginStore';
+import { useLoginModalStore } from '@/store/loginStore';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import XIcon from '@/components/Icons/XIcon';
 import SocialLoginButtons from './SocialLoginButtons/SocialLoginButtons';
 
 function LoginModal() {
-  const { isOpen, closeLoginModal } = useLoginMoalStore();
+  const { isOpen, closeLoginModal } = useLoginModalStore();
   return (
     /* onClose(): 모달이 닫힐 때 호출되어 open을 false로 변경 */
     <Dialog open={isOpen} onOpenChange={(open) => !open && closeLoginModal()} modal={true}>

@@ -1,19 +1,16 @@
 import { Textarea } from '@/components/ui/textarea';
-import { LogWriteFormData } from '@/pages/register-page/LogWritePage';
 import useDrawerStore from '@/store/drawerStore';
 import { Circle, CircleCheck, Clock, MapPin } from 'lucide-react';
-import { Control, Controller, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import PlaceImagesInput from './PlaceImagesInput';
 
 interface PlaceFormItemProps {
-  control: Control<LogWriteFormData>;
   place: kakao.maps.services.PlacesSearchResultItem;
   idx: number;
-  setValue: UseFormSetValue<LogWriteFormData>;
-  trigger: UseFormTrigger<LogWriteFormData>;
 }
 
-const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItemProps) => {
+const PlaceFormItem = ({ place, idx }: PlaceFormItemProps) => {
+  const { control } = useFormContext();
   const isOpen = useDrawerStore((state) => state.isOpen); // 열림 여부
   const openModal = useDrawerStore((state) => state.openNewLogDrawer); // 열림 + 타켓 지정
   const closeModal = useDrawerStore((state) => state.closeDrawer);
@@ -51,7 +48,7 @@ const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItem
       </section>
 
       {/* 사진 첨부 */}
-      <PlaceImagesInput control={control} setValue={setValue} idx={idx} trigger={trigger} />
+      <PlaceImagesInput idx={idx} />
 
       {/* 내용 */}
       <Controller
@@ -61,7 +58,8 @@ const PlaceFormItem = ({ place, idx, control, setValue, trigger }: PlaceFormItem
           <Textarea
             {...field}
             value={(field.value as string) ?? ''}
-            className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+            variant={'ghost'}
+            size={'lg'}
             placeholder="내용을 입력해주세요. (최대 500자)"
           />
         )}

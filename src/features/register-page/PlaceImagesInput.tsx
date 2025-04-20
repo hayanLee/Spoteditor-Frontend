@@ -1,31 +1,25 @@
 import { CameraIcon } from '@/components/Icons';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import useImages from '@/hooks/useImages';
-import { LogWriteFormData } from '@/pages/register-page/LogWritePage';
-import { Image } from '@/services/apis/types/registerAPI.type';
+import useImagesUpload from '@/hooks/useImagesUpload';
 import { CircleX } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Control, Controller, UseFormSetValue, UseFormTrigger } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 interface PlaceImagesInputProps {
-  control: Control<LogWriteFormData>;
-  defaultplaceImgs?: Image[];
-  setValue: UseFormSetValue<LogWriteFormData>;
   idx: number;
-  trigger: UseFormTrigger<LogWriteFormData>;
 }
 
-const PlaceImagesInput = ({ control, setValue, idx, trigger }: PlaceImagesInputProps) => {
+const PlaceImagesInput = ({ idx }: PlaceImagesInputProps) => {
+  const { control, setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { imagePreviews, handleFileChange, handleRemoveImage, isUploading, presignedUrlObjs } =
-    useImages();
+    useImagesUpload();
 
   useEffect(() => {
     if (presignedUrlObjs) {
-      setValue(`places.${idx}.photos`, presignedUrlObjs);
-      trigger(`places.${idx}.photos`);
+      setValue(`places.${idx}.photos`, presignedUrlObjs, { shouldValidate: true });
     }
-  }, [presignedUrlObjs, setValue, idx, trigger]);
+  }, [presignedUrlObjs, setValue, idx]);
 
   return (
     <>
@@ -47,19 +41,17 @@ const PlaceImagesInput = ({ control, setValue, idx, trigger }: PlaceImagesInputP
         control={control}
         render={({ field }) => (
           <div className="flex overflow-x-auto mb-2.5">
-            {imagePreviews.map((previewURL, previewIdx) => (
+            {imagePreviews.map((previewObj, previewIdx) => (
               <div className="relative m-1 shrink-0" key={previewIdx}>
                 <Input
                   type="image"
-                  src={previewURL.previewUrl}
+                  src={previewObj.previewUrl}
                   alt="장소 이미지"
                   className="h-[300px] object-cover p-0 "
                 />
                 <CircleX
                   className="stroke-primary-300 fill-slate-100 stroke-1 absolute top-2 right-2  cursor-pointer hover:fill-slate-50/50"
-                  onClick={() => {
-                    handleRemoveImage(previewIdx, false);
-                  }}
+                  onClick={() => handleRemoveImage(previewIdx, previewObj.isNew)}
                 />
               </div>
             ))}

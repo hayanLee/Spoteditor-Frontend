@@ -13,12 +13,13 @@ export default ({ mode }: ConfigEnv) => {
   return defineConfig({
     plugins: [
       react(),
-      (stripImport as any)({
-        include: ['**/*.ts', '**/*.tsx'], // TypeScript 파일만 대상
-        functions: ['console.log', 'console.warn', 'console.debug'], // 제거할 함수들
-        debugger: true, // debugger 문도 제거
-      }),
-    ],
+      !isDevelop &&
+        stripImport({
+          include: ['**/*.ts', '**/*.tsx'],
+          functions: ['console.log', 'console.warn', 'console.debug', 'console.error'],
+          debugger: true,
+        }),
+    ].filter(Boolean),
     define: {
       global: {}, // 웹소켓 'global is not defined' 해결
     },

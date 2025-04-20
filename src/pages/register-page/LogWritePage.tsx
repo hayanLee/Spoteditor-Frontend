@@ -1,20 +1,20 @@
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import ModifyDrawer from '@/components/Drawer/ModifyDrawer';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import LogCoverImgInput from '@/features/register-page/LogCoverImgInput';
 import LogWriteBar from '@/features/register-page/LogWriteBar';
 import PlaceFormItem from '@/features/register-page/PlaceFormItem';
 import useCreateLogMutation from '@/hooks/mutations/log/useCreateLogMutation';
+import useFormattedLog from '@/hooks/useFormattedLog';
 import { cn } from '@/lib/utils';
-import { Log, PresignUrlResponse } from '@/services/apis/types/registerAPI.type';
+import { PresignUrlResponse } from '@/services/apis/types/registerAPI.type';
 import { LogWriteFormSchema } from '@/services/schemas/logSchema';
 import { useRegisterStore } from '@/store/registerStore';
-import { formatAddress } from '@/utils/formatLogForm';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 export interface LogWriteFormData {
   title: string;
@@ -24,6 +24,7 @@ export interface LogWriteFormData {
 }
 
 const LogWritePage = () => {
+  const format = useFormattedLog();
   const form = useForm<LogWriteFormData>({
     resolver: zodResolver(LogWriteFormSchema),
     mode: 'onBlur',
@@ -34,75 +35,43 @@ const LogWritePage = () => {
       places: [],
     },
   });
-  const { mutateAsync: logCreateMuatation } = useCreateLogMutation();
+  const { mutateAsync: logCreateMutation } = useCreateLogMutation();
 
-  /* states */
   const selectedPlaces = useRegisterStore((state) => state.selectedPlaces);
   const resetSelectedPlaces = useRegisterStore((state) => state.clearAllSelections);
-  const selectedWhom = useRegisterStore((state) => state.experience.selectedWhom);
-  const selectedMoods = useRegisterStore((state) => state.experience.selectedMoods);
-
   const [sido = '', , bname = ''] = selectedPlaces[0]?.address_name?.split(' ') || [];
 
-  /* handlers */
-  const formatLog = ({ title, description, coverImgSrc, places }: LogWriteFormData): Log => {
-    return {
-      name: title,
-      description: description,
-      originalFile: coverImgSrc?.originalFile || '',
-      uuid: coverImgSrc?.uuid || '',
-      status: 'public',
-      tags: [
-        ...selectedWhom.map((whom) => ({ name: whom, category: 'WITH_WHOM' as const })),
-        ...selectedMoods.map((mood) => ({ name: mood, category: 'MOOD' as const })),
-      ],
-      places: places.map((place, idx) => {
-        return {
-          name: selectedPlaces[idx].place_name,
-          description: place.placeDescription || '',
-          address: formatAddress(selectedPlaces[idx]),
-          category: 'TOUR',
-          originalFiles: place?.photos.map((item) => item.originalFile),
-          uuids: place?.photos.map((item) => item.uuid),
-        };
-      }),
-    };
-  };
-
   const onSubmit = async (values: LogWriteFormData) => {
-    const formatedLog = formatLog(values);
-    if (!formatedLog) return;
-    const { status } = await logCreateMuatation(formatedLog);
+    const formattedLog = format(values);
+    const { status } = await logCreateMutation(formattedLog);
     if (status === 201) resetSelectedPlaces();
   };
 
   return (
     <div className="h-full flex flex-col">
-      {/* 헤더 */}
       <LogWriteBar sido={sido} bname={bname} />
 
-      <Form {...form}>
+      <FormProvider {...form}>
         <form
-          className="flex flex-col items-center grow min-h-0 overflow-y-auto scrollbar-hide "
+          className="flex flex-col items-center grow min-h-0 overflow-y-auto scrollbar-hide"
           onSubmit={form.handleSubmit(onSubmit)}
         >
           <FormField
             name="title"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="flex flex-col items-center w-full border-b px-4 relative">
+              <FormItem className="flex w-full px-4">
                 <Input
                   {...field}
                   placeholder="제목을 입력해주세요. (최대 30자) *"
                   className={cn(
-                    "placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0",
+                    "placeholder:text-primary-300 placeholder:after:content-['*'] font-medium px-0 border-b border-gray-100",
                     form.formState.errors.title && 'placeholder:text-error-500'
                   )}
                 />
-                <FormMessage className="w-full" />
                 {field.value && (
                   <CircleX
-                    className="stroke-white fill-primary-100 absolute stroke-1 top-2 right-4  cursor-pointer hover:fill-slate-50/50"
+                    className="h-full stroke-white fill-light-100  stroke-1 top-2  cursor-pointer"
                     size={24}
                     onClick={() => form.setValue(field.name, '')}
                   />
@@ -110,27 +79,24 @@ const LogWritePage = () => {
               </FormItem>
             )}
           />
-
           {/* 커버 이미지 */}
-          <LogCoverImgInput
-            name="coverImgSrc"
-            control={form.control}
-            setValue={form.setValue}
-            trigger={form.trigger}
-          />
+          <LogCoverImgInput />
           <FormField
             name="description"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="px-4 w-full">
+              <FormItem className="w-full">
                 <FormControl>
                   <Textarea
                     {...field}
-                    className="bg-primary-50 min-h-[85px] px-[18px] py-2.5 text-primary-300 text-text-sm  placeholder:text-primary-300 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    variant={'ghost'}
+                    size={'lg'}
                     placeholder="내용을 입력해주세요. (최대 500자)"
+                    className={cn(
+                      form.formState.errors.description && 'placeholder:text-error-500'
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -138,19 +104,15 @@ const LogWritePage = () => {
           {/* 장소 */}
           <div className="flex flex-col w-full mt-3 px-4">
             {selectedPlaces.map((place, idx) => (
-              <PlaceFormItem
-                control={form.control}
-                place={place}
-                key={place.id}
-                idx={idx}
-                setValue={form.setValue}
-                trigger={form.trigger}
-              />
+              <PlaceFormItem place={place} key={place.id} idx={idx} />
             ))}
+
+            <div className="text-error-500 px-4 py-3 bg-error-50 text-center rounded-[10px] my-2.5 text-text-sm">
+              부적절한 이미지 적발시 로그가 삭제될 수 있습니다.
+            </div>
           </div>
         </form>
-      </Form>
-
+      </FormProvider>
       {/* <Button onClick={() => console.log(form.formState.errors)}>확인</Button> */}
 
       {/* 버튼 */}
