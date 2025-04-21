@@ -14,6 +14,7 @@ import useOtherFollower from '@/hooks/queries/follow/useOtherFollower';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
 
 interface FollowerListButtonProps {
   isMe: boolean;
@@ -94,7 +95,7 @@ export default function FollowerListButton({ isMe, otherUserId, count }: Followe
                         <figure className="flex items-center gap-[6px]">
                           <Avatar className="w-11 h-11">
                             <AvatarImage
-                              src={follower.imageUrl}
+                              src={follower.imageUrl || userDefaultAvatar}
                               alt={`${follower.name}님의 프로필`}
                               className="object-cover object-center"
                             />

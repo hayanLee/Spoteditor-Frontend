@@ -1,9 +1,9 @@
-import { SubtractIcon } from '@/components/Icons';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import useOtherUser from '@/hooks/queries/user/useOtherUser';
 import useUser from '@/hooks/queries/user/useUser';
 import { Link } from 'react-router-dom';
 import LogFollowingButton from '../follow/LogFollowingButton';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
 
 interface OtherUserProfileSectionProps {
   userId: number;
@@ -20,11 +20,11 @@ export default function OtherUserProfileSection({ userId }: OtherUserProfileSect
       <div className="flex items-center gap-2">
         <Link to={`/profile/${userId}`} className="flex items-center gap-2">
           <Avatar className="w-6 h-6">
-            <AvatarImage src={data?.profileImage.imageUrl} alt="user Avatar" />
+            <AvatarImage src={data?.profileImage.imageUrl || userDefaultAvatar} alt="user Avatar" />
           </Avatar>
           <div className="flex items-center gap-2">
             <p className="font-semibold text-text-sm">{data?.name}</p>
-            <SubtractIcon />
+            {/* <SubtractIcon /> */}
           </div>
         </Link>
         {userData && userData?.userId && !isMe && (

@@ -1,7 +1,6 @@
 import HeadPhoneIcon from '@/components/Icons/HeadPhoneIcon';
 import SettingIcon from '@/components/Icons/SettingIcon';
 import UserIcon from '@/components/Icons/UserIcon';
-import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,14 +10,13 @@ import {
 import LogoutButton from '@/features/profile/LogoutButton';
 import useUser from '@/hooks/queries/user/useUser';
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MyProfileButton from './MyProfileButton';
 
 function UserProfileButton() {
   const { data: user } = useUser();
 
-  const textRef = useRef<HTMLSpanElement>(null);
+  /* const textRef = useRef<HTMLSpanElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
   useEffect(() => {
@@ -33,7 +31,7 @@ function UserProfileButton() {
     if (textRef.current) observer.observe(textRef.current);
 
     return () => observer.disconnect();
-  }, []);
+  }, []); */
 
   return (
     <DropdownMenu modal={false}>
@@ -42,12 +40,11 @@ function UserProfileButton() {
           <UserIcon />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-[264px]">
         <DropdownMenuItem className="font-bold text-text-lg flex justify-start gap-[5px] px-4 items-center">
-          <span ref={textRef} className="truncate">
-            {user?.name}
-          </span>
-          {!isTruncated && <VerifiedLabelIcon />}
+          {/* 체크 아이콘 추가 시 span에 ref={textRef} 추가 */}
+          <span className="truncate">{user?.name}</span>
+          {/* {!isTruncated && <VerifiedLabelIcon />} */}
         </DropdownMenuItem>
         <DropdownMenuItem className="px-4 py-5 focus:bg-white">
           <MyProfileButton />

@@ -1,4 +1,3 @@
-import useResponsive from '@/hooks/useResponsive';
 import { cn } from '@/lib/utils';
 import { useCitySearchStore } from '@/store/searchStore';
 import { useState } from 'react';
@@ -17,10 +16,9 @@ const categories: string[] = [
 const MainHero = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { isDropBox } = useCitySearchStore();
-  const { isWeb } = useResponsive();
   return (
     <>
-      <div className="web:z-20 bg-black px-4 py-[30px] gap-9 flex flex-col web:grid web:grid-cols-2 web:gap-[30px] web:px-[50px] web:py-10 relative">
+      <div className="web:z-20 bg-black px-4 py-[30px] gap-9 flex flex-col web:grid web:grid-cols-2 web:gap-[30px] web:px-[50px] web:py-10 relative box-content">
         <div className="flex flex-col justify-between web:justify-around ">
           <div className="text-white text-md font-medium web:text-xl pb-[25px]">
             반가워요! <br />
@@ -75,8 +73,8 @@ const MainHero = () => {
           </div>
         </div>
       </div>
-      {isWeb && isDropBox && (
-        <div className="fill-black/50 backdrop-blur-[10px] w-screen h-screen fixed top-0 left-0 z-10" />
+      {isDropBox && (
+        <div className="bg-black/50 backdrop-blur-[10px] w-screen h-screen fixed top-0 left-0 z-10 mobile:hidden" />
       )}
     </>
   );

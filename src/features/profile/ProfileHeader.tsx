@@ -1,4 +1,3 @@
-import VerifiedLabelIcon from '@/components/Icons/VerifiedLabelIcon';
 import ProfileHeaderSkeleton from '@/components/Skeleton/ProfileHeaderSkeleton';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -9,6 +8,7 @@ import { Link, useParams } from 'react-router-dom';
 import FollowerListButton from '../follow/FollowerListButton';
 import FollowingListButton from '../follow/FollowingListButton';
 import ProfileFollowingButton from '../follow/ProfileFollowingButton';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
 
 function ProfileHeader() {
   const { userId } = useParams();
@@ -31,15 +31,16 @@ function ProfileHeader() {
           <section>
             <Avatar className="w-[60px] h-[60px]">
               <AvatarImage
-                src={data?.profileImage.imageUrl}
+                src={data?.profileImage.imageUrl || userDefaultAvatar}
                 alt={`${data?.name}님의 프로필`}
                 className="object-cover object-center"
               />
             </Avatar>
           </section>
           <section className="gap-[6px] flex justify-center items-center my-3">
-            <h2 className="pl-3 font-bold text-md web:text-xl">{data?.name}</h2>
-            <VerifiedLabelIcon className="w-[16.075px] h-[15.921px] web:w-[22px] web:h-[21px]" />
+            {/* VerifiedLabelIcon 도입 시 h2 태그에 pl-3 추가 */}
+            <h2 className="font-bold text-md web:text-xl">{data?.name}</h2>
+            {/* <VerifiedLabelIcon className="w-[16.075px] h-[15.921px] web:w-[22px] web:h-[21px]" /> */}
           </section>
           <section className="flex gap-[15px] py-1 text-text-lg web:text-text-2xl">
             <FollowerListButton

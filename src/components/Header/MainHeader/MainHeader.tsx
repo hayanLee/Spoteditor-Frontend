@@ -5,7 +5,9 @@ import LoginModal from '@/features/login/LoginModal';
 import SearchBar from '@/features/search/SearchBar';
 import { Link } from 'react-router-dom';
 import SearchBarButton from './components/SearchBarButton';
+import useUser from '@/hooks/queries/user/useUser';
 const MainHeader = () => {
+  const { data: user } = useUser();
   return (
     <header className="sticky w-full z-50 bg-black px-4 web:px-[50px] py-4 web:py-5 left-0 top-0">
       <section className="flex justify-between w-full">
@@ -21,7 +23,7 @@ const MainHeader = () => {
         </section>
       </section>
       <SearchBar />
-      <LoginModal />
+      {!user && <LoginModal />}
     </header>
   );
 };

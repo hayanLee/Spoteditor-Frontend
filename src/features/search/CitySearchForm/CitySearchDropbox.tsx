@@ -1,20 +1,30 @@
 import XIcon from '@/components/Icons/XIcon';
 import { useCitySearchStore } from '@/store/searchStore';
 import CitySearchButton from './CitySearchButton';
-import { cityCategories } from '@/services/data/cityData';
+import { cityCategories, cityDistricts } from '@/services/data/cityData';
 import BnameButtonList from './BnameButtonList';
 
 export default function CitySearchDropbox() {
-  const { sido, bname, setSido, setBname, closeDropBox } = useCitySearchStore();
+  const {
+    sido,
+    isSidoDropBox,
+    isBnameDropBox,
+    closeDropBox,
+    setSido,
+    setBname,
+    toggleSidoDropBox,
+    toggleBnameDropBox,
+  } = useCitySearchStore();
 
   const onSidoClick = (sido: string) => {
     setSido(sido);
-    setBname('');
+    setBname(cityDistricts[sido]?.[0]);
+    toggleSidoDropBox();
   };
 
   const onBnameClick = (bname: string) => {
     setBname(bname);
-    closeDropBox();
+    toggleBnameDropBox();
   };
   return (
     <>
@@ -33,13 +43,17 @@ export default function CitySearchDropbox() {
       </header>
       <div className="flex justify-center web:justify-start">
         <section className="grid grid-cols-2 web:flex web:justify-start web:items-center gap-[5px] flex-wrap mobile:w-[343px]">
-          {!sido &&
-            !bname &&
+          {isSidoDropBox &&
             cityCategories.map((sido) => (
               <CitySearchButton key={sido} gio={sido} onClick={onSidoClick} />
             ))}
-          {sido && !bname && <BnameButtonList sido={sido} onSigunguClick={onBnameClick} />}
+
+          {isBnameDropBox && <BnameButtonList sido={sido} onSigunguClick={onBnameClick} />}
         </section>
+        <div
+          onClick={() => closeDropBox()}
+          className="fixed top-0 left-0 w-screen h-screen -z-10"
+        />
       </div>
     </>
   );

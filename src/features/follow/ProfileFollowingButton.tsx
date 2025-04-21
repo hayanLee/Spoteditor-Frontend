@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useFollowingMutation } from '@/hooks/mutations/follow/useFollowingMutation';
 import { useUnfollowMutation } from '@/hooks/mutations/follow/useUnfollowMutation';
 import useOtherUser from '@/hooks/queries/user/useOtherUser';
+import useUser from '@/hooks/queries/user/useUser';
 import { cn } from '@/lib/utils';
 
 interface ProfileFollowingButtonProps {
@@ -13,6 +14,9 @@ export default function ProfileFollowingButton({
   otherUserId,
   className = '',
 }: ProfileFollowingButtonProps) {
+  const { data: user } = useUser();
+  if (!user) return;
+
   const { data: userData } = useOtherUser(otherUserId);
   const { mutate: onMutate, status: onStatus } = useFollowingMutation();
   const { mutate: unMutate, status: unStatus } = useUnfollowMutation();

@@ -28,7 +28,7 @@ function SaveProfileButton({ userId, onTrigger }: SaveProfileButtonProps) {
               onTrigger();
             }
           }}
-          className="rounded-[6px] h-[42px] px-5"
+          className="rounded-[6px] w-[120px] h-[42px]"
         >
           저장
         </Button>

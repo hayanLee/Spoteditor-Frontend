@@ -61,8 +61,8 @@ export default function GeoConsentModal() {
             </button>
           </DialogClose>
         </section>
-        <div className="flex flex-col px-5">
-          <DialogHeader className="gap-4 web:gap-6 mb-2.5">
+        <div className="flex flex-col w-full">
+          <DialogHeader className="gap-4 web:gap-6 mb-2.5 px-5">
             <section className="flex flex-col items-center w-full gap-5">
               <CompassIcon />
               <DialogTitle className="font-bold text-text-2xl">
@@ -75,11 +75,11 @@ export default function GeoConsentModal() {
               동의하지 않는 경우 위치기반 서비스 이용에 제약을 받을 수 있습니다.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex flex-row items-center gap-2 py-5">
-            <Button onClick={onCencelClick} variant="outline" className="flex-1 font-semibold">
+          <DialogFooter className="grid items-center grid-cols-2 gap-2 py-5">
+            <Button onClick={onCencelClick} variant="outline" className="font-semibold">
               거절
             </Button>
-            <Button className="font-semibold web:flex-1" onClick={requestLocation}>
+            <Button className="font-semibold" onClick={requestLocation}>
               동의
             </Button>
           </DialogFooter>

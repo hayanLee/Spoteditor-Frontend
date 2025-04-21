@@ -15,6 +15,7 @@ import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import ProfileFollowingButton from './ProfileFollowingButton';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
 
 interface FollowingListButtonProps {
   isMe: boolean;
@@ -104,7 +105,7 @@ export default function FollowingListButton({
                           <figure className="flex items-center gap-[6px]">
                             <Avatar className="w-11 h-11">
                               <AvatarImage
-                                src={following.imageUrl}
+                                src={following.imageUrl || userDefaultAvatar}
                                 alt={`${following.name}님의 프로필`}
                                 className="object-cover object-center"
                               />

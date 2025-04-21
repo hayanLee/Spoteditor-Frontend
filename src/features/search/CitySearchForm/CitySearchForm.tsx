@@ -1,14 +1,11 @@
-import GeoConsentModal from '@/components/GeoConsentModal';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import useGeolocationPermission from '@/hooks/useGeolocationPermission';
-import useLocationToAddress from '@/hooks/useLocationToAddress';
 import { citySearchSchema } from '@/services/schemas/searchSchema';
 import { useCitySearchStore } from '@/store/searchStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion, useMotionTemplate, Variants } from 'motion/react';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -41,20 +38,15 @@ const dropboxVar: Variants = {
 };
 function CitySearchForm() {
   const nav = useNavigate();
-  const { position, checkPermission } = useGeolocationPermission();
-  const { address } = useLocationToAddress(position?.latitude ?? null, position?.longitude ?? null);
-  const { isDropBox, sido, bname, openDropBox } = useCitySearchStore();
+  const { isDropBox, sido, bname, toggleSidoDropBox, toggleBnameDropBox } = useCitySearchStore();
 
   /* 드롭박스 마운트, 언마운트 시 transformOrigin 값 변경 */
   const transformOrigin = useMotionTemplate`top ${isDropBox ? 'left' : 'right'} `;
 
-  const defaultValues = useMemo(
-    () => ({
-      sido: sido || address?.region_1depth_name || '서울',
-      bname: bname || address?.region_2depth_name || '송파구',
-    }),
-    [sido, bname, address]
-  );
+  const defaultValues = {
+    sido: '서울',
+    bname: '송파구',
+  };
 
   const form = useForm({
     resolver: zodResolver(citySearchSchema),
@@ -72,18 +64,18 @@ function CitySearchForm() {
   }, [sido, bname, form]);
 
   const onSearchSubmit = async ({ sido, bname }: z.infer<typeof citySearchSchema>) => {
-    const currentPermission = await checkPermission();
-    if (currentPermission === 'prompt') {
-      return; // 모달은 checkPermission에서 열림
-    }
     /* 추후 모달창 닫혔을 경우 검색할 수 있는 기능 추가 */
     nav('/search', {
       state: { sido, bname },
     });
   };
 
-  const openDropBoxClick = () => {
-    openDropBox();
+  const openSidoDropBoxClick = () => {
+    toggleSidoDropBox();
+  };
+
+  const openBnameDropBoxClick = () => {
+    toggleBnameDropBox();
   };
 
   return (
@@ -102,7 +94,7 @@ function CitySearchForm() {
                   <FormLabel className="!text-light-400 text-text-sm">어디로 놀러갈까요?</FormLabel>
                   <FormControl>
                     <Input
-                      onClick={openDropBoxClick}
+                      onClick={openSidoDropBoxClick}
                       placeholder="서울"
                       readOnly
                       {...field}
@@ -121,7 +113,7 @@ function CitySearchForm() {
                   <FormLabel className="!text-light-400 text-text-sm">더 상세히 검색!</FormLabel>
                   <FormControl>
                     <Input
-                      onClick={openDropBoxClick}
+                      onClick={openBnameDropBoxClick}
                       placeholder="송파구"
                       readOnly
                       {...field}
@@ -157,7 +149,6 @@ function CitySearchForm() {
           </AnimatePresence>
         </form>
       </Form>
-      <GeoConsentModal />
     </>
   );
 }
