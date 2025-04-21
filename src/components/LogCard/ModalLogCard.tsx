@@ -59,7 +59,7 @@ const ModalLogCard = memo(({ place, isPlaceBookMark, placeLogId }: ModalLogCard)
       <div className="text-text-sm mt-[5px]">
         <h5 className="font-bold">{place?.name} </h5>
         <h6 className="text-light-300 font-normal">
-          {place && `${place.address.sido} | ${place.address.sigungu}`}
+          {place && `${place.address.sido} | ${place.address.bname}`}
         </h6>
       </div>
     </div>

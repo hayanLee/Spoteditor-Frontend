@@ -90,7 +90,7 @@ function CitySearchForm() {
               control={form.control}
               name="sido"
               render={({ field }) => (
-                <FormItem className="flex flex-col bg-white px-3 py-2.5 gap-2">
+                <FormItem className="flex flex-col bg-white web:px-4 px-3 web:py-3 py-2.5 gap-2">
                   <FormLabel className="!text-light-400 text-text-sm">어디로 놀러갈까요?</FormLabel>
                   <FormControl>
                     <Input
@@ -109,7 +109,7 @@ function CitySearchForm() {
               control={form.control}
               name="bname"
               render={({ field }) => (
-                <FormItem className="flex flex-col bg-white px-3 py-2.5 gap-2">
+                <FormItem className="flex flex-col bg-white web:px-4 px-3 web:py-3 py-2.5 gap-2">
                   <FormLabel className="!text-light-400 text-text-sm">더 상세히 검색!</FormLabel>
                   <FormControl>
                     <Input
@@ -126,7 +126,7 @@ function CitySearchForm() {
           </div>
           <Button
             type="submit"
-            className="h-full font-medium text-white rounded-none bg-light-950 text-text-sm hover:bg-primary-900"
+            className="h-full font-medium text-white rounded-none bg-light-950 !text-text-md hover:bg-primary-900"
           >
             검색
           </Button>

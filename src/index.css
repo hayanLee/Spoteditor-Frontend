@@ -56,6 +56,9 @@ html {
   .card-id-gradient {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 74.97%, rgba(0, 0, 0, 0.7) 94.58%);
   }
+  .icon-button {
+    @apply bg-white border border-light-100 rounded-full w-9 h-9 flex items-center justify-center cursor-pointer z-10 opacity-70 hover:opacity-80 transition-opacity duration-200;
+  }
 }
 
 /* 스크롤바 넓이 지정 */

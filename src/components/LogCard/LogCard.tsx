@@ -50,7 +50,7 @@ const LogCard = memo(({ isLarge, vertical, log }: LogCardProps) => {
           src={getImgFromCloudFront(log?.image.storedFile ?? '')}
           alt="장소 이미지"
           className={cn(
-            'object-cover w-full aspect-[3/2]',
+            'object-cover h-full aspect-[3/2]',
             vertical && 'aspect-[3/4]',
             vertical && isMobile && 'max-w-xs mx-auto'
           )}
@@ -80,7 +80,7 @@ const LogCard = memo(({ isLarge, vertical, log }: LogCardProps) => {
       <div className="text-text-sm web:text-text-md">
         <h5 className="font-bold">{log?.name} </h5>
         <h6 className="font-normal text-primary-300">
-          {log && `${log.address.sido} | ${log.address.sigungu}`}
+          {log && `${log.address.sido} | ${log.address.bname}`}
         </h6>
       </div>
     </div>
