@@ -8,6 +8,20 @@ import { useNavigate } from 'react-router-dom';
 import MainPageLogCardList from '../detail-page/components/MainPageLogCardList';
 
 const HomePage = () => {
+  (() => {
+    window.navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        window.document.body.innerHTML = `<h2>📍현재 위치</h2><p>위도: ${lat}</p><p>경도: ${lng}</p>`;
+        console.log({ lat, lng });
+      },
+      (err) => {
+        window.document.body.innerHTML = `<p style="color: red;">❌ 위치 오류: ${err.message}</p>`;
+        console.error(err);
+      }
+    );
+  })();
   const navi = useNavigate();
   const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
 

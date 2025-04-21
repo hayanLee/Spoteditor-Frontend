@@ -44,7 +44,7 @@ function Search() {
         <SectionHeader
           labelText="Sort by"
           queryText="Popularity"
-          className="pt-10 web:pt-[50px] gap-[3px] web:gap-[9px]"
+          className="pt-10 web:pt-[50px] gap-[3px]"
         />
         {data?.content.length === 0 || !data ? (
           <SearchNotFound />
