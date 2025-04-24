@@ -9,7 +9,10 @@ import MainPageLogCardList from '../detail-page/components/MainPageLogCardList';
 
 const HomePage = () => {
   const navi = useNavigate();
-  const handleGotoRegisterPage = () => navi(REGISTER_SELECT);
+  const handleGotoRegisterPage = () =>
+    navi(REGISTER_SELECT, {
+      state: { from: location.pathname },
+    });
 
   return (
     <>

@@ -7,6 +7,6 @@ export const formatAddress = (place: kakao.maps.services.PlacesSearchResultItem)
   latitude: Number(place.y),
   longitude: Number(place.x),
   sido: place.address_name.split(' ')[0],
-  bname: place.address_name.split(' ')[1],
-  sigungu: place.address_name.split(' ')[2],
+  sigungu: place.address_name.split(' ')[1],
+  bname: place.address_name.split(' ')[2],
 });

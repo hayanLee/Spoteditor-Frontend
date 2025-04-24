@@ -14,7 +14,7 @@ import useOtherFollower from '@/hooks/queries/follow/useOtherFollower';
 import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
-import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.webp';
 
 interface FollowerListButtonProps {
   isMe: boolean;

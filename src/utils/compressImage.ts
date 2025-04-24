@@ -21,7 +21,6 @@ export async function compressImageToWebp(file: File, options?: CompressionOptio
     maxWidthOrHeight: 1024,
     useWebWorker: true,
     fileType: 'image/webp',
-    onProgress: (p) => console.log(`압축률: ${p}%`),
     ...options,
   };
 

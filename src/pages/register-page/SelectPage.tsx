@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { HOME, REGISTER_SEARCH } from '@/constants/pathname';
+import { REGISTER_SEARCH } from '@/constants/pathname';
 import OptionSelection from '@/features/register-page/OptionSelection';
 import RegisterBar from '@/features/register-page/RegisterBar';
 import { useRegisterStore } from '@/store/registerStore';
@@ -9,12 +9,12 @@ const SelectPage = () => {
   const navi = useNavigate();
   const companions = useRegisterStore((state) => state.experience.selectedWhom);
   const feelings = useRegisterStore((state) => state.experience.selectedMoods);
-  const handleGoBack = () => navi(HOME);
-  return (
-    <div className="h-full flex flex-col px-4">
-      <RegisterBar onClick={handleGoBack} />
 
-      <main className="flex flex-col items-center justify-center grow ">
+  return (
+    <div className="h-full flex flex-col">
+      <RegisterBar />
+
+      <main className="flex flex-col items-center justify-center grow px-4">
         {/* 제목 */}
         <div className="flex flex-col items-center mt-5 mb-[25px] gap-[7px]">
           <h3 className="text-md font-bold">어떤 하루인가요?</h3>

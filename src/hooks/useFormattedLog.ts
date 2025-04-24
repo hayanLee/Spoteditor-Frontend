@@ -8,13 +8,13 @@ const useFormattedLog = () => {
   const selectedMoods = useRegisterStore((state) => state.experience.selectedMoods);
 
   const format = (formData: LogWriteFormData) => {
-    const { title, description, coverImgSrc, places } = formData;
+    const { title, description, coverImgSrc, places, status } = formData;
     return {
       name: title,
       description,
       originalFile: coverImgSrc?.originalFile || '',
       uuid: coverImgSrc?.uuid || '',
-      status: 'public' as const,
+      status,
       tags: [
         ...selectedWhom.map((whom) => ({ name: whom, category: 'WITH_WHOM' as const })),
         ...selectedMoods.map((mood) => ({ name: mood, category: 'MOOD' as const })),

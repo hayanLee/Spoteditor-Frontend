@@ -31,7 +31,7 @@ const ModalLogCard = memo(({ place, isPlaceBookMark, placeLogId }: ModalLogCard)
   };
 
   return (
-    <div className="h-full">
+    <div>
       {/* 이미지 */}
       <div className={cn('relative grow group cursor-pointer')}>
         <img

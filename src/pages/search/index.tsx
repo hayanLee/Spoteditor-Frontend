@@ -6,7 +6,6 @@ import SearchTitleHeader from '@/features/search/SearchTitleHeader';
 import useSearchAddresLog from '@/hooks/queries/searchLog/useSearchAddresLog';
 import useSearchNameLog from '@/hooks/queries/searchLog/useSearchNameLog';
 import PageLayout from '@/layouts/PageLayout';
-import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -14,18 +13,20 @@ function Search() {
   const location = useLocation();
   const nav = useNavigate();
   const [searchParams] = useSearchParams();
-
   const pageNumber = searchParams.get('pageNumber');
 
   const title = location.state?.title || '';
-
   const sido = location.state.sido;
   const bname = location.state.bname;
+
+  console.log(title, sido, bname);
+
   useEffect(() => {
     if (!title && !sido && !bname) {
       nav('/');
     }
   }, [title, sido, bname, nav]);
+
   const { data: addresData } = useSearchAddresLog(
     { page: Number(pageNumber), sido, bname },
     { enabled: !!bname }
@@ -39,29 +40,22 @@ function Search() {
   //const isLoading = title ? isNameLoading : isAddresLoading;
   return (
     <PageLayout>
-      <SearchTitleHeader labelText="Searching for" queryText={title || bname} />
+      <SearchTitleHeader queryText={title || bname} />
       <section className="flex flex-col w-full pt-10 web:pt-[50px]">
-        <SectionHeader
-          labelText="Sort by"
-          queryText="Popularity"
-          className="pt-10 web:pt-[50px] gap-[3px]"
-        />
+        <SectionHeader className="pt-10 web:pt-[50px] gap-[3px]" />
         {data?.content.length === 0 || !data ? (
           <SearchNotFound />
         ) : (
           <>
             <div className="flex flex-col gap-y-[34px] web:grid web:grid-cols-4 web:gap-x-[15px] web:gap-y-10 mt-6 web:mt-[50px]">
-              {data?.content?.map((log, idx: number) => {
-                const isLarge = idx === 2;
-
-                return (
-                  <div key={idx} className={cn(isLarge && 'col-span-2 row-span-2')}>
-                    <LogCard log={log} isLarge={isLarge} />
-                  </div>
-                );
-              })}
+              {data?.content?.map((log) => (
+                <LogCard log={log} key={log.placeLogId} />
+              ))}
             </div>
-            <CustomPagination currentPage={data?.pageNumber!} totalPages={data?.totalPages!} />
+            <CustomPagination
+              currentPage={Number(data?.pageNumber)}
+              totalPages={Number(data?.totalPages)}
+            />
           </>
         )}
       </section>

@@ -117,7 +117,10 @@ const DetailPage = () => {
               <h3 className="text-lg web:text-2xl font-bold text-white">{name}</h3>
               <div className="flex gap-1 flex-wrap">
                 {tags?.map((item: Tag) => (
-                  <div className="flex items-center gap-1 text-text-xs web:text-text-sm ">
+                  <div
+                    className="flex items-center gap-1 text-text-xs web:text-text-sm"
+                    key={item.name}
+                  >
                     <span className="text-white bg-white/30 px-4 py-1.5 rounded-full gap-1 flex items-center">
                       <span>{item.name}</span>
                     </span>
@@ -199,7 +202,7 @@ const DetailPage = () => {
                 <DialogTitle className="text-text-2xl">소개된 장소</DialogTitle>
               </DialogHeader>
 
-              <div className="grid grid-cols-3 gap-x-[5px] gap-y-5 w-full max-h-[calc(90vh-100px)] overflow-y-auto scrollbar-hide py-[18px] aspect-[1/1.5]">
+              <div className="grid grid-cols-3 gap-x-[5px] gap-y-5 w-full max-h-[calc(90vh-100px)] overflow-y-auto scrollbar-hide py-[18px]">
                 {places.map((place: PlaceInLog, idx) => (
                   <ModalLogCard
                     key={place.placeId}

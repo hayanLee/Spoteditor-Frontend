@@ -40,11 +40,10 @@ const PlaceImagesInput = ({ idx }: PlaceImagesInputProps) => {
         name={`places.${idx}.photos`}
         control={control}
         render={({ field }) => (
-          <div className="flex overflow-x-auto mb-2.5">
+          <div className="flex overflow-x-auto mb-2.5 scrollbar-hide">
             {imagePreviews.map((previewObj, previewIdx) => (
               <div className="relative m-1 shrink-0" key={previewIdx}>
-                <Input
-                  type="image"
+                <img
                   src={previewObj.previewUrl}
                   alt="장소 이미지"
                   className="h-[300px] object-cover p-0 "

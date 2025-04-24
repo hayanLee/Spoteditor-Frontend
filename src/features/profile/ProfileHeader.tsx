@@ -8,7 +8,7 @@ import { Link, useParams } from 'react-router-dom';
 import FollowerListButton from '../follow/FollowerListButton';
 import FollowingListButton from '../follow/FollowingListButton';
 import ProfileFollowingButton from '../follow/ProfileFollowingButton';
-import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.webp';
 
 function ProfileHeader() {
   const { userId } = useParams();

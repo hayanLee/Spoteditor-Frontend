@@ -75,6 +75,7 @@ export type UpdateRequest = {
   name?: string;
   description?: string;
   originalFile?: string;
+  status?: 'public' | 'private';
   uuid?: string;
   deletePlaceIds?: number[];
   addPlaces?: Place[];

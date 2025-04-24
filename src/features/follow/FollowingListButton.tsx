@@ -15,7 +15,7 @@ import useBottomScrollTrigger from '@/hooks/useBottomScrollTrigger';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import ProfileFollowingButton from './ProfileFollowingButton';
-import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.webp';
 
 interface FollowingListButtonProps {
   isMe: boolean;

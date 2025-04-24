@@ -1,7 +1,19 @@
-import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
 import ModifyDrawer from '@/components/Drawer/ModifyDrawer';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import LogCoverImgInput from '@/features/register-page/LogCoverImgInput';
 import LogWriteBar from '@/features/register-page/LogWriteBar';
@@ -15,12 +27,12 @@ import { useRegisterStore } from '@/store/registerStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CircleX } from 'lucide-react';
 import { FormProvider, useForm } from 'react-hook-form';
-
 export interface LogWriteFormData {
   title: string;
   description: string;
   coverImgSrc: PresignUrlResponse | null;
   places: { photos: PresignUrlResponse[]; placeDescription?: string }[];
+  status: 'public' | 'private';
 }
 
 const LogWritePage = () => {
@@ -33,6 +45,7 @@ const LogWritePage = () => {
       description: '',
       coverImgSrc: null,
       places: [],
+      status: 'public',
     },
   });
   const { mutateAsync: logCreateMutation } = useCreateLogMutation();
@@ -43,6 +56,7 @@ const LogWritePage = () => {
 
   const onSubmit = async (values: LogWriteFormData) => {
     const formattedLog = format(values);
+    // console.log(formattedLog);
     const { status } = await logCreateMutation(formattedLog);
     if (status === 201) resetSelectedPlaces();
   };
@@ -85,7 +99,7 @@ const LogWritePage = () => {
             name="description"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="w-full">
+              <FormItem className="px-4 w-full">
                 <FormControl>
                   <Textarea
                     {...field}
@@ -112,20 +126,66 @@ const LogWritePage = () => {
             </div>
           </div>
         </form>
-      </FormProvider>
-      {/* <Button onClick={() => console.log(form.formState.errors)}>확인</Button> */}
+        {/* <Button onClick={() => console.log(form.formState.errors, form.watch())}>확인용</Button> */}
 
-      {/* 버튼 */}
-      <div className="pt-2 pb-3 px-4 ">
-        <ModifyDrawer />
-        <ConfirmDialog
-          title="로그를 등록하시겠어요?"
-          showCheckbox={true}
-          checkboxLabel="비공개"
-          onConfirm={form.handleSubmit(onSubmit)}
-          disabled={!!Object.keys(form.formState.errors).length}
-        />
-      </div>
+        {/* 버튼 */}
+        <div className="pt-2 pb-3 px-4 ">
+          <ModifyDrawer />
+          {/* <ConfirmDialog
+            title="로그를 등록하시겠어요?"
+            showCheckbox={true}
+            checkboxLabel="비공개"
+            onConfirm={form.handleSubmit(onSubmit)}
+            disabled={!!Object.keys(form.formState.errors).length}
+          /> */}
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant={Object.keys(form.formState.errors).length ? 'muted' : 'default'}
+                size="xl"
+                className="w-full"
+                disabled={!!Object.keys(form.formState.errors).length}
+              >
+                제출
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="max-w-[400px] min-w-[300px]">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-text-2xl">
+                  로그를 등록하시겠어요?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="hidden">
+                  alertDialog 설명란
+                </AlertDialogDescription>
+                <FormField
+                  name="status"
+                  control={form.control}
+                  render={({ field }) => (
+                    <Label
+                      htmlFor="secret"
+                      className="flex items-center gap-3 h-fit cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        id="secret"
+                        className="w-5 h-5 border rounded-sm bg-white cursor-pointer accent-black"
+                        checked={field.value === 'private'}
+                        onChange={(e) => field.onChange(e.target.checked ? 'private' : 'public')}
+                      />
+                      <span className="text-black text-text-sm">비공개</span>
+                    </Label>
+                  )}
+                />
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>취소</AlertDialogCancel>
+                <AlertDialogAction onClick={form.handleSubmit(onSubmit)}>확인</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </FormProvider>
     </div>
   );
 };

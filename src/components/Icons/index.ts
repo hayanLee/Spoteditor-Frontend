@@ -1,8 +1,9 @@
 export { default as CameraIcon } from './CameraIcon';
 export { default as ClockIcon } from './ClockIcon';
 export { default as EarthIcon } from './EarthIcon';
+export { default as HomeIcon } from './HomeIcon';
+export { default as SearchIcon } from './SearchIcon';
 export { default as SpotIcon } from './SpotIcon';
 export { default as StarIcon } from './StarIcon';
 export { default as SubtractIcon } from './SubtractIcon';
 export { default as TableIcon } from './TableIcon';
-export { default as SearchIcon } from './SearchIcon';

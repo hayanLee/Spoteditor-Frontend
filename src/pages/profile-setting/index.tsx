@@ -4,7 +4,6 @@ import AccountSettings from '@/features/profile-setting/AccountSettings';
 import ProfileSettingAvatar from '@/features/profile-setting/ProfileSettingAvatar';
 import ProfileSettingForm from '@/features/profile-setting/ProfileSettingForm/ProfileSettingForm';
 import SaveProfileButton from '@/features/profile-setting/SaveProfileButton';
-import useUnsavedChangesWarning from '@/hooks/form/useUnsavedChangesWarning';
 import useUpdateUser from '@/hooks/mutations/user/useUpdateUser';
 import useUser from '@/hooks/queries/user/useUser';
 import PageLayout from '@/layouts/PageLayout';
@@ -62,7 +61,8 @@ function ProfileSetting() {
 
   const { mutate } = useUpdateUser();
 
-  /* 폼 변경 여부를 비교하는 함수 */
+  /* 추후 인스타그램 수정 시 저장하면 저장이 안되는 부분 개선
+  // 폼 변경 여부를 비교하는 함수
   const isChanged = useCallback(
     (current: z.infer<typeof profileSettingSchema>) => {
       return (
@@ -76,8 +76,8 @@ function ProfileSetting() {
     [user, file]
   );
 
-  /* 폼 변경 시 새로고침/페이지 이동 경고 띄우기 */
-  useUnsavedChangesWarning(form, isChanged);
+  // 폼 변경 시 새로고침/페이지 이동 경고 띄우기
+  useUnsavedChangesWarning(form, isChanged); */
 
   const onSubmit = async (data: z.infer<typeof profileSettingSchema>) => {
     const { name, description, imageUrl } = data;

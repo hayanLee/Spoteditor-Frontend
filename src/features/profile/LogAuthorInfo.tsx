@@ -1,4 +1,4 @@
-import userDefaultAvatar from '@/assets/profile/user-default-avatar.png';
+import userDefaultAvatar from '@/assets/profile/user-default-avatar.webp';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import useOtherUser from '@/hooks/queries/user/useOtherUser';
 import useUser from '@/hooks/queries/user/useUser';

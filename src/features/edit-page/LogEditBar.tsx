@@ -1,4 +1,5 @@
 import { ConfirmDialog } from '@/components/Dialog/ConfirmDialog';
+import PrivateToggle from '@/components/Toggle/PrivateToggle';
 import { Button } from '@/components/ui/button';
 import useDeleteLog from '@/hooks/mutations/log/useDeleteLogMutation';
 import { ArrowLeft } from 'lucide-react';
@@ -15,8 +16,8 @@ const LogEditBar = ({ logTitle }: LogEditBarProps) => {
   const handleBack = () => navi(-1);
   const handleClickDelete = () => deleteLog();
   return (
-    <div className="flex items-center w-full py-[7px] px-4 justify-between">
-      <div className="flex items-center gap-2.5">
+    <div className="flex items-center w-full py-[7px] px-4 justify-between gap-6">
+      <div className="flex items-center gap-2.5 grow">
         <Button
           type="button"
           className="p-0 [&_svg]:size-auto"
@@ -28,6 +29,7 @@ const LogEditBar = ({ logTitle }: LogEditBarProps) => {
         <p className="text-text-2xl font-bold">로그 수정</p>
       </div>
 
+      <PrivateToggle />
       <ConfirmDialog
         title={logTitle}
         description="로그를 삭제하시겠습니까?"

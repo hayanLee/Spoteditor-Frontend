@@ -2,6 +2,7 @@ import LogCard from '@/components/LogCard/LogCard';
 import LogCardSkeleton from '@/components/Skeleton/LogCardSkeleton';
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import useLogList from '@/hooks/queries/log/useLogList';
+import useResponsive from '@/hooks/useResponsive';
 import { LogContent } from '@/services/apis/types/logAPI.type';
 import Autoplay from 'embla-carousel-autoplay';
 import throttle from 'lodash/throttle';
@@ -16,14 +17,11 @@ const MainCarousel = () => {
 
   const { content } = data ?? {};
   const isDataReady = isPending || !data || isError;
+  const { isMobile } = useResponsive();
 
   const [api, setApi] = useState<CarouselApi | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const autoplayPlugin = useRef(Autoplay({ delay: 8000, stopOnInteraction: false }));
-
-  const handleSetApi = useCallback((carouselApi: CarouselApi | null) => {
-    setApi(carouselApi);
-  }, []);
 
   const updateProgressBar = useCallback(() => {
     if (!api || !progressRef.current) return;
@@ -31,9 +29,10 @@ const MainCarousel = () => {
     progressRef.current.style.transform = `scaleX(${progress})`;
   }, [api]);
 
-  const throttledUpdateProgress = useRef(
-    throttle(updateProgressBar, 16, { leading: true, trailing: true })
-  ).current;
+  const throttledUpdateProgress = throttle(updateProgressBar, 16, {
+    leading: true,
+    trailing: true,
+  });
 
   useEffect(() => {
     if (!api) return;
@@ -55,10 +54,14 @@ const MainCarousel = () => {
   }, [api, updateProgressBar, throttledUpdateProgress]);
 
   useEffect(() => {
+    const currentAutoplayPlugin = autoplayPlugin.current; // ref값 복사
+
     return () => {
-      autoplayPlugin.current.stop();
+      currentAutoplayPlugin.stop();
     };
   }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -76,9 +79,9 @@ const MainCarousel = () => {
       <Carousel
         plugins={[autoplayPlugin.current]}
         opts={{
-          slidesToScroll: 4,
+          slidesToScroll: isMobile ? 1 : 4,
         }}
-        setApi={handleSetApi}
+        setApi={setApi}
       >
         <CarouselContent className="flex">
           {isDataReady

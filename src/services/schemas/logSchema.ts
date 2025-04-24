@@ -28,6 +28,7 @@ export const LogWriteFormSchema = z.object({
     .max(500, '설명은 500자를 초과할 수 없습니다.'),
   coverImgSrc: PresignUrlSchema,
   places: z.array(PlaceSchema).min(1, '장소는 최소 1개 이상 입력해야 합니다.'),
+  status: z.enum(['public', 'private']).optional(),
 });
 
 export const LogEditFormSchema = z.object({
@@ -41,21 +42,11 @@ export const LogEditFormSchema = z.object({
     .max(500, '설명은 500자를 초과할 수 없습니다.'),
   coverImgSrc: z.union([PresignUrlSchema, ImageSchema]),
   places: z.record(
-    z
-      .object({
-        placeId: z.number(),
-        placeDescription: z.string().optional(),
-        photos: z.array(z.union([ImageSchema, PresignUrlSchema])).default([]),
-        newPhotos: z.array(PresignUrlSchema).default([]),
-        deleteImageIds: z.array(z.number()).default([]),
-      })
-      .refine(
-        (place) =>
-          !(place.deleteImageIds.length === place.photos.length && place.newPhotos.length < 1),
-        {
-          message: '최소 1개의 이미지는 유지해야 합니다.',
-          path: ['newPhotos'],
-        }
-      )
+    z.object({
+      placeId: z.number(),
+      placeDescription: z.string().optional(),
+      photos: z.array(z.union([ImageSchema, PresignUrlSchema])).default([]),
+    })
   ),
+  status: z.enum(['public', 'private']).optional(),
 });

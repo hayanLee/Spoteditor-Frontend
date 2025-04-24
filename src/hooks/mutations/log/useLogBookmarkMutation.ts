@@ -3,7 +3,7 @@ import { userLogsKeys } from '@/hooks/queries/userLog/userLogQueryKeys';
 import api from '@/services/apis/api';
 import { UserBookmarkLogs } from '@/services/apis/types/userLogAPI';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
+import { useMatch, useSearchParams } from 'react-router-dom';
 
 interface UseLogBookmarkMutationProps {
   isBookMark: boolean;
@@ -14,6 +14,8 @@ const useLogBookmarkMutation = ({ isBookMark, placeLogId }: UseLogBookmarkMutati
   const [searchParams] = useSearchParams();
   const pageNumber = searchParams.get('pageNumber');
 
+  const profileMatch = useMatch('/profile/:userId/saved-logs');
+
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -22,19 +24,26 @@ const useLogBookmarkMutation = ({ isBookMark, placeLogId }: UseLogBookmarkMutati
 
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: userLogsKeys.bookmarkLogList({
-          page: Number(pageNumber),
-          size: 12,
-          direction: 'ASC',
-        }),
+        queryKey: logKeys.logBookMark(placeLogId),
       });
+      if (profileMatch) {
+        await queryClient.cancelQueries({
+          queryKey: userLogsKeys.bookmarkLogList({
+            page: Number(pageNumber),
+            size: 12,
+            direction: 'ASC',
+          }),
+        });
+      }
 
       const previousLogBookMark = queryClient.getQueryData<{ isBookmarked: boolean }>([
         ...logKeys.logBookMark(placeLogId),
       ]);
-      const previousProfileLogBookBark = queryClient.getQueryData(
-        userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' })
-      );
+      const previousProfileLogBookBark = profileMatch
+        ? queryClient.getQueryData(
+            userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' })
+          )
+        : undefined;
 
       queryClient.setQueryData(
         [...logKeys.logBookMark(placeLogId)],
@@ -42,17 +51,18 @@ const useLogBookmarkMutation = ({ isBookMark, placeLogId }: UseLogBookmarkMutati
           isBookmarked: !(old?.isBookmarked ?? false),
         })
       );
-
-      queryClient.setQueryData(
-        userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' }),
-        (oldData: UserBookmarkLogs) => {
-          const targetLog = oldData.content.filter((log) => log.placeLogId !== placeLogId);
-          return {
-            ...oldData,
-            ...targetLog,
-          };
-        }
-      );
+      if (profileMatch) {
+        queryClient.setQueryData(
+          userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' }),
+          (oldData: UserBookmarkLogs) => {
+            const targetLog = oldData.content.filter((log) => log.placeLogId !== placeLogId);
+            return {
+              ...oldData,
+              ...targetLog,
+            };
+          }
+        );
+      }
 
       return { previousLogBookMark, previousProfileLogBookBark };
     },
@@ -61,23 +71,27 @@ const useLogBookmarkMutation = ({ isBookMark, placeLogId }: UseLogBookmarkMutati
       if (context?.previousLogBookMark) {
         queryClient.setQueryData([...logKeys.logBookMark(placeLogId)], context.previousLogBookMark);
       }
-      queryClient.setQueryData(
-        userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' }),
-        context?.previousProfileLogBookBark
-      );
+      if (profileMatch) {
+        queryClient.setQueryData(
+          userLogsKeys.bookmarkLogList({ page: Number(pageNumber), size: 12, direction: 'ASC' }),
+          context?.previousProfileLogBookBark
+        );
+      }
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [...logKeys.logBookMark(placeLogId)] });
       queryClient.refetchQueries({ queryKey: [...logKeys.logBookMark(placeLogId)] });
 
-      queryClient.invalidateQueries({
-        queryKey: userLogsKeys.bookmarkLogList({
-          page: Number(pageNumber),
-          size: 12,
-          direction: 'ASC',
-        }),
-      });
+      if (profileMatch) {
+        queryClient.invalidateQueries({
+          queryKey: userLogsKeys.bookmarkLogList({
+            page: Number(pageNumber),
+            size: 12,
+            direction: 'ASC',
+          }),
+        });
+      }
     },
   });
 };

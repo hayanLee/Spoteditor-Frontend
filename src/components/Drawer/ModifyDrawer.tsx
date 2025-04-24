@@ -54,7 +54,7 @@ const ModifyDrawer = () => {
       <Drawer.Portal>
         <Drawer.Content
           data-testid="content"
-          className="z-50 fixed flex flex-col bg-black border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-20"
+          className="z-50 fixed flex flex-col bg-black border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-20 max-w-[724px] mx-auto"
         >
           <DrawerTitle className="hidden">로그 작성 내 장소 순서 변경 및 삭제 Drawer</DrawerTitle>
           <DialogDescription className="hidden">
