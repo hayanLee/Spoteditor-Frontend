@@ -8,8 +8,10 @@ export default function ContentLayout() {
   return (
     <>
       {!isNoticePage && <MainHeader />}
-      <div className="w-full grow">
-        <Outlet />
+      <div className="w-full grow max-w-[1920px]">
+        <div className="mt-[-1px]">
+          <Outlet />
+        </div>
       </div>
       {!isNoticePage && <MainFooter />}
     </>

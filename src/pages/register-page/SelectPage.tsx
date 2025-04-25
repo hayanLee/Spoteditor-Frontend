@@ -29,7 +29,7 @@ const SelectPage = () => {
       </main>
 
       {/* 버튼 */}
-      <div className="w-full flex flex-col items-center gap-[15px] mb-6">
+      <div className="w-full flex flex-col items-center gap-[15px] mb-6 px-4">
         <Button
           className="w-full !text-text-sm text-gray-50"
           size={'xl'}

@@ -1,11 +1,12 @@
 import MainCarousel from '@/components/Carousel/MainCarousel';
+import CaptionTitle from '@/components/Header/CaptionTitle';
 import { Button } from '@/components/ui/button';
 import { REGISTER_SELECT } from '@/constants/pathname';
 import MainHero from '@/features/home-page/MainHero';
 import TypingText from '@/features/home-page/TypingText';
 import { MoveUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import MainPageLogCardList from '../detail-page/components/MainPageLogCardList';
+import MainPageLogCardList from './components/MainPageLogCardList';
 
 const HomePage = () => {
   const navi = useNavigate();
@@ -15,17 +16,14 @@ const HomePage = () => {
     });
 
   return (
-    <>
+    <div>
       {/* 메인 히어로 */}
       <MainHero />
 
-      <div className="flex flex-col px-4 web:px-[50px]">
+      <div className="flex flex-col px-4 web:px-[50px] mt-10 web:mt-[60px]">
         {/* 제목 */}
-        <div className="flex items-end justify-between mt-10 mb-6">
-          <div className="text-xl font-medium web:text-2xl !leading-[120%] font-untitled">
-            <h3 className="text-primary-300">Sort by</h3>
-            <h3 className="text-primary-950">Popularity</h3>
-          </div>
+        <div className="flex items-end justify-between mb-6 web:mb-[45px]">
+          <CaptionTitle title="Sort by" subTitle="Popularity" />
         </div>
 
         {/* 컨테이너 */}
@@ -65,16 +63,13 @@ const HomePage = () => {
         </div>
 
         {/* 로그 */}
-        <div className="mb-6 font-untitled">
-          <div className="text-xl font-medium web:text-2xl">
-            <h3 className="text-primary-300">Latest</h3>
-            <h3 className="text-primary-950">Log</h3>
-          </div>
+        <div className="flex items-end justify-between mb-6 web:mb-[45px]">
+          <CaptionTitle title="Latest" subTitle="Log" />
         </div>
 
         <MainPageLogCardList />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -147,7 +147,7 @@ const LogWritePage = () => {
                 className="w-full"
                 disabled={!!Object.keys(form.formState.errors).length}
               >
-                제출
+                완료
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-[400px] min-w-[300px]">

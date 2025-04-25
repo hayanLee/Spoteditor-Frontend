@@ -8,7 +8,6 @@ import { useSearchParams } from 'react-router-dom';
 const MainPageLogCardList = () => {
   const [searchParams] = useSearchParams();
   const pageNumber = searchParams.get('pageNumber');
-
   const { data, isPending, isError } = useLogList({ page: Number(pageNumber) || 1 });
   const isDataReady = isPending || isError;
   const content = data?.content || [];
